@@ -1,0 +1,52 @@
+// Scrall grammar
+
+// We assume that the input file has been pre-processed to remove
+// comments, extraneous end of line space but newlines are left intact
+// with a single newline added at the end to simplify our grammar
+
+ignore_keywords = !" true" !"true " !" false" !"false " !" and" !"and " !" or" !"or " !" not" !"not " !" its" !"its " ! " me" !" me"
+nl = '\n' // New line
+space = r'[ \t]' // Required at least one space, no newlines
+_ = space+
+__ = space*
+wdelim = r'[ _]' // Word delimiter to separate words in a name
+word = ignore_keywords r'[A-Za-z][A-Za-z0-9]*' // String of alpahnumeric text with no whitespace starting with alpha char
+name = word (wdelim word)* // Sequence of delimited words forming a name
+
+// Math and logic operators
+EXP = '^'
+INCR = '++' / '--'
+MATCH = ':'
+EQUAL = '==' / '!='
+COMPARE = r'[<>][=]?'
+OR = 'or'
+AND = 'and'
+NOT = '!' / 'not'
+UNARY_MINUS = '-'
+ADD = r'[+-]'
+MULT = r'[*/%]'
+SCALAR_ASSIGN = '='
+
+// math and boolean operator precedence
+scalar_expr = __ logical_or __
+logical_or = logical_and (_ OR _ logical_and)*
+logical_and = equality (_ AND _ equality)*
+equality = comparison (__ EQUAL __ comparison)*
+comparison = addition (__ COMPARE __ addition)*
+addition = mult (__ ADD __ mult)*
+mult = exponent (__ MULT __ exponent)*
+exponent = logical_not (EXP logical_not)*
+logical_not = (NOT _)? UNARY_MINUS? INCR? term
+
+
+term = name / '(' __ scalar_expr __ ')'
+
+// Assignment
+assign_scalar = name __ SCALAR_ASSIGN __ scalar_expr nl
+
+
+// SENDTO = '->'
+
+// signal = name space? SENDTO space? name nl
+
+activity = assign_scalar* EOF
