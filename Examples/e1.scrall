@@ -2,4 +2,4 @@
 
 // some not message -> some instance
 
-a = b + c
+boxes .= /R12/Box(1, Size: Large)
