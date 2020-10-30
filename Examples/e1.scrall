@@ -2,4 +2,10 @@
 
 // some not message -> some instance
 
-boxes .= /R12/Box(1, Size: Large)
+boxes = this(a).toF()
+v = /R12/EV(1).Speed + y
+y = a+PI[3].toF()
+x ..= Aircraft( Speed > /R12/Pilot.Age + x*y)
+z = in.Got this
+this message -> that thing @ this time
+this message -> :

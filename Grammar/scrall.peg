@@ -68,16 +68,25 @@ bool_value = TRUE / FALSE
 scalar_expr = __ logical_or __
 logical_or = logical_and (_ OR _ logical_and)*
 logical_and = equality (_ AND _ equality)*
-equality = comparison (_ EQUAL _ comparison)*
-comparison = addition (_ COMPARE _ addition)*
-addition = mult (_ ADD _ mult)*
-mult = exponent (_ MULT _ exponent)*
+equality = comparison (__ EQUAL __ comparison)*
+comparison = addition (__ COMPARE __ addition)*
+addition = mult (__ ADD __ mult)*
+mult = exponent (__ MULT __ exponent)*
 exponent = logical_not (EXP logical_not)*
 logical_not = (NOT _)? UNARY_MINUS? INCR? term
-term = name / '(' __ scalar_expr __ ')'
+// term = op_call / name
+term = scalar_component ('.' scalar_component)* / '(' __ scalar_expr __ ')'
 
-scalar_term = scalar_component '.' scalar_term / scalar_component
-scalar_component = '(' __ scalar_expr __ ')'
+scalar_component = (inst_set '.')? (op_call / input_param / selector / name )
+
+// Input param
+input_param = IN name
+
+// Operation call
+type_qual = __ ':' __ name
+param = name type_qual?
+signature = '(' (__ param __ (',' __ param __)*)? ')'
+op_call = name signature
 // ---
 
 // path
@@ -95,6 +104,12 @@ criteria = (op_card __ ',' __ restriction) / op_card / restriction
 selection = '(' __ criteria? __ ')'
 // ---
 
+// Type selector
+alpha_numeric_word = r'[a-zA-Z0-9]+'
+value_name = alpha_numeric_word (WDELIM name)?
+value_selection = '[' __ value_name __ ']'
+selector = name value_selection
+
 
 // ACTIONS
 // Scalar assignment action
@@ -106,7 +121,9 @@ inst_set = ME / inst_source selection?
 assign_inst_set = name _ INST_ASSIGN _ inst_set
 
 // Signal action
-signal = name __ SENDTO __ name
+when = scalar_expr
+destination = (__ ':' __) / inst_set __ (DELAY __ when)?
+signal = name __ SENDTO __ destination
 // ---
 
 action = (assign_scalar / assign_inst_set / signal) NEWLINE
