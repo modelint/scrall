@@ -7,4 +7,4 @@ We've been having great success translating this to the open source micca platfo
 
 I am planning to develop a complete arpeggio grammar to support Scrall. When it is complete, this will no longer be psuedo-code.
 
-This language will be consistent with the action metamodel also in development.
+This language will be consistent with the [Shlaer Mellor Metamodel](https://github.com/modelint/shlaer-mellor-metamodel) also in development.
