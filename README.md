@@ -3,6 +3,8 @@ Scrall = Starr's Concise Relational Action Language
 
 This is the pseudo-code that we use to write all the action language in our Executable UML models. Since we use the Shlaer-Mellor variation of Executable UML, this language is true to its unique semantics and is tool independent.
 
+NOTE: If you have the Scrall version 1.0.0 PDF, consider it superceded by the wiki on this site where the language spec is now maintained and updated.
+
 See the [wiki](https://github.com/modelint/scrall/wiki) for a full description of this language.
 
 We've been having great success translating this to the open source micca platform (on Fossil, not Github) which generates efficient C code from the complete Executable UML models at the [Toyota Research Institute](https://github.com/ToyotaResearchInstitute/opensafety-mbse/wiki).
