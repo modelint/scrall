@@ -1,11 +1,35 @@
 // e1.scrall
 
-// some not message -> some instance
+//[A]a = b.Speed[E][C]
+//[X] a ..= Aircraft(1)[Q]
 
-boxes = this(a).toF()
-v = /R12/EV(1).Speed + y
-y = a+PI[3].toF()
-x ..= Aircraft( Speed > /R12/Pilot.Age + x*y)
-z = in.Got this
-this message -> that thing @ this time
-this message -> :
+a ..= getAircraft()/R1/A
+//
+//[A] f() [B]
+//[D]g()
+//
+//[A][B]{
+//     [Z]boxes = this(a).toF()[Q]
+//     a()
+//}[Z][Y]
+//
+//{a = b + c} [hello]
+//
+//some message -] some instance
+//
+//a(
+//    this: THAT,
+//    q: INT
+//)
+//
+//{
+//    v = /R12/EV( 1 ).Speed + y
+//    boxes = this(a ).toF( )
+//    { x = ((b + c) and
+//        (x or y))
+//    }[U]
+//}
+//y = a+PI||3||.toF()
+//z = in.Got this; d = n * m
+//this message -] that thing @ this time
+//this message -] :

@@ -1,4 +1,4 @@
-// Scrall grammar – Diagnostic Version (limited capability)
+// Scrall grammar
 
 // PRE-PROCESSING ASSUMPTION
 //
@@ -11,23 +11,23 @@
 // Whitespace and delimiters
 NEWLINE = '\n' // Newline character
 SPACE = r'[ \t]' // A single whitespace character without any newlines or returns
-WHITE = r'[ \t\r\n]'  // Any whitespace character
-_ = SPACE WHITE* // At least one space character
-__ = WHITE* // Any amount of whitespace
-NAME_GLUE = r'[ _]' // Word delimiter character to separate words in a name
+_ = SPACE+ // At least one space character
+__ = SPACE* // Any amount of optional space characters
+WDELIM = r'[ _]' // Word delimiter character to separate words in a name
 // ---
 
 // Names (attribute, class, variable, etc)
 // Scrall is designed to have as few keywords as possible. The few that it does have
 // cannot be a word in a name
-//ignore_keywords = (
-//    !" true" !"true " !" false" !"false "
-//    !" and" !"and " !" or" !"or "!" not" !"not "
-//    !" its" !"its " ! " me" !" me"
-//)
+ignore_keywords = (
+    !" true" !"true " !" false" !"false "
+    !" and" !"and " !" or" !"or "!" not" !"not "
+    !" its" !"its " ! " me" !" me"
+)
+// A word is a string of alpahnumeric text with no whitespace starting with alpha char and not a keyword
+// >> word = ignore_keywords r'[A-Za-z][A-Za-z0-9]*'
 word = r'[A-Za-z][A-Za-z0-9]*'
-//word = ignore_keywords r'[A-Za-z][A-Za-z0-9]*'
-name = word (NAME_GLUE word)* // One word or a sequence of delimited words (name used for most model elements)
+name = word (WDELIM word)* // One word or a sequence of delimited words (name used for most model elements)
 rnum = r'R[1-9][0-9]*' // Relationship number (name used for relationships)
 // ---
 
@@ -77,14 +77,14 @@ bool_value = TRUE / FALSE
 
 // math and boolean operator precedence
 scalar_expr = __ logical_or __
-logical_or = logical_and (__ OR __ logical_and)*
-logical_and = equality (__ AND __ equality)*
+logical_or = logical_and (_ OR _ logical_and)*
+logical_and = equality (_ AND _ equality)*
 equality = comparison (__ EQUAL __ comparison)*
 comparison = addition (__ COMPARE __ addition)*
 addition = mult (__ ADD __ mult)*
 mult = exponent (__ MULT __ exponent)*
 exponent = logical_not (EXP logical_not)*
-logical_not = (NOT __)? UNARY_MINUS? INCR? term
+logical_not = (NOT _)? UNARY_MINUS? INCR? term
 // term = op_call / name
 term = scalar_component ('.' scalar_component)* / '(' __ scalar_expr __ ')'
 
@@ -96,7 +96,7 @@ input_param = IN name
 // Operation call
 type_qual = __ ':' __ name
 param = name type_qual?
-signature = '(' __ (param __ (',' __ param __)*)? ')'
+signature = '(' (__ param __ (',' __ param __)*)? ')'
 op_call = name signature
 // ---
 
@@ -117,8 +117,8 @@ selection = '(' __ criteria? __ ')'
 
 // Type selector
 alpha_numeric_word = r'[a-zA-Z0-9]+'
-value_name = alpha_numeric_word (NAME_GLUE name)?
-value_selection = '||' __ value_name __ '||'
+value_name = alpha_numeric_word (WDELIM name)?
+value_selection = '[' __ value_name __ ']'
 selector = name value_selection
 
 
@@ -127,19 +127,9 @@ selector = name value_selection
 assign_scalar = name _ SCALAR_ASSIGN _ scalar_expr
 
 // Instance set assignment action
-// inst_source = path / name
-// inst_set = ME / inst_source selection?
+inst_source = path / name
+inst_set = ME / inst_source selection?
 assign_inst_set = name _ INST_ASSIGN _ inst_set
-
-// Instance set
-// inst_set = name selection
-// generator = inst_set selection
-// inst_set = name / inst_set ( path / '.' op_call / selection )
-//inst_source = op_call / name  // add creation
-inst_set = inst_expr
-inst_expr = source (path / selection / '.' op_call)*
-source = name / op_call
-// ---
 
 // Signal action
 when = scalar_expr
@@ -147,14 +137,12 @@ destination = (__ ':' __) / inst_set __ (DELAY __ when)?
 signal = name __ SENDTO __ destination
 // ---
 
+action = (assign_scalar / assign_inst_set / op_call / signal)
 
-// Activity and action execution units
-action = (assign_scalar / assign_inst_set / op_call / signal) __
-line_cluster = action (__ ACTION_SEP __ action)+ __
-action_block = '{' (__ execution_group __)+ '}' __
-initial_sequence_token = r'[ \t]*\[' name ']' SPACE* // SPACE* sequence_token SPACE* (??)
-sequence_token = '[' name ']' SPACE*
-input_sequence_set = initial_sequence_token sequence_token*
-output_sequence_set = sequence_token* NEWLINE
-execution_group = input_sequence_set? (action_block / line_cluster / action) SPACE* output_sequence_set?
+// line_cluster = action (__ ACTION_SEP __ action)+
+// action_block = '{' (__ action __)+ '}'
+sequence_token = '<' name '>'
+action_block = '{' (__ execution_group __)+ '}'
+action_cluster = action / action_block
+execution_group = sequence_token* __ action_cluster __ sequence_token* NEWLINE
 activity = execution_group* EOF
