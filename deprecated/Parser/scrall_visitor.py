@@ -1,4 +1,4 @@
-""" scrall_visitor.py """
+""" visitor.py """
 from arpeggio import PTNodeVisitor
 
 class ScrallVisitor(PTNodeVisitor):

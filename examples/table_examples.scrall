@@ -1,0 +1,17 @@
+// Implicit
+t4[ Altitude::Height, Heading::Compass ] #= { { a1, h1 } { a2, h2 } } // Two rows
+t5[ Altitude::Height, Heading::Compass ] #= {} // No rows
+t6[] #= {} // Tabledum - no attrs, no rows
+t7[] #= { {} } // Tabledee - no attrs, one row
+// Rename
+non_arriving_ids #= a(*).(Tnum) - b[c>>d]
+non_arriving_ids #= Aircraft.(Tail number) - Arrival[Aircraft >> Tail number]
+low aircraft #= Aircraft(Altitude < floor altitude)[ID>>Tail number].(Tail number, Altitude)
+// Explicit
+t #= Aicrcraft[ID>>Tailnumber](Altitude > max).(Tailnumber, Altitude)
+t1 #= t2
+non_arriving_ids #= t2[a>>b]
+non_arriving_ids #= Aircraft(*).(a, b) - t2[a>>b]
+t #= t1 * (t2 ## t3)
+low aircraft #= Aircraft(Altitude < floor altitude).()
+t #= Aircraft(*).(*)

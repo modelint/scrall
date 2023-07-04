@@ -1,0 +1,131 @@
+// Method with tables
+t3 #= (t4.(x, y) + t5.(w, z))[x>>q](q > nmax).(q, z) - t7
+destination heights #= ((requested stops.(Floor, Shaft) + requested floors) ## Floor[Name >> Floor]).(Floor, Height)
+=>> Accessible Shaft Level( Floor: nearest dest.Floor; Shaft )
+// Scalar calls
+/R4/Door.Lock requested.set()
+door.Lock requested.set()
+// Migration
+atcOn >>On Duty Controller(Time logged in: Date.Now hms) &R3 my station
+>>Open()
+// Iteration
+<< /OR1/next >> {
+    LOG.LogData( Item1: Altitude, Item2: Airspeed )
+}
+<< Aircraft(^+Altitude; ^-Airspeed) >> {
+    LOG.LogData( Item1: Altitude, Item2: Airspeed )
+}
+// Implicit
+t4[ Altitude::Height, Heading::Compass ] #= { { a1, h1 } { a2, h2 } } // Two rows
+t5[ Altitude::Height, Heading::Compass ] #= {} // No rows
+t6[] #= {} // Tabledum - no attrs, no rows
+t7[] #= { {} } // Tabledee - no attrs, one row
+// Rename
+non_arriving_ids #= a(*).(Tnum) - b[c>>d]
+non_arriving_ids #= Aircraft.(Tail number) - Arrival[Aircraft >> Tail number]
+low aircraft #= Aircraft(Altitude < floor altitude)[ID>>Tail number].(Tail number, Altitude)
+// Explicit
+t #= Aicrcraft[ID>>Tailnumber](Altitude > max).(Tailnumber, Altitude)
+t1 #= t2
+non_arriving_ids #= t2[a>>b]
+non_arriving_ids #= Aircraft(*).(a, b) - t2[a>>b]
+t #= t1 * (t2 ## t3)
+low aircraft #= Aircraft(Altitude < floor altitude).()
+t #= Aircraft(*).(*)
+// Misc
+avg altitude = Aircraft(*).(Altitude).avg
+my department .= /R3/Department
+Waiting for clerk -> /R1|my department<1>
+// Explicit types and tuple scalar output
+low filying aircraft::Aircraft ..= tids
+i::Integer = ival
+x,y = .compute()
+calling fname, calling height = Floor( Name: ^calling floor ).(Name, Height)
+// Create and relate
+*[ A() &R3 a, b; B() ]
+&R1 that one
+&R15 folder
+aircraft &R1 pilot
+license &R3 dog, owner
+*Taxiing Aircraft(ID: ^id, Heading: ^initial heading) &R1 assigned runway, trun
+*A()
+// Opchain
+x = Temperature[].DegC
+x = _red
+a = ^b + ^c
+b = Motor.Compute(x: c or d, y: e / f)
+x = /R1/Aircraft(1).Speed.mph
+higher follow ac .= /OR3/is following/~/its.Altitude |>|
+hf ac .= /OR3/is following/~|( its.Altitude - Altitude ) > y
+cabin .= Cabin(1, ^-.Estimated travel delay( To floor : calling floor, Calling dir: Dir ))
+best cabin .= ^-.Estimated travel delay(floor: position)
+x = .compute(x, y)
+// Tokens
+<1>{
+    Aircraft(1).Land( Runway: north)
+    Cabin at destination() -> /R53/Transfer<X>
+    <X>Arrived() -> there
+}<2><3>
+// Signals
+too hot -> me
+hot? cool down : heat up(amount: bump) -> me @wait
+Cabin at destination() -> /R53/Transfer
+Cabin at destination() -> /R53/Transfer @ x.compute_delay()
+// Decision
+!inservice OR z.getClearance(id)? {
+    Aircraft(1).Land( Runway: north)
+    Cabin at destination() -> /R53/Transfer<X>
+    Arrived() -> there
+} : {
+    Unarrived() -> there
+    x = a
+}
+// Switches
+R1? {
+   _Fixed Wing Aircraft: {
+       a = f
+       b = c
+    }
+   _Rotary Wing Aircraft: {
+       a = r
+       c = e
+    }
+}
+valve position? {
+    _open _stuck : close -> my valve
+    _closed : open -> my valve
+}
+R1? {
+   _Fixed Wing Aircraft: a = f
+   _Rotary Wing Aircraft: {
+       a = r
+       c = e
+    }
+}
+// Scalar assignments
+speed 2 = myaircraft.groundspeed + area.checkwind() - airspeed
+a = b * c / d
+ok = a AND b and c and not (d > x)
+broken = !shaft.inservice
+z = (a != b)
+broken = not shaft.inservice
+wrong = not -(x * y)
+f = A == B == C
+m = not working and true
+b = Motor.Compute(x: c or d, y: e / f)
+my speed = myaircraft.groundspeed + area.checkwind() * airspeed
+y = ^hello * ^there
+// instance set assignments
+q ..= Cabin(*).Closest()/R2/Shaft.Nearest()(id : shaft)
+a ..= /R1/R2/Aircraft(alt: high * af; speed <= max speed )
+my plane .= Aircraft(Speed: (v or x) or Height > h)
+b ..= Cabin(*).Closest()/R2/Shaft.Nearest()(id : shaft)
+my plane2 .= Aircraft(Speed: v and Height > h)
+my plane3 .= Aircraft(Speed: v and not (Height > h or Length < l))
+// call actions
+TRAN.Goto floor(floor : Height; direction)
+tower.nearest plane().Land( Runway: north)
+tower.nearest plane().distance().km.feet
+Aircraft(1).Land( Runway: north)
+// return value
+=>> *Aircraft(id: ^tail_number)

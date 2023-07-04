@@ -1,4 +1,4 @@
-""" scrall_parser.py """
+""" parser.py """
 
 from scrall_exceptions import ScrallParseError
 from scrall_visitor import ScrallVisitor
@@ -22,8 +22,8 @@ class ScrallParser:
 
     # Local directories
     project = Path(__file__).parent.parent  # Top level directory of this project
-    diag_dir = project / "Diagnostics"
-    grammer_dir = project / "Grammar"
+    diag_dir = project / "diagnostics"
+    grammer_dir = project / "grammar"
     parser_dir = project / "Parser"
 
     # File paths
@@ -84,7 +84,7 @@ class ScrallParser:
 
 if __name__ == "__main__":
     # For diagnostics
-    scrall_path = Path(__file__).parent.parent / "Examples" / 'e1.scrall'
+    scrall_path = Path(__file__).parent.parent / "examples" / 'e1.scrall'
     x = ScrallParser(scrall_file_path=scrall_path, debug=True)
     try:
         x.parse()
