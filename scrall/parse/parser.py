@@ -8,6 +8,7 @@ import os  # For issuing system commands to generate diagnostic files
 from pathlib import Path
 from typing import List
 
+
 class ScrallParser:
     """
     Parses the text of an Activity written in Scrall
@@ -17,20 +18,20 @@ class ScrallParser:
         - scrall_grammar -- Text read from the Scrall grammar file
         - scrall_text -- Unparsed scrall text input for a single metamodel activity (state, method, operation)
     """
-    debug = False # by default
-    scrall_grammar = None # We haven't read it in yet
-    scrall_text = None # User will provide this
+    debug = False  # by default
+    scrall_grammar = None  # We haven't read it in yet
+    scrall_text = None  # User will provide this
 
-    root_rule_name = 'activity' # The required name of the highest level parse element
+    root_rule_name = 'activity'  # The required name of the highest level parse element
 
     # Useful paths within the project
     project_path = Path(__file__).parent.parent.parent
     module_path = project_path / 'scrall'
-    grammar_path = module_path / 'grammar' # The grammar files are all here
-    diagnostics_path = project_path / 'diagnostics' # All parser diagnostic output goes here
+    grammar_path = module_path / 'grammar'  # The grammar files are all here
+    diagnostics_path = project_path / 'diagnostics'  # All parser diagnostic output goes here
 
     # Files
-    grammar_file = grammar_path / "scrall.peg" # We parse using this peg grammar
+    grammar_file = grammar_path / "scrall.peg"  # We parse using this peg grammar
     grammar_model_pdf = diagnostics_path / "scrall_model.pdf"
     parse_tree_pdf = diagnostics_path / "scrall_parse_tree.pdf"
     parse_tree_dot = module_path / f"{root_rule_name}_parse_tree.dot"
@@ -81,7 +82,6 @@ class ScrallParser:
             cls.scrall_text += '\n'
 
         cls.parse()
-
 
     @classmethod
     def parse(cls) -> List:
