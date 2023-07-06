@@ -5,31 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ee34e30-6947-4828-a364-06d349fe03f0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrall/__main__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrall/exceptions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrall/log.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrall/parse/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scrall/technotes/Scrall grammar tree.graffle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Scrall.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Scrall.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__main__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/all_examples.scrall" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/examples/all_examples.scrall" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/cabin.scrall" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/examples/cabin.scrall" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/table_examples.scrall" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/examples/table_examples.scrall" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/test_example.scrall" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/examples/test_example.scrall" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/transfer.scrall" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/examples/transfer.scrall" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/grammar/scrall.peg" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/grammar/scrall.peg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parse/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parse/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/parse/parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parse/visitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/parse/visitor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/technotes/Scrall grammar tree.graffle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/technotes/Scrall grammar tree.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/technotes/Traverse action.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/diagnostics/scrall_model.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/diagnostics/scrall_model.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/diagnostics/scrall_parse_tree.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/diagnostics/scrall_parse_tree.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrall/__main__.py" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/__main__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrall/examples/cabin.scrall" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/examples/cabin.scrall" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scrall/parse/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/scrall/parse/parser.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +89,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1688601940558</updated>
-      <workItem from="1688601941949" duration="2508000" />
+      <workItem from="1688601941949" duration="3972000" />
     </task>
     <servers />
   </component>
@@ -121,13 +101,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/scrall/parse/parser.py</url>
-          <line>111</line>
+          <line>117</line>
           <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/scrall/parse/parser.py</url>
+          <line>41</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Scrall$__main__.coverage" NAME="__main__ Coverage Results" MODIFIED="1688608125685" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scrall" />
+    <SUITE FILE_PATH="coverage/Scrall$__main__.coverage" NAME="__main__ Coverage Results" MODIFIED="1688610021442" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scrall" />
   </component>
 </project>
