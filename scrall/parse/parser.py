@@ -27,17 +27,17 @@ class ScrallParser:
     project_path = Path(__file__).parent.parent.parent
     module_path = project_path / 'scrall'
     grammar_path = module_path / 'grammar' # The grammar files are all here
-    diagnostics_path = module_path / 'diagnostics' # All parser diagnostic output goes here
+    diagnostics_path = project_path / 'diagnostics' # All parser diagnostic output goes here
 
     # Files
     grammar_file = grammar_path / "scrall.peg" # We parse using this peg grammar
     grammar_model_pdf = diagnostics_path / "scrall_model.pdf"
     parse_tree_pdf = diagnostics_path / "scrall_parse_tree.pdf"
-    parse_tree_dot = project_path / f"{root_rule_name}_parse_tree.dot"
-    parser_model_dot = project_path / f"{root_rule_name}_peg_parser_model.dot"
+    parse_tree_dot = module_path / f"{root_rule_name}_parse_tree.dot"
+    parser_model_dot = module_path / f"{root_rule_name}_peg_parser_model.dot"
 
-    pg_tree_dot = project_path / "peggrammar_parse_tree.dot"
-    pg_model_dot = project_path / "peggrammar_parser_model.dot"
+    pg_tree_dot = module_path / "peggrammar_parse_tree.dot"
+    pg_model_dot = module_path / "peggrammar_parser_model.dot"
     pg_tree_pdf = diagnostics_path / "peggrammar_parse_tree.pdf"
     pg_model_pdf = diagnostics_path / "peggrammar_parser_model.pdf"
 
@@ -61,6 +61,9 @@ class ScrallParser:
         if not cls.scrall_text:
             raise ScrallInputFileEmpty(file_input)
 
+        if not cls.scrall_text.endswith('\n'):
+            cls.scrall_text += '\n'
+
         cls.parse()
 
     @classmethod
@@ -74,6 +77,9 @@ class ScrallParser:
         """
         cls.debug = debug
         cls.scrall_text = scrall_text
+        if not cls.scrall_text.endswith('\n'):
+            cls.scrall_text += '\n'
+
         cls.parse()
 
 

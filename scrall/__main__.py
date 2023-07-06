@@ -54,7 +54,7 @@ def main():
     if args.file:
         fpath = Path(args.file)
         d = args.debug
-        ScrallParser.parse_file(file_input=fpath, debug=d)
+        result = ScrallParser.parse_file(file_input=fpath, debug=d)
 
     logger.info("No problemo")  # We didn't die on an exception, basically
     print("\nNo problemo")
