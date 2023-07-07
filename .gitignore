@@ -4,3 +4,4 @@
 *.pdf
 *.db
 .DS_Store
+.idea/workspace.xml
