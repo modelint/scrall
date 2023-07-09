@@ -18,13 +18,13 @@ keywords = ["action language", "executable uml", "mbse", "xuml", "xtuml", "platf
 dependencies = ['tomli; python_version < "3.11"']
 requires-python = ">=3.10"
 
-    [project.optional-dependencies]
-    build = ["build", "twine"]
-    dev = ["bump2version", "pytest"]
+[project.optional-dependencies]
+build = ["build", "twine"]
+dev = ["bump2version", "pytest"]
 
-    [project.scripts]
-    scrall = "scrall.__main__:main"
+[project.scripts]
+scrall = "scrall.__main__:main"
 
-    [project.urls]
-    repository    = "https://github.com/modelint/scrall"
-    documentation = "https://github.com/modelint/scrall/wiki"
+[project.urls]
+repository    = "https://github.com/modelint/scrall"
+documentation = "https://github.com/modelint/scrall/wiki"
