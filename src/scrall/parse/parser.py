@@ -1,7 +1,7 @@
 """ parser.py """
 
-from scrall.exceptions import ScrallGrammarFileOpen, ScrallParseError, ScrallInputFileEmpty, ScrallInputFileOpen
-from scrall.parse.visitor import ScrallVisitor
+from src.scrall.exceptions import ScrallGrammarFileOpen, ScrallParseError, ScrallInputFileEmpty, ScrallInputFileOpen
+from src.scrall.parse.visitor import ScrallVisitor
 from arpeggio import visit_parse_tree, NoMatch
 from arpeggio.cleanpeg import ParserPEG
 import os  # For issuing system commands to generate diagnostic files
@@ -25,8 +25,9 @@ class ScrallParser:
     root_rule_name = 'activity'  # The required name of the highest level parse element
 
     # Useful paths within the project
-    project_path = Path(__file__).parent.parent.parent
-    module_path = project_path / 'scrall'
+    project_path = Path(__file__).parent.parent.parent.parent  # Top level of project
+    source_path = project_path / 'src'  # Top level of all source code
+    module_path = source_path / 'scrall'
     grammar_path = module_path / 'grammar'  # The grammar files are all here
     diagnostics_path = project_path / 'diagnostics'  # All parser diagnostic output goes here
 

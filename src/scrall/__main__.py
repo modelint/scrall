@@ -9,8 +9,8 @@ import logging.config
 import sys
 import argparse
 from pathlib import Path
-from scrall import version
-from scrall.parse.parser import ScrallParser
+from src.scrall import version
+from src.scrall.parse.parser import ScrallParser
 
 _logpath = Path("scrall.log")
 
