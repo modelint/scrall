@@ -8,3 +8,8 @@
 .DS_Store
 .idea/
 /src/scrall.egg-info
+.idea/Scrall.iml
+.idea/Scrall.iml
+.idea/workspace.xml
+diagnostics/scrall_model.pdf
+diagnostics/scrall_parse_tree.pdf
