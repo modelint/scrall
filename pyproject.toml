@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "scrall"
-version = "0.2.2"
+version = "0.2.3"
 description = "Starr's Concise Relational Action Language - For Shlaer-Mellor Executable UML"
 readme = "README.md"
 authors = [{ name = "Leon Starr", email = "leon_starr@modelint.com" }]
@@ -15,7 +15,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 keywords = ["action language", "executable uml", "mbse", "xuml", "xtuml", "platform independent", "sysml"]
-dependencies = ['tomli; python_version < "3.11"']
+dependencies = ["Arpeggio", 'tomli; python_version < "3.11"']
 requires-python = ">=3.10"
 
 [project.optional-dependencies]
