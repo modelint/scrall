@@ -1,1 +1,1 @@
-include scrall/*.conf
+include src/scrall/log.conf
