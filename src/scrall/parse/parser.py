@@ -25,21 +25,21 @@ class ScrallParser:
     root_rule_name = 'activity'  # The required name of the highest level parse element
 
     # Useful paths within the project
-    project_path = Path(__file__).parent.parent.parent.parent  # Top level of project
-    source_path = project_path / 'src'  # Top level of all source code
-    module_path = source_path / 'scrall'
-    grammar_path = module_path / 'grammar'  # The grammar files are all here
-    diagnostics_path = project_path / 'diagnostics'  # All parser diagnostic output goes here
+    src_path = Path(__file__).parent.parent.parent  # Path to src folder
+    module_path = src_path / 'scrall'
+    grammar_path = module_path  # The grammar files are all here
+    cwd = Path.cwd()
+    diagnostics_path = cwd / 'scrall-diagnostics'  # All parser diagnostic output goes here
 
     # Files
     grammar_file = grammar_path / "scrall.peg"  # We parse using this peg grammar
     grammar_model_pdf = diagnostics_path / "scrall_model.pdf"
     parse_tree_pdf = diagnostics_path / "scrall_parse_tree.pdf"
-    parse_tree_dot = module_path / f"{root_rule_name}_parse_tree.dot"
-    parser_model_dot = module_path / f"{root_rule_name}_peg_parser_model.dot"
+    parse_tree_dot = cwd / f"{root_rule_name}_parse_tree.dot"
+    parser_model_dot = cwd / f"{root_rule_name}_peg_parser_model.dot"
 
-    pg_tree_dot = module_path / "peggrammar_parse_tree.dot"
-    pg_model_dot = module_path / "peggrammar_parser_model.dot"
+    pg_tree_dot = cwd / "peggrammar_parse_tree.dot"
+    pg_model_dot = cwd / "peggrammar_parser_model.dot"
     pg_tree_pdf = diagnostics_path / "peggrammar_parse_tree.pdf"
     pg_model_pdf = diagnostics_path / "peggrammar_parser_model.pdf"
 
@@ -53,6 +53,11 @@ class ScrallParser:
         :return:
         """
         cls.debug = debug
+        if debug:
+            # If there is no scrall diagnostics directory, create one
+            cls.diagnostics_path.mkdir(parents=False, exist_ok=True)
+
+
 
         # Try to read the supplied scrall text file
         try:

@@ -1,4 +1,4 @@
-""" visitor.py - current test """
+""" visitor.py - current tests """
 from arpeggio import PTNodeVisitor
 from collections import namedtuple
 from scrall.exceptions import ScrallMissingParameterName
