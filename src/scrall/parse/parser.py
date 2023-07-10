@@ -1,7 +1,7 @@
 """ parser.py """
 
-from src.scrall.exceptions import ScrallGrammarFileOpen, ScrallParseError, ScrallInputFileEmpty, ScrallInputFileOpen
-from src.scrall.parse.visitor import ScrallVisitor
+from scrall.exceptions import ScrallGrammarFileOpen, ScrallParseError, ScrallInputFileEmpty, ScrallInputFileOpen
+from scrall.parse.visitor import ScrallVisitor
 from arpeggio import visit_parse_tree, NoMatch
 from arpeggio.cleanpeg import ParserPEG
 import os  # For issuing system commands to generate diagnostic files

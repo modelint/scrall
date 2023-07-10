@@ -1,7 +1,7 @@
 """ visitor.py - current test """
 from arpeggio import PTNodeVisitor
 from collections import namedtuple
-from src.scrall.exceptions import ScrallMissingParameterName
+from scrall.exceptions import ScrallMissingParameterName
 import logging
 
 _logger = logging.getLogger(__name__)
