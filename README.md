@@ -1,11 +1,78 @@
 # Scrall Action Language
 Scrall = Starr's Concise Relational Action Language
 
-This is an action language that supports Shlaer-Mellor executable UML. It allows you to specify computation
-inside states, methods, and external entity operations.
+### Why you need this
+
+You are building or exploring Executable UML models using the Shlaer-Mellor methodology and you need a text language
+for specifying actions that:
+
+* perform computations
+* access and traverse the class model
+* synchronize states
+* communicate internally and with external entities
+
+With these qualities:
+* platorm independent action sequencing
+* platform independent data types
+* ability to manipulate both instances and attributres as well as relations (tables)
+* conforms to Date and Darwen's formulation of relational and type theory
+
+Scroll down for more about these qualities.
+
+### Installation
+
+Create or use a python 3.10+ environment. Then
+
+% pip install scrall
+
+At this point you can invoke the parser via the command line or from your python script.
+
+#### From your python script
+
+You need this import statement at a minimum:
+
+    from scrall.parse.parser import ScrallParser
+
+You can then either specify a path or a text variable using the appropriate method:
+
+    result = ScrallParser.parse_text(scrall_text=action_text, debug=False)
+
+OR
+
+    result = ScrallParser.parse_file(file_input=path_to_file, debug=False)
+
+Check the code in `parser.py` to verify I haven't changed these parameters on you wihtout updating the readme.
+
+In either case, `result` will be a list of parsed scrall statements. You may find the header of the `visitor.py`
+file helpful in interpreting these results.
+
+#### From the command line
+
+This is not the intended usage scenario, but may be helpful for testing or exploration. Since scrall may generate
+some diagnostic info you may want to create a fresh working directory and cd into it first. From there...
+
+    % scrall -f somefile.scrall
+
+The .scrall extension is not necessary, but the file must contain scrall text. See this repository's wiki for
+more about the scrall language. The grammar is defined in the [scrall.peg](https://github.com/modelint/scrall/blob/master/src/scrall/scrall.peg) file. (if the link breaks after I do some update to the code, 
+just browse through the code looking for the scrall.peg file, and let me know so I can fix it)
+
+You can also specify a debug option like this:
+
+    % scrall -f somefile.scrall -D
+
+This will create a scrall-diagnostics folder in your current working directory and deposite a coupel of PDFs defining
+the parse of both the scrall grammar: `scrall_parse_tree.pdf` and your supplied text: `scrall_model.pdf`.
+
+You should also see a file named `scrall.log`
+
+### Compatibility
 
 This language is consistent with the [Shlaer Mellor Metamodel](https://github.com/modelint/shlaer-mellor-metamodel),
- another repository on this site.
+ another [repository](https://github.com/modelint/class-model-dsl/wiki) on this site. In that repository the metamodel
+is used to define a schema for a database where user models can be stored and accessed.
+
+### Older documentation
 
 NOTE: If you have the Scrall version 1.0.0 PDF, consider it superceded by the wiki on this site where the language spec is now maintained and updated.
 
