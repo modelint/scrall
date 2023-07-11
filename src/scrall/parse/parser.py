@@ -44,7 +44,7 @@ class ScrallParser:
     pg_model_pdf = diagnostics_path / "peggrammar_parser_model.pdf"
 
     @classmethod
-    def parse_file(cls, file_input: Path, debug=False):
+    def parse_file(cls, file_input: Path, debug=False) -> List:
         """
         Read and save the file contents and options and then call the parser
 
@@ -71,10 +71,10 @@ class ScrallParser:
         if not cls.scrall_text.endswith('\n'):
             cls.scrall_text += '\n'
 
-        cls.parse()
+        return cls.parse()
 
     @classmethod
-    def parse_text(cls, scrall_text: str, debug=False):
+    def parse_text(cls, scrall_text: str, debug=False) -> List:
         """
         Save options and call the parser
 
@@ -87,7 +87,7 @@ class ScrallParser:
         if not cls.scrall_text.endswith('\n'):
             cls.scrall_text += '\n'
 
-        cls.parse()
+        return cls.parse()
 
     @classmethod
     def parse(cls) -> List:
