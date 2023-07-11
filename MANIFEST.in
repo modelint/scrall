@@ -1,2 +1,2 @@
 include src/scrall/log.conf
-include src/scrall/grammar/*.peg
+include src/scrall/scrall.peg
