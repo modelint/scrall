@@ -1,0 +1,41 @@
+//
+// Search ahead of the Cabin in the indicated direction
+// return the nearest ASL with a stop request and/or a Floor Service calling
+// in that direction. If none is found, return the empty set.
+
+// Get all aslevs that are calling in the search dir or requesting a stop in my shaft
+// and join with the floor class to get distances
+
+//s ..= /R2/R1/R6/R38/Bank Level
+//o ..= /R43/R28/Floor/OR7/higher/Floor
+//d ..= /R43/R28/Floor/is higher than/Floor
+//x ..= /R53/Accessible Shaft Level/R49/Bank Level/R38/Top Bank Level
+//x ..= /R53/Accessible Shaft Level/R3/Shaft Level
+//testrel .= /travels through/R1/Bank
+// ---
+shaft aslevs ..= /R2/R28/Shaft Level/R3/Accessible Shaft Level
+x .= Bank(Max close attempts: (v or x) or Average cabin speed > mspeed)
+//x .= Aircraft(Speed: (v or x) or Height > h)
+requested stops ..= shaft aslevs( Stop requested: avalue )
+
+// Join shaft aslevs with related Floor Service instances calling in the ping direction
+requested floors #= shaft aslevs/R49/Floor Service ## shaft aslevs(Direction : ^dir ).(Floor, Shaft)
+
+// Take the union of requested stops and floors and join with Floor to get heights of each
+destination heights #= ((requested stops.(Floor, Shaft) + requested floors) ## Floor[Name >> Floor]).(Floor, Height)
+
+// Find all Accessible Shaft Levels ahead of the cabin
+current floor height = /R43/R28/Floor.Height
+in.dir? {
+    _up:
+        // Get the lowest floor at or above the cabin
+        nearest dest #= destination heights(1, ^-Height >= current floor height)
+    _down:
+        // Get the highest floor below the cabin
+        nearest dest #= destination heights(1, ^+Height < current floor height)
+}
+// Since you can’t have two floors at the same height for the same shaft, we have
+// at most one row in our table
+
+// Convert to either zero or one instance of ASLEV class and provide as output
+=>> Accessible Shaft Level( Floor: nearest dest.Floor; Shaft )
