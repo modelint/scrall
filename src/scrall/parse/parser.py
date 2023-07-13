@@ -27,7 +27,7 @@ class ScrallParser:
     # Useful paths within the project
     src_path = Path(__file__).parent.parent.parent  # Path to src folder
     module_path = src_path / 'scrall'
-    grammar_path = module_path  # The grammar files are all here
+    grammar_path = module_path / 'parse'  # The grammar files are all here
     cwd = Path.cwd()
     diagnostics_path = cwd / 'scrall-diagnostics'  # All parser diagnostic output goes here
 
