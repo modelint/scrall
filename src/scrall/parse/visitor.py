@@ -949,6 +949,9 @@ class ScrallVisitor(PTNodeVisitor):
             op_chain = children.results['op_chain'][0]
             return its, op_chain
 
+        if len(children) == 1 and isinstance(children[0], N_a):
+            return children[0]
+
         return children
 
     @classmethod
