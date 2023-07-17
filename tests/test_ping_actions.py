@@ -6,6 +6,12 @@ from scrall.parse.visitor import Execution_Unit_a, Signal_a, Signal_Dest_a, N_a,
     Inst_Assignment_a, Flow_Output_a, Selection_a, BOOL_a
 
 actions = [
+    ("Change requested -> me",
+     Execution_Unit_a(input_tokens=None, output_tokens=None,
+                      action_group=Signal_a(event='Change requested', supplied_params=[],
+                                            dest=Signal_Dest_a(target_iset=N_a(name='me'),
+                                                               assigner_partition=N_a(name=None), delay=0)))
+     ),
     ("shaft aslevs ..= /R2/R28/Shaft Level/R3/Accessible Shaft Level\n",
      Execution_Unit_a(input_tokens=None, output_tokens=None,
                       action_group=Inst_Assignment_a(
@@ -25,8 +31,8 @@ actions = [
                                                  Selection_a(card='*',
                                                              criteria=BOOL_a(op=['=='],
                                                                              operands=[
-                                                                                 [N_a(name='Stop requested')],
-                                                                                 [N_a(name='avalue')]]))])))
+                                                                                 N_a(name='Stop requested'),
+                                                                                 N_a(name='avalue')]))])))
      ),
 ]
 
