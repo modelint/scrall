@@ -29,6 +29,8 @@ def parse(cl_input):
     :return:
     """
     parser = argparse.ArgumentParser(description='Scrall parser')
+    parser.add_argument('-e', '--expr', action='store',
+                        help='Scrall expression')
     parser.add_argument('-f', '--file', action='store',
                         help='Scrall file name')
     parser.add_argument('-D', '--debug', action='store_true',
@@ -50,6 +52,11 @@ def main():
         # Just print the version and quit
         print(f'Scrall parser version: {version}')
         sys.exit(0)
+
+    if args.expr:
+        text = args.expr + '\n'
+        d = args.debug
+        result = ScrallParser.parse_text(scrall_text=text, debug=d)
 
     if args.file:
         fpath = Path(args.file)
