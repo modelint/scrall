@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "scrall"
-version = "0.2.9"
+version = "0.2.10"
 description = "Starr's Concise Relational Action Language - For Shlaer-Mellor Executable UML"
 readme = "README.md"
 authors = [{ name = "Leon Starr", email = "leon_starr@modelint.com" }]
