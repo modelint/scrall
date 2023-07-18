@@ -6,13 +6,21 @@ from scrall.parse.visitor import Execution_Unit_a, Signal_a, Signal_Dest_a, N_a,
     Inst_Assignment_a, Flow_Output_a, Selection_a, BOOL_a, Supplied_Parameter_a, Call_a, Op_a, IN_a
 
 actions = [
-    (
-        "TRAN.Go to floor( Dest floor: ^new dest, Shaft )",
+    ("Try redirect( ^new dest ) -> /R53/Cabin",
+        Execution_Unit_a(input_tokens=None, output_tokens=None,
+                         action_group=Signal_a(event='Try redirect', supplied_params=[[
+                                 Supplied_Parameter_a(pname='new dest', sval=IN_a(name='new dest'))]],
+                                               dest=Signal_Dest_a(target_iset=INST_a(
+                                                   components=[
+                                                       PATH_a(hops=[R_a(rnum='R53'), N_a(name='Cabin')])]),
+                                                   assigner_partition=N_a(name=None), delay=0)))
+    ),
+    ("TRAN.Go to floor( Dest floor: ^new dest, Shaft )",
         Execution_Unit_a(input_tokens=None, output_tokens=None,
                          action_group=Call_a(call=INST_a(components=[
                              Op_a(owner='TRAN', op_name='Go to floor',
                                   supplied_params=[
-                                      Supplied_Parameter_a(pname='Dest floor', sval=[IN_a(name='new dest')]),
+                                      Supplied_Parameter_a(pname='Dest floor', sval=IN_a(name='new dest')),
                                       Supplied_Parameter_a(pname='Shaft', sval=N_a(name='Shaft'))], order=None)]),
                              op_chain=None))
     ),
