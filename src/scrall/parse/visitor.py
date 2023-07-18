@@ -623,12 +623,12 @@ class ScrallVisitor(PTNodeVisitor):
 
         If only a scalar_expr is present, it means that the supplied expr has the same name
         Ex: ( shaft id ) as that of the required parameter. Short for ( shaft id : shaft id ). This
-        is a convenience that elminates the need for name doubling in a supplied parameter set
+        is a convenience that eliminates the need for name doubling in a supplied parameter set
         """
-        s = children.results['scalar_expr'][0]
+        s = children.results['scalar_expr']
         s = s if len(s) > 1 else s[0]
         p = children.results.get('name')
-        if not p and not (isinstance(s,N_a) or isinstance(s,IN_a)):
+        if not p and not (isinstance(s, N_a) or isinstance(s, IN_a)):
             _logger.error(f"Paramenter name not supplied with expression value: [{children.results}]")
             raise ScrallMissingParameterName(children.results)
         return Supplied_Parameter_a(pname=s.name if not p else p[0].name, sval=s)
