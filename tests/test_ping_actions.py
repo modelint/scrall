@@ -33,7 +33,7 @@ actions = [
     ("shaft aslevs ..= /R2/R28/Shaft Level/R3/Accessible Shaft Level\n",
      Execution_Unit_a(input_tokens=None, output_tokens=None,
                       action_group=Inst_Assignment_a(
-                          lhs=Flow_Output_a(name=N_a(name='shaft aslevs'), exp_type=None), card='Mc',
+                          lhs=Flow_Output_a(name=N_a(name='shaft aslevs'), exp_type=None), card='M',
                           rhs=INST_a(components=[
                               PATH_a(hops=[R_a(rnum='R2'),
                                            R_a(rnum='R28'),
@@ -44,7 +44,7 @@ actions = [
     ("requested stops ..= shaft aslevs( Stop requested: avalue )\n",
      Execution_Unit_a(input_tokens=None, output_tokens=None,
                       action_group=Inst_Assignment_a(
-                          lhs=Flow_Output_a(name=N_a(name='requested stops'), exp_type=None), card='Mc',
+                          lhs=Flow_Output_a(name=N_a(name='requested stops'), exp_type=None), card='M',
                           rhs=INST_a(components=[N_a(name='shaft aslevs'),
                                                  Selection_a(card='*',
                                                              criteria=BOOL_a(op=['=='],

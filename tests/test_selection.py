@@ -7,35 +7,35 @@ from scrall.parse.visitor import Execution_Unit_a, Signal_a, Signal_Dest_a, N_a,
 
 actions = [
     ("s ..= Shaft(Inservice; Cleared)", Execution_Unit_a(input_tokens=None, output_tokens=None,
-        action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='Mc',
+        action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='M',
            rhs=INST_a(components=[N_a(name='Shaft'), Selection_a(card='*',
                  criteria=BOOL_a(op='AND', operands=[N_a(name='Inservice'), N_a(name='Cleared')]))])))
      ),
     ("c ..= Cabin(Speed > slowest + buffer)", Execution_Unit_a(input_tokens=None, output_tokens=None,
-        action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='c'), exp_type=None), card='Mc',
+        action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='c'), exp_type=None), card='M',
             rhs=INST_a(components=[N_a(name='Cabin'), Selection_a(card='*',
                 criteria=BOOL_a(op='>', operands=[N_a(name='Speed'),
                                                   MATH_a(op='+', operands=[
                                                       N_a(name='slowest'), N_a(name='buffer')])]))])))
     ),
     ("c ..= Cabin(Speed > slowest)", Execution_Unit_a(input_tokens=None, output_tokens=None,
-        action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='c'), exp_type=None), card='Mc',
+        action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='c'), exp_type=None), card='M',
             rhs=INST_a(components=[N_a(name='Cabin'), Selection_a(card='*',
                 criteria=BOOL_a(op='>', operands=[N_a(name='Speed'), N_a(name='slowest')]))])))
      ),
     ("s ..= Shaft(In service: True)", Execution_Unit_a(input_tokens=None, output_tokens=None,
-        action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='Mc',
+        action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='M',
             rhs=INST_a(components=[N_a(name='Shaft'), Selection_a(card='*',
                criteria=BOOL_a(op=['=='], operands=[N_a(name='In service'), 'true']))])))
      ),
     ("s ..= Shaft(In service)", Execution_Unit_a(input_tokens=None, output_tokens=None,
-        action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='Mc',
+        action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='M',
             rhs=INST_a(components=[N_a(name='Shaft'), Selection_a(card='*',
                criteria=N_a(name='In service'))])))
      ),
     ("x .= Bank(Max close attempts: (v or x) or Average cabin speed > mspeed)",
      Execution_Unit_a(input_tokens=None, output_tokens=None,
-                      action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='1c',
+                      action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='1',
                       rhs=INST_a(components=[
                           N_a(name='Bank'),
                           Selection_a(card='*',
@@ -48,7 +48,7 @@ actions = [
      ),
     ("x ..= car.findsome()(color: _red)",
      Execution_Unit_a(input_tokens=None, output_tokens=None,
-                      action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='Mc',
+                      action_group=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='M',
                                                      rhs=INST_a(components=[
                                                          Op_a(owner='car', op_name='findsome', supplied_params=[],
                                                               order=None),

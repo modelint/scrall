@@ -537,7 +537,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         return Inst_Assignment_a(
             lhs=children.results['flow_output'][0],
-            card='1c' if children.results['INST_ASSIGN'][0] == '.=' else 'Mc',
+            card='1' if children.results['INST_ASSIGN'][0] == '.=' else 'M',
             rhs=children.results['instance_set'][0]
         )
 
