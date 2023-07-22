@@ -39,7 +39,8 @@ actions = [
                                            R_a(rnum='R28'),
                                            N_a(name='Shaft Level'),
                                            R_a(rnum='R3'),
-                                           N_a(name='Accessible Shaft Level')])])))
+                                           N_a(name='Accessible Shaft Level')])]),
+                          X=(0, 62)))
      ),
     ("requested stops ..= shaft aslevs( Stop requested: avalue )\n",
      Execution_Unit_a(input_tokens=None, output_tokens=None,
@@ -50,7 +51,8 @@ actions = [
                                                              criteria=BOOL_a(op=['=='],
                                                                              operands=[
                                                                                  N_a(name='Stop requested'),
-                                                                                 N_a(name='avalue')]))])))
+                                                                                 N_a(name='avalue')]))]),
+                          X=(0, 58)))
      ),
 ]
 
