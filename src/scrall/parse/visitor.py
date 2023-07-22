@@ -17,7 +17,7 @@ Scalar_Call_a = namedtuple('Scalar_Call_a', 'call')
 """The subject of a call could be an instance set (method) or an external entity (ee operation)"""
 Attr_Access_a = namedtuple('Attr_Access_a', 'cname its attr')
 Selection_a = namedtuple('Selection_a', 'card criteria')
-Inst_Assignment_a = namedtuple('Inst_Assignment_a', 'lhs card rhs')
+Inst_Assignment_a = namedtuple('Inst_Assignment_a', 'lhs card rhs X')
 EE_Signal_a = namedtuple('EE_Signal_a', 'event supplied_params ee')
 Signal_a = namedtuple('Signal_a', 'event supplied_params dest')
 """Signal sent to trigger event at destination with optional supplied parameters"""
@@ -538,7 +538,8 @@ class ScrallVisitor(PTNodeVisitor):
         return Inst_Assignment_a(
             lhs=children.results['flow_output'][0],
             card='1' if children.results['INST_ASSIGN'][0] == '.=' else 'M',
-            rhs=children.results['instance_set'][0]
+            rhs=children.results['instance_set'][0],
+            X=(node.position, node.position_end)
         )
 
 
