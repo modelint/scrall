@@ -61,4 +61,4 @@ actions = [
 def test_signal_action(text, expected):
     parse = ScrallParser.parse_text(scrall_text=text, debug=False)[0]
     print(parse)
-    assert parse == expected
+    assert parse[0] == expected

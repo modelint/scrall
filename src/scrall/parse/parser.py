@@ -1,7 +1,7 @@
 """ parser.py """
 
 from scrall.exceptions import ScrallGrammarFileOpen, ScrallParseError, ScrallInputFileEmpty, ScrallInputFileOpen
-from scrall.parse.visitor import ScrallVisitor
+from scrall.parse.visitor import ScrallVisitor, Execution_Unit_a, Output_Flow_a
 from arpeggio import visit_parse_tree, NoMatch
 from arpeggio.cleanpeg import ParserPEG
 import os  # For issuing system commands to generate diagnostic files
@@ -44,7 +44,7 @@ class ScrallParser:
     pg_model_pdf = diagnostics_path / "peggrammar_parser_model.pdf"
 
     @classmethod
-    def parse_file(cls, file_input: Path, debug=False) -> List:
+    def parse_file(cls, file_input: Path, debug=False) -> (List[Execution_Unit_a | Output_Flow_a], str):
         """
         Read and save the file contents and options and then call the parser
 
@@ -74,7 +74,7 @@ class ScrallParser:
         return cls.parse()
 
     @classmethod
-    def parse_text(cls, scrall_text: str, debug=False) -> List:
+    def parse_text(cls, scrall_text: str, debug=False) -> (List[Execution_Unit_a | Output_Flow_a], str):
         """
         Save options and call the parser
 
@@ -90,11 +90,11 @@ class ScrallParser:
         return cls.parse()
 
     @classmethod
-    def parse(cls) -> List:
+    def parse(cls) -> (List[Execution_Unit_a | Output_Flow_a], str):
         """
         Parse a Scrall activity
 
-        :return: A list of parsed Scrall statements
+        :return: A list of parsed execution units and the input scrall text
         """
         # Read the grammar file
         try:
@@ -130,4 +130,4 @@ class ScrallParser:
             # Comment this part out if you want to retain the dot files
             cls.parse_tree_dot.unlink(True)
 
-        return result
+        return result, cls.scrall_text
