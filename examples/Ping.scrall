@@ -13,10 +13,10 @@
 //x ..= /R53/Accessible Shaft Level/R3/Shaft Level
 //testrel .= /travels through/R1/Bank
 // ---
-shaft aslevs ..= /R2/R28/Shaft Level/R3/Accessible Shaft Level
+//shaft aslevs ..= /R2/R28/Shaft Level/R3/Accessible Shaft Level
 //x .= Bank(Max close attempts: (v or x) or Average cabin speed > mspeed)
 //x .= Aircraft(Speed: (v or x) or Height > h)
-requested stops ..= shaft aslevs( Stop requested )
+//requested stops ..= shaft aslevs( Stop requested )
 
 // Join shaft aslevs with related Floor Service instances calling in the ping direction
 requested floors #= shaft aslevs/R49/Floor Service ## shaft aslevs(Direction : ^dir ).(Floor, Shaft)

@@ -301,7 +301,11 @@ class ScrallVisitor(PTNodeVisitor):
         """
         table / "(" table_expr ")" header_expr? selection? projection?
         """
-        return children
+        t = children.results.get('table')
+        if t:
+            return t[0]  # Prevents unnecessary nesting of table operand
+        else:
+            return children  # TODO: inspect this case later for excessive nesting
 
     @classmethod
     def visit_TOP(cls, node, children):
