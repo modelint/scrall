@@ -37,7 +37,7 @@ UNARY_a = namedtuple('UNARY_a', 'op operand')
 BOOL_a = namedtuple('BOOL_a', 'op operands')
 """Boolean operation returns true or false"""
 Scalar_Assignment_a = namedtuple('Scalar_Assignment_a', 'lhs rhs')
-Table_Assignment_a = namedtuple('Table_Assignment_a', 'type lhs rhs')
+Table_Assignment_a = namedtuple('Table_Assignment_a', 'type lhs rhs X')
 Scalar_RHS_a = namedtuple('Scalar_RHS_a', 'expr attrs')
 Flow_Output_a = namedtuple('Flow_Output_a', 'name exp_type')
 PATH_a = namedtuple('PATH_a', 'hops')
@@ -227,7 +227,8 @@ class ScrallVisitor(PTNodeVisitor):
         """
         table_def TABLE_ASSIGN table_value
         """
-        return Table_Assignment_a(type='explicit', lhs=children[0], rhs=children[1])
+        return Table_Assignment_a(type='explicit', lhs=children[0], rhs=children[1],
+                                  X=(node.position, node.position_end))
 
     @classmethod
     def visit_table_def(cls, node, children):
@@ -277,7 +278,8 @@ class ScrallVisitor(PTNodeVisitor):
         """
         name TABLE_ASSIGN table_expr
         """
-        return Table_Assignment_a(type='implicit', lhs=children[0].name, rhs=children[1])
+        return Table_Assignment_a(type='implicit', lhs=children[0].name, rhs=children[1],
+                                  X=(node.position, node.position_end))
 
     @classmethod
     def visit_table_expr(cls, node, children):
