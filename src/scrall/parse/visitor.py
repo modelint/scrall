@@ -42,6 +42,7 @@ Scalar_RHS_a = namedtuple('Scalar_RHS_a', 'expr attrs')
 Flow_Output_a = namedtuple('Flow_Output_a', 'name exp_type')
 PATH_a = namedtuple('PATH_a', 'hops')
 INST_a = namedtuple('INST_a', 'components')
+TABLE_a = namedtuple('TABLE_a', 'iset hexpr selection projection')
 R_a = namedtuple('R_a', 'rnum')
 IN_a = namedtuple('IN_a', 'name')
 Enum_a = namedtuple('Enum_a', 'value')
@@ -301,13 +302,29 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_table_term(cls, node, children):
         """
-        table / "(" table_expr ")" header_expr? selection? projection?
+        (instance_set / "(" table_expr ")") header_expr? selection? projection?
         """
-        t = children.results.get('table')
-        if t:
-            return t[0]  # Prevents unnecessary nesting of table operand
-        else:
-            return children  # TODO: inspect this case later for excessive nesting
+        # There will always be a leading instance_set either alone or in the nested table_expr
+        iset = children.results.get('instance_set')[0]
+
+        # Extract the last component so we can see if it is a selection phrase
+        last_comp = iset.components[-1]
+
+        # Also check for a table selection as well outside of the instance set
+        s = children.results.get('selection')
+
+        if type(last_comp).__name__ == 'Selection_a':
+            if s:
+                # We have two selection phrases. The first is terminating the instance set
+                # and the second is defined on the table expression. We will take the first one and ignore the second,
+                # and issue a warning to the user.
+                _logger.warning(f"Two adjacent selection phrases in table assignment: ({last_comp})({s}) @<{node.position}-{node.position_end}>")
+            # Make the last component the selection on this table and remove it from the iset
+            s = last_comp
+            iset = INST_a(iset.components[:-1])  # Drop the terminating selection component saves as s
+        h = children.results.get('header_expr')
+        p = children.results.get('projection')
+        return TABLE_a(iset=iset, hexpr=None if not h else h[0], selection=s, projection=None if not p else p[0])
 
     @classmethod
     def visit_TOP(cls, node, children):
@@ -316,15 +333,15 @@ class ScrallVisitor(PTNodeVisitor):
         """
         return table_op[children[0]]
 
-    @classmethod
-    def visit_table(cls, node, children):
-        """
-        instance_set header_expr? selection? projection?
-        """
-        if len(children) == 1:
-            return children[0]
-        else:
-            return children
+    # @classmethod
+    # def visit_table(cls, node, children):
+    #     """
+    #     instance_set header_expr? selection? projection?
+    #     """
+    #     if len(children) == 1:
+    #         return children[0]
+    #     else:
+    #         return children
 
     # Table header operations
     @classmethod
@@ -548,21 +565,6 @@ class ScrallVisitor(PTNodeVisitor):
             X=(node.position, node.position_end)
         )
 
-
-    # Table header operations
-    @classmethod
-    def visit_header_expr(cls, node, children):
-        """
-        '[' column_op (',' column_op)* ']'
-        """
-        return children
-
-    @classmethod
-    def visit_column_op(cls, node, children):
-        """
-        extend / rename
-        """
-        return children[0]
 
     @classmethod
     def visit_extend(cls, node, children):

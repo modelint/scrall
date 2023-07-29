@@ -29,9 +29,10 @@ attr_value_set = scalar_expr (',' SP* scalar_expr)*
 implicit_table_assignment = name SP+ TABLE_ASSIGN SP+ table_expr
 table_expr = SP* table_operation SP*
 table_operation = table_term (SP* TOP SP* table_term)*
-table_term = table / "(" SP* table_expr SP* ")" header_expr? selection? projection?
+table_term = (instance_set / "(" SP* table_expr SP* ")") header_expr? selection? projection?
+//table_term = table / "(" SP* table_expr SP* ")" header_expr? selection? projection?
 TOP = '^' / '+' / '-' / '*' / '%' / '##'
-table = instance_set header_expr? selection? projection?
+//table = instance_set header_expr? selection? projection?
 
 // Table header operations
 header_expr = '[' SP* column_op (',' SP+ column_op)* SP*']'
