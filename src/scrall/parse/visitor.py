@@ -32,7 +32,7 @@ Delete_Action_a = namedtuple('Delete_Action_a', 'instance_set')
 Case_a = namedtuple('Case_a', 'enums execution_unit')
 Switch_a = namedtuple('Switch_a', 'input_flow cases')
 MATH_a = namedtuple('MATH_a', 'op operands')
-TOP_a = namedtuple('TABLE_a', 'op operands')
+TOP_a = namedtuple('TOP_a', 'op operands')
 UNARY_a = namedtuple('UNARY_a', 'op operand')
 BOOL_a = namedtuple('BOOL_a', 'op operands')
 """Boolean operation returns true or false"""
@@ -42,7 +42,7 @@ Scalar_RHS_a = namedtuple('Scalar_RHS_a', 'expr attrs')
 Flow_Output_a = namedtuple('Flow_Output_a', 'name exp_type')
 PATH_a = namedtuple('PATH_a', 'hops')
 INST_a = namedtuple('INST_a', 'components')
-TABLE_a = namedtuple('TABLE_a', 'iset hexpr selection projection')
+TEXPR_a = namedtuple('TEXPR_a', 'table hexpr selection projection')
 R_a = namedtuple('R_a', 'rnum')
 IN_a = namedtuple('IN_a', 'name')
 Enum_a = namedtuple('Enum_a', 'value')
@@ -304,27 +304,40 @@ class ScrallVisitor(PTNodeVisitor):
         """
         (instance_set / "(" table_expr ")") header_expr? selection? projection?
         """
-        # There will always be a leading instance_set either alone or in the nested table_expr
-        iset = children.results.get('instance_set')[0]
+        # We always receive either an INST_a or an N_a, both instance sets, but N_a is just a name
+        # without the trailing components.
 
-        # Extract the last component so we can see if it is a selection phrase
-        last_comp = iset.components[-1]
-
-        # Also check for a table selection as well outside of the instance set
-        s = children.results.get('selection')
-
-        if type(last_comp).__name__ == 'Selection_a':
-            if s:
-                # We have two selection phrases. The first is terminating the instance set
-                # and the second is defined on the table expression. We will take the first one and ignore the second,
-                # and issue a warning to the user.
-                _logger.warning(f"Two adjacent selection phrases in table assignment: ({last_comp})({s}) @<{node.position}-{node.position_end}>")
-            # Make the last component the selection on this table and remove it from the iset
-            s = last_comp
-            iset = INST_a(iset.components[:-1])  # Drop the terminating selection component saves as s
+        # Optional items
         h = children.results.get('header_expr')
+        s = children.results.get('selection')
         p = children.results.get('projection')
-        return TABLE_a(iset=iset, hexpr=None if not h else h[0], selection=s, projection=None if not p else p[0])
+
+        # We either have an instance set as INST_a or N_a or we have a table expression as TEXPR_a
+        # Check the iset case first
+        iset = children.results.get('instance_set')
+        if iset:
+            table = iset[0]
+            # If we have an INST_a, extract the last component so we can see if it is a selection phrase
+            # Otherwise, it's just an N_a and there can't be a selection component
+            last_comp = None
+            if type(table).__name__ == 'INST_a':
+                last_comp = table.components[-1]
+
+            if last_comp and type(last_comp).__name__ == 'Selection_a':
+                if s:
+                    # We have two selection phrases. The first is terminating the instance set and the second is
+                    # picked up as 's' above. We will take the first one and ignore the second,
+                    # and issue a warning to the user.
+                    _logger.warning(f"Two adjacent selection phrases in table assignment: "
+                                    f"({last_comp})({s}) @<{node.position}-{node.position_end}>")
+                # Make the last component the selection on this table and remove it from the iset
+                s = last_comp
+                table = INST_a(table.components[:-1])  # Drop the terminating selection component saves as s
+        else:
+            # It must be a table expression
+            table = children.results.get('table_expr')[0]
+
+        return TEXPR_a(table=table, hexpr=None if not h else h[0], selection=s, projection=None if not p else p[0])
 
     @classmethod
     def visit_TOP(cls, node, children):
@@ -332,16 +345,6 @@ class ScrallVisitor(PTNodeVisitor):
         '^' / '+' / '-' / '*' / '%' / '##'
         """
         return table_op[children[0]]
-
-    # @classmethod
-    # def visit_table(cls, node, children):
-    #     """
-    #     instance_set header_expr? selection? projection?
-    #     """
-    #     if len(children) == 1:
-    #         return children[0]
-    #     else:
-    #         return children
 
     # Table header operations
     @classmethod
