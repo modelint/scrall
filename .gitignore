@@ -1,6 +1,7 @@
 build/
 dist/
 diagnostics/
+working/
 *.dot
 *.log
 *.pyc

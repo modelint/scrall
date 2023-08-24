@@ -113,7 +113,7 @@ delete = '!*' SP* instance_set
 scalar_assignment = scalar_output_set SP* SCALAR_ASSIGN SP* scalar_expr projection?
 scalar_output_set = flow_output (',' SP* flow_output)*
 flow_output = name (TYPE_ASSIGN name)?
-projection = '.' '(' ( (ALL / (name (',' SP+ name)*) )? ')')
+projection = '.' (name / '(' ( (ALL / (name (',' SP+ name)*) )? ')'))
 ALL = '*'
 
 scalar_expr = SP* scalar_logical_or SP*

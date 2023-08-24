@@ -3,9 +3,17 @@
 import pytest
 from scrall.parse.parser import ScrallParser
 from scrall.parse.visitor import Execution_Unit_a, Signal_a, Signal_Dest_a, N_a, INST_a, PATH_a, R_a,\
-    Inst_Assignment_a, Flow_Output_a, Selection_a, BOOL_a, Supplied_Parameter_a, Call_a, Op_a, IN_a
+    Inst_Assignment_a, Flow_Output_a, Selection_a, BOOL_a, Supplied_Parameter_a, Call_a, Op_a, IN_a, \
+    Table_Assignment_a, TEXPR_a, Projection_a
 
 actions = [
+    ("stop here floors #= shaft aslevs( Stop requested ).Floor",
+     Execution_Unit_a(input_tokens=None, output_tokens=None,
+                      action_group=Table_Assignment_a(type='implicit', lhs='stop here floors',
+                         rhs=TEXPR_a(table=INST_a(components=[N_a(name='shaft aslevs')]),
+                         hexpr=None, selection=Selection_a(card='*', criteria=N_a(name='Stop requested')),
+                         projection=Projection_a(expand=None, attrs=[N_a(name='Floor')])), X=(0, 56)))
+     ),
     ("Try redirect( ^new dest ) -> /R53/Cabin",
         Execution_Unit_a(input_tokens=None, output_tokens=None,
                          action_group=Signal_a(event='Try redirect', supplied_params=[[
