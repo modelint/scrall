@@ -31,7 +31,7 @@ table_expr = SP* table_operation SP*
 table_operation = table_term (SP* TOP SP* table_term)*
 table_term = (instance_set / "(" SP* table_expr SP* ")") header_expr? selection? projection?
 //table_term = table / "(" SP* table_expr SP* ")" header_expr? selection? projection?
-TOP = '^' / '+' / '-' / '*' / '%' / '##'
+TOP = '^' / '+' / '-' / '*' / '##'
 //table = instance_set header_expr? selection? projection?
 
 // Table header operations

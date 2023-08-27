@@ -72,11 +72,10 @@ Migration_a = namedtuple('Migration_a','from_inst to_subclass')
 symbol = {'^+': 'ascending', '^-': 'descending'}
 
 table_op = {
-    '%': 'SYMDIFF',
     '^': 'INTERSECT',
     '+': 'UNION',
-    '-': 'SUB',
-    '*': 'MULT',
+    '-': 'MINUS',
+    '*': 'TIMES',
     '##': 'JOIN',
 }
 
@@ -342,7 +341,7 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_TOP(cls, node, children):
         """
-        '^' / '+' / '-' / '*' / '%' / '##'
+        '^' / '+' / '-' / '*' / '##'
         """
         return table_op[children[0]]
 
