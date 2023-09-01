@@ -791,7 +791,7 @@ class ScrallVisitor(PTNodeVisitor):
         expr = children.results['scalar_expr'][0]
         proj = children.results.get('projection')
         proj = None if not proj else proj[0]
-        return Scalar_Assignment_a(lhs=sout_set, rhs=Scalar_RHS_a(expr,proj))
+        return Scalar_Assignment_a(lhs=sout_set, rhs=Scalar_RHS_a(expr, proj))
 
     @classmethod
     def visit_scalar_output_set(cls, node, children):
@@ -815,7 +815,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         all = children.results.get('ALL')
         n = children.results.get('name')
-        exp = 'ALL' if all else 'EMPTY' if not all and not n else None
+        exp = 'ALL' if all else 'NONE' if not all and not n else None
         return Projection_a(expand=exp, attrs=n)
 
     @classmethod
