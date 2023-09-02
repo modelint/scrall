@@ -48,7 +48,7 @@ IN_a = namedtuple('IN_a', 'name')
 Enum_a = namedtuple('Enum_a', 'value')
 Order_name_a = namedtuple('Order_name_a', 'order name')
 N_a = namedtuple('N_a', 'name')
-Op_chain_a = namedtuple('Op_chain', 'components')
+Op_chain_a = namedtuple('Op_chain_a', 'components')
 """Input parameter"""
 Reflexive_select_a = namedtuple('Reflexive_select_a', 'expr compare position')
 Type_expr_a = namedtuple('Type_expr_a', 'type selector')
