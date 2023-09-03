@@ -42,6 +42,7 @@ Scalar_RHS_a = namedtuple('Scalar_RHS_a', 'expr attrs')
 Flow_Output_a = namedtuple('Flow_Output_a', 'name exp_type')
 PATH_a = namedtuple('PATH_a', 'hops')
 INST_a = namedtuple('INST_a', 'components')
+INST_PROJ_a = namedtuple('INST_PROJ_a', 'iset projection')
 TEXPR_a = namedtuple('TEXPR_a', 'table hexpr selection projection')
 R_a = namedtuple('R_a', 'rnum')
 IN_a = namedtuple('IN_a', 'name')
@@ -962,6 +963,12 @@ class ScrallVisitor(PTNodeVisitor):
 
         if len(children) == 1 and (isinstance(children[0], N_a) or (isinstance(children[0], IN_a))):
             return children[0]
+
+        # Instance set and projection are grouped for scalar ouput flow
+        iset = children.results.get('instance_set')
+        if iset:
+            p = children.results.get('projection')
+            return INST_PROJ_a(iset=iset[0], projection=None if not p else p[0])
 
         return children
 
