@@ -1,1 +1,1 @@
-x .= Bank(Max close attempts: (v or x) or Average cabin speed > mspeed)
+!(/R2/Shaft.In service) ? Take out of service -> me

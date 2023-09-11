@@ -4,7 +4,7 @@ output_flow = OUTPUT SP+ scalar_expr
 OUTPUT = '=>>'
 statement_set = SP* sequenced_statement_set / component_statement_set
 sequenced_statement_set = sequence_token* (block / statement)
-component_statement_set = block / statement
+component_statement_set = block / LINEWRAP* statement
 block = SP* '{' execution_unit* '}'
 statement = table_assignment / new_lineage / new_instance / update_ref / delete / migration / scalar_assignment / signal_action / switch / decision / inst_assignment / call / iteration
 
@@ -44,7 +44,7 @@ RENAME = '>>'
 
 // Decision action
 decision = scalar_expr SP* true_result false_result? // Control flow version of an if-then
-true_result = DECISION_OP LINEWRAP* component_statement_set
+true_result = DECISION_OP SP* component_statement_set
 false_result = SP* FALSE_RESULT_OP SP* component_statement_set // Else
 FALSE_RESULT_OP = ':'
 
