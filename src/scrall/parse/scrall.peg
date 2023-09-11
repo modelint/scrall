@@ -1,5 +1,5 @@
-activity = (LINEWRAP* EOF) / (execution_unit* output_flow? EOF)
-execution_unit = LINEWRAP* (statement_set sequence_token?) EOL+
+activity = (LINEWRAP* EOF) / (execution_unit* EOF)
+execution_unit = LINEWRAP* (output_flow / (statement_set sequence_token?)) EOL+
 output_flow = OUTPUT SP+ scalar_expr
 OUTPUT = '=>>'
 statement_set = SP* sequenced_statement_set / component_statement_set
@@ -164,11 +164,11 @@ hop = '/' (rnum / name) // just a sequence of rels and phrase or class names
 name = first_word (NAME_GLUE word)* // One word or a sequence of delimited words (name used for most model elements)
 NAME_GLUE = r'[ _]' // delmits words within a name
 rnum = r'O?R[1-9][0-9]*' // Relationship number (name used for relationships)
-first_word = r'[A-Za-z][A-Za-z0-9]*'
-word = SP* r'[A-Za-z0-9]+'
-//first_word = ignore_keywords r'[A-Za-z][A-Za-z0-9]*'
-//word = ignore_keywords r'[A-Za-z0-9]+'
-//ignore_keywords = !"true" !"false" !"and" !"or" !"not" !"TRUE" !"FALSE" !"AND" !"OR" !"NOT"
+//first_word = r'[A-Za-z][A-Za-z0-9]*'
+//word = SP* r'[A-Za-z0-9]+'
+first_word = ignore_keywords r'[A-Za-z][A-Za-z0-9]*'
+word = ignore_keywords r'[A-Za-z0-9]+'
+ignore_keywords = !"true" !"false" !"and" !"or" !"not" !"TRUE" !"FALSE" !"AND" !"OR" !"NOT"
 
 // Whitespace and comments
 LINEWRAP = EOL SP* // end of line followed by optional indent on next line

@@ -122,7 +122,7 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_activity(cls, node, children):
         """
-        (LINEWRAP* EOF) / (execution_unit* output_flow? EOF)
+        (LINEWRAP* EOF) / (execution_unit* EOF)
 
         This is the root node. All Scrall language is built up to define a
         single Shlaer-Mellor activity.
@@ -137,7 +137,6 @@ class ScrallVisitor(PTNodeVisitor):
         The EOF symbol is a standard terminator at the root level for Arpeggio grammars.
         It signals the parser that there is no more text to parse.
         """
-        oflow = getresult('output_flow', children)
         return [c for c in children if c]
 
     @classmethod
@@ -152,6 +151,9 @@ class ScrallVisitor(PTNodeVisitor):
 
         Every execution unit is terminated by a new line.
         """
+        oflow = getresult('output_flow', children)
+        if oflow:
+            return Output_Flow_a(oflow[0])
         output_token = getresult('sequence_token', children)
         st_set = getresult('statement_set', children)
         return Execution_Unit_a(output_token=output_token, statement_set=st_set)

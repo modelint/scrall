@@ -52,12 +52,12 @@ actions = [
                   lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='1',
                   rhs=INST_a(components=[N_a(name='Bank'), Selection_a(card='*',
                       criteria=BOOL_a(op='OR', operands=[
-                                  BOOL_a(op=['=='], operands=[N_a(name='Max close attempts'), N_a(name='v or x')]),
-                                  BOOL_a(op='>', operands=[N_a(name='Average cabin speed'), N_a(name='mspeed')])]
-                               )
-                      )]),
+                          BOOL_a(op=['=='], operands=[
+                              N_a(name='Max close attempts'),
+                              BOOL_a(op='OR', operands=[N_a(name='v'), N_a(name='x')])]),
+                          BOOL_a(op='>', operands=[N_a(name='Average cabin speed'), N_a(name='mspeed')])]))]),
               X=(0, 71)), block=None), output_token=None)
-     ),
+    ),
     ("x ..= car.findsome()(color: _red)",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
               statement=Inst_Assignment_a(
