@@ -1,6 +1,1 @@
-^dir? {
-    _up:
-        a = b
-    _down:
-        a = c
-}
+requested stops ..= shaft aslevs( Stop requested: avalue )
