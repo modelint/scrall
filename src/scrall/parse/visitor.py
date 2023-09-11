@@ -24,9 +24,10 @@ Signal_a = namedtuple('Signal_a', 'event supplied_params dest')
 Signal_Action_a = namedtuple('Signal_Action_a', 'event supplied_params dest delay assigner_partition')
 Signal_Dest_a = namedtuple('Signal_Dest_a', 'target_iset assigner_partition delay')
 Signal_Choice_a = namedtuple('Signal_Choice_a', 'decision true_signal false_signal')
-Block_a = namedtuple('Block_a', 'actions')
 Sequence_Token_a = namedtuple('Sequence_Token_a', 'name')
-Execution_Unit_a = namedtuple('Execution_Unit_a', 'input_tokens output_tokens action_group')
+Execution_Unit_a = namedtuple('Execution_Unit_a', 'statement_set output_token')
+Seq_Statement_Set_a = namedtuple('Seq_Statement_Set_a', 'input_tokens statement block')
+Comp_Statement_Set_a = namedtuple('Comp_Statement_Set_a', 'statement block')
 Decision_a = namedtuple('Decision_a', 'input true_result false_result')
 Delete_Action_a = namedtuple('Delete_Action_a', 'instance_set')
 Case_a = namedtuple('Case_a', 'enums execution_unit')
@@ -66,7 +67,7 @@ Attr_Val_a = namedtuple('Attr_Val_a', 'attr_name attr_value')
 Class_to_Table_a = namedtuple('Class_to_Table_a', 'cname selection projection')
 Table_Def_a= namedtuple('Table_Def_a', 'name header')
 Rename_a = namedtuple('Rename_a', 'from_name to_name')
-Iteration_a = namedtuple('Iteration_a','order action_group')
+Iteration_a = namedtuple('Iteration_a', 'order statement_set')
 Migration_a = namedtuple('Migration_a','from_inst to_subclass')
 
 
@@ -79,6 +80,18 @@ table_op = {
     '*': 'TIMES',
     '##': 'JOIN',
 }
+
+def getresult(t: str, c):
+    """
+    Returns the first element of the specified term in the parse children.results
+    dictionary if the term is present, otherwise None.
+
+    :param t:  Name of some parse term
+    :param c:  Children
+    :return:   The term result or None
+    """
+    return None if t not in c.results else c.results[t][0]
+
 
 class ScrallVisitor(PTNodeVisitor):
     """
@@ -109,7 +122,7 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_activity(cls, node, children):
         """
-        execution_unit* EOF
+        (LINEWRAP* EOF) / (execution_unit* output_flow? EOF)
 
         This is the root node. All Scrall language is built up to define a
         single Shlaer-Mellor activity.
@@ -124,35 +137,52 @@ class ScrallVisitor(PTNodeVisitor):
         The EOF symbol is a standard terminator at the root level for Arpeggio grammars.
         It signals the parser that there is no more text to parse.
         """
+        oflow = getresult('output_flow', children)
         return [c for c in children if c]
 
     @classmethod
     def visit_execution_unit(cls, node, children):
         """
-        ( output_flow / (input_tokens? action_group output_tokens?) ) EOL+
+        LINEWRAP* (statement_set sequence_token?) EOL+
 
-        An execution unit is a set of action groups.
+        When a statement_set completes execution it may enable a single output token.
 
-        When an action group completes execution it may enable any number of output tokens.
-        Each output token represents an outgoing control flow on a data flow diagram.
-        Any output token may feed into any number of other action groups in the form of an input token.
-
-        So the syntax defines which input tokens, if any enable this action group to execute and which
-        output tokens, if any are enabled upon execution of this action group.
+        An output token represents an outgoing Sequence Flow.
+        Any output token may feed into any number of other sequenced_statement_sets in the form of an input token.
 
         Every execution unit is terminated by a new line.
         """
-        oflow = children.results.get('output_flow')
-        if oflow:
-            return Output_Flow_a(oflow[0])
-        itok = children.results.get('input_tokens')
-        otok = children.results.get('output_tokens')
-        ag = children.results.get('action_group')[0]
-        return Execution_Unit_a(
-            input_tokens=None if not itok else itok[0],
-            output_tokens=None if not otok else otok[0],
-            action_group=ag
-        )
+        output_token = getresult('sequence_token', children)
+        st_set = getresult('statement_set', children)
+        return Execution_Unit_a(output_token=output_token, statement_set=st_set)
+
+    @classmethod
+    def visit_statement_set(cls, node, children):
+        """
+        SP* sequenced_statement_set / component_statement_set
+        """
+        return children[0]
+
+    @classmethod
+    def visit_sequenced_statement_set(cls, node, children):
+        """
+        sequence_token* (block / statement)
+        """
+        input_tokens = getresult('sequence_token', children)
+        b = getresult('block', children)
+        s = getresult('statement', children)
+        return Seq_Statement_Set_a(input_tokens=input_tokens, statement=s, block=b)
+
+    @classmethod
+    def visit_component_statement_set(cls, node, children):
+        """
+        block / statement
+        """
+        # b = None if 'block' not in children.results else children.results['block'][0]
+        # s = None if 'statement' not in children.results else children.results['statement'][0]
+        b = getresult('block', children)
+        s = getresult('statement', children)
+        return Comp_Statement_Set_a(statement=s, block=b)
 
     @classmethod
     def visit_block(cls, node, children):
@@ -165,35 +195,21 @@ class ScrallVisitor(PTNodeVisitor):
         This correpsonds to the concept of one or more control flows on a data flow diagram
         enabling multiple processes.
         """
-        return Block_a(actions=children)
+        return children
 
     @classmethod
-    def visit_action(cls, node, children):
+    def visit_statement(cls, node, children):
         """
-        scalar_assignment / delete / scalar_switch / decision / inst_assignment / signal_action / call
+        table_assignment / new_lineage / new_instance / update_ref / delete / migration / scalar_assignment /
+            signal_action / switch / decision / inst_assignment / call / iteration
 
-        These are (or will be) a complete set of scrall actions. The ordering helps in some cases to prevent
-        one type of action from being mistaken for another during the parse. You can't backgrack in a peg
+        These are (or will be) a complete set of scrall statements. The ordering helps in some cases to prevent
+        one type of statement from being mistaken for another during the parse. You can't backgrack in a peg
         grammar, so you need to match the pattern right on the first scan.
 
         There should be only one child element and it will be a named tuple defining the parsed action.
         """
         return children[0]
-
-    # Explicit sequence using control flow input and output tokens
-    @classmethod
-    def visit_input_tokens(cls, node, children):
-        """
-        sequence_token+
-        """
-        return children
-
-    @classmethod
-    def visit_output_tokens(cls, node, children):
-        """
-        sequence_token+
-        """
-        return children
 
     @classmethod
     def visit_sequence_token(cls, node, children):
