@@ -71,7 +71,7 @@ actions = [
 
 
 @pytest.mark.parametrize("text, expected", actions)
-def test_signal_action(text, expected):
+def test_selection(text, expected):
     parse = ScrallParser.parse_text(scrall_text=text + '\n', debug=False)[0]
     print(parse)
     assert parse[0] == expected
