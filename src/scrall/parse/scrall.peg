@@ -1,4 +1,4 @@
-activity = (LINEWRAP* EOF) / (execution_unit* EOF)
+activity = LINEWRAP* execution_unit* EOF
 execution_unit = LINEWRAP* (output_flow / (statement_set sequence_token?)) EOL+
 output_flow = OUTPUT SP+ scalar_expr
 OUTPUT = '=>>'
@@ -49,9 +49,11 @@ false_result = SP* FALSE_RESULT_OP SP* component_statement_set // Else
 FALSE_RESULT_OP = ':'
 
 // Switch action
-switch = (rnum / scalar_expr) DECISION_OP SP* case_block // Boolean expr triggers case_block
-case_block = '{' LINEWRAP* case+ '}'
-case = (SP* enum_value)+ SP* ':' SP* execution_unit
+switch = switch_input DECISION_OP SP* case_block // Boolean expr triggers case_block
+switch_input = rnum / scalar_expr
+case_block = '{' LINEWRAP* case+ LINEWRAP*'}'
+case = LINEWRAP* trigger_set? SP* ':' LINEWRAP* component_statement_set
+trigger_set = enum_value (',' SP+ enum_value)*
 enum_value = '_' name // Scalar switch has enum value cases
 DECISION_OP = '?'
 

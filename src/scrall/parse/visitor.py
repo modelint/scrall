@@ -427,24 +427,20 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_switch(cls, node, children):
         """
-        (rnum / scalar_expr) DECISION_OP case_block
+        switch_input DECISION_OP SP* case_block
 
         Rnum or boolean expr triggers case_block
         If rnum, the enums must be subclass names (verified outside parser)
         """
-        input_flow = children.results.get('rnum')
-        input_flow = None if not input_flow else input_flow[0]
-        input_flow = input_flow if input_flow else children.results['scalar_expr'][0]
-
         return Switch_a(
-            input_flow=input_flow,
+            input_flow=children.results['switch_input'][0],
             cases=children.results['case_block'][0]
         )
 
     @classmethod
     def visit_case_block(cls, node, children):
         """
-        '{' case+ '}'
+        '{' LINEWRAP* case+ LINEWRAP*'}'
 
         One or more cases between brackets
         """
@@ -453,14 +449,22 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_case(cls, node, children):
         """
-        enum_value+ ':' execution_unit
+        LINEWRAP* trigger_set? SP* ':' LINEWRAP* component_statement_set
 
         One or more enumerated values that triggers an execution unit
         """
+        triggers = children.results.get('trigger_set')
         return Case_a(
-            enums=children.results['enum_value'],
-            execution_unit=children.results['execution_unit'][0]
+            enums=[] if not triggers else triggers[0],
+            execution_unit=children.results['component_statement_set'][0]
         )
+
+    @classmethod
+    def visit_trigger_set(cls, node, children):
+        """
+        enum_value (',' SP+ enum_value)*
+        """
+        return [c.value.name for c in children]
 
     @classmethod
     def visit_enum_value(cls, node, children):

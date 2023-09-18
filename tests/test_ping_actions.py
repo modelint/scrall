@@ -5,7 +5,7 @@ from scrall.parse.parser import ScrallParser
 from scrall.parse.visitor import Execution_Unit_a, Signal_a, Signal_Dest_a, N_a, INST_a, PATH_a, R_a,\
     Inst_Assignment_a, Flow_Output_a, Selection_a, BOOL_a, Supplied_Parameter_a, Call_a, Op_a, IN_a, \
     Table_Assignment_a, TEXPR_a, Projection_a, Seq_Statement_Set_a, Scalar_Assignment_a, Scalar_RHS_a, \
-    Sequence_Token_a, Case_a, Switch_a, Enum_a, Output_Flow_a, INST_PROJ_a
+    Sequence_Token_a, Case_a, Switch_a, Enum_a, Output_Flow_a, INST_PROJ_a, Comp_Statement_Set_a, Order_name_a
 
 actions = [
     ("{\n    a = b\n    c = d\n}<1>",
@@ -23,18 +23,17 @@ actions = [
                output_token=Sequence_Token_a(name='1'))),
     ("^dir? {\n    _up:\n        a = b\n    _down:\n        a = c\n}\n",
             Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
-               statement=Switch_a(input_flow=IN_a(name='dir'), cases=[
-                   Case_a(enums=[Enum_a(value=N_a(name='up'))], execution_unit=Execution_Unit_a(
-                       statement_set=Seq_Statement_Set_a(input_tokens=None,
-                           statement=Scalar_Assignment_a(
-                               lhs=[Flow_Output_a(name=N_a(name='a'), exp_type=None)],
-                               rhs=Scalar_RHS_a(expr=N_a(name='b'), attrs=None)), block=None), output_token=None)),
-                   Case_a(enums=[Enum_a(value=N_a(name='down'))], execution_unit=Execution_Unit_a(
-                       statement_set=Seq_Statement_Set_a(input_tokens=None,
-                           statement=Scalar_Assignment_a(
-                               lhs=[Flow_Output_a(name=N_a(name='a'), exp_type=None)],
-                               rhs=Scalar_RHS_a(expr=N_a(name='c'), attrs=None)), block=None), output_token=None))]),
-               block=None), output_token=None)),
+                statement=Switch_a(input_flow=IN_a(name='dir'), cases=[
+                    Case_a(enums=['up'], execution_unit=Comp_Statement_Set_a(
+                        statement=Scalar_Assignment_a(
+                            lhs=[Flow_Output_a(name=N_a(name='a'), exp_type=None)],
+                            rhs=Scalar_RHS_a(expr=N_a(name='b'), attrs=None)), block=None)),
+                    Case_a(enums=['down'], execution_unit=Comp_Statement_Set_a(
+                        statement=Scalar_Assignment_a(
+                            lhs=[Flow_Output_a(name=N_a(name='a'), exp_type=None)],
+                            rhs=Scalar_RHS_a(expr=N_a(name='c'), attrs=None)), block=None))]),
+                block=None), output_token=None)
+     ),
 
     ("stop here floors #= shaft aslevs( Stop requested ).Floor",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,

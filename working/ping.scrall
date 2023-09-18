@@ -1,1 +1,6 @@
-!(/R2/Shaft.In service) ? Take out of service -> me
+^dir? {
+    _up:
+        a = b
+    _down:
+        a = c
+}
