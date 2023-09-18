@@ -30,7 +30,7 @@ Seq_Statement_Set_a = namedtuple('Seq_Statement_Set_a', 'input_tokens statement 
 Comp_Statement_Set_a = namedtuple('Comp_Statement_Set_a', 'statement block')
 Decision_a = namedtuple('Decision_a', 'input true_result false_result')
 Delete_Action_a = namedtuple('Delete_Action_a', 'instance_set')
-Case_a = namedtuple('Case_a', 'enums execution_unit')
+Case_a = namedtuple('Case_a', 'enums comp_statement_set')
 Switch_a = namedtuple('Switch_a', 'input_flow cases')
 MATH_a = namedtuple('MATH_a', 'op operands')
 TOP_a = namedtuple('TOP_a', 'op operands')
@@ -456,7 +456,7 @@ class ScrallVisitor(PTNodeVisitor):
         triggers = children.results.get('trigger_set')
         return Case_a(
             enums=[] if not triggers else triggers[0],
-            execution_unit=children.results['component_statement_set'][0]
+            comp_statement_set=children.results['component_statement_set'][0]
         )
 
     @classmethod

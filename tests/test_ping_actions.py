@@ -24,11 +24,11 @@ actions = [
     ("^dir? {\n    _up:\n        a = b\n    _down:\n        a = c\n}\n",
             Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
                 statement=Switch_a(input_flow=IN_a(name='dir'), cases=[
-                    Case_a(enums=['up'], execution_unit=Comp_Statement_Set_a(
+                    Case_a(enums=['up'], comp_statement_set=Comp_Statement_Set_a(
                         statement=Scalar_Assignment_a(
                             lhs=[Flow_Output_a(name=N_a(name='a'), exp_type=None)],
                             rhs=Scalar_RHS_a(expr=N_a(name='b'), attrs=None)), block=None)),
-                    Case_a(enums=['down'], execution_unit=Comp_Statement_Set_a(
+                    Case_a(enums=['down'], comp_statement_set=Comp_Statement_Set_a(
                         statement=Scalar_Assignment_a(
                             lhs=[Flow_Output_a(name=N_a(name='a'), exp_type=None)],
                             rhs=Scalar_RHS_a(expr=N_a(name='c'), attrs=None)), block=None))]),
