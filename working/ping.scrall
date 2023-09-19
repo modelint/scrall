@@ -1,6 +1,2 @@
-^dir? {
-    _up:
-        a = b
-    _down:
-        a = c
-}
+nearest dest #= destination heights(1, ^-Height >= current floor height)
+

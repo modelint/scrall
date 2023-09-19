@@ -122,8 +122,6 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_activity(cls, node, children):
         """
-        (LINEWRAP* EOF) / (execution_unit* EOF)
-
         This is the root node. All Scrall language is built up to define a
         single Shlaer-Mellor activity.
 
@@ -137,13 +135,16 @@ class ScrallVisitor(PTNodeVisitor):
         The EOF symbol is a standard terminator at the root level for Arpeggio grammars.
         It signals the parser that there is no more text to parse.
         """
-        return [c for c in children if c]
+        _logger.info('activity = LINEWRAP* execution_unit* EOF')
+
+        _logger.info(f"< {children}")
+        result = [c for c in children if c]
+        _logger.info(f"  -> {result}")
+        return result
 
     @classmethod
     def visit_execution_unit(cls, node, children):
         """
-        LINEWRAP* (statement_set sequence_token?) EOL+
-
         When a statement_set completes execution it may enable a single output token.
 
         An output token represents an outgoing Sequence Flow.
@@ -151,76 +152,97 @@ class ScrallVisitor(PTNodeVisitor):
 
         Every execution unit is terminated by a new line.
         """
+        _logger.info('execution_unit = LINEWRAP* (output_flow / (statement_set sequence_token?)) EOL+')
+
+        _logger.info(f"  < {children}")
         oflow = getresult('output_flow', children)
         if oflow:
             return Output_Flow_a(oflow[0])
         output_token = getresult('sequence_token', children)
         st_set = getresult('statement_set', children)
-        return Execution_Unit_a(output_token=output_token, statement_set=st_set)
+        result = Execution_Unit_a(output_token=output_token, statement_set=st_set)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_statement_set(cls, node, children):
-        """
-        SP* sequenced_statement_set / component_statement_set
-        """
-        return children[0]
+
+        _logger.info('statement_set = SP* sequenced_statement_set / component_statement_set')
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_sequenced_statement_set(cls, node, children):
-        """
-        sequence_token* (block / statement)
-        """
+
+        _logger.info('sequenced_statement_set = sequence_token* (block / statement)')
+
+        _logger.info(f"  < {children}")
         input_tokens = getresult('sequence_token', children)
         b = getresult('block', children)
         s = getresult('statement', children)
-        return Seq_Statement_Set_a(input_tokens=input_tokens, statement=s, block=b)
+        result = Seq_Statement_Set_a(input_tokens=input_tokens, statement=s, block=b)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_component_statement_set(cls, node, children):
-        """
-        block / statement
-        """
+
+        _logger.info('component_statement_set = block / statement')
+
+        _logger.info(f"  > {children}")
         # b = None if 'block' not in children.results else children.results['block'][0]
         # s = None if 'statement' not in children.results else children.results['statement'][0]
         b = getresult('block', children)
         s = getresult('statement', children)
-        return Comp_Statement_Set_a(statement=s, block=b)
+        result = Comp_Statement_Set_a(statement=s, block=b)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_block(cls, node, children):
         """
-        '{' execution_unit* '}'
-
         We organize multiple execution units in a block (between brackets) when multiple
         execution units are enabled by the same decision, case, or input tokens.
 
         This correpsonds to the concept of one or more control flows on a data flow diagram
         enabling multiple processes.
         """
+        _logger.info('block = "{" execution_unit* "}"')
+
+        _logger.info(f"  < {children}")
+        _logger.info(f"  > pass")
         return children
 
     @classmethod
     def visit_statement(cls, node, children):
         """
-        table_assignment / new_lineage / new_instance / update_ref / delete / migration / scalar_assignment /
-            signal_action / switch / decision / inst_assignment / call / iteration
-
         These are (or will be) a complete set of scrall statements. The ordering helps in some cases to prevent
         one type of statement from being mistaken for another during the parse. You can't backgrack in a peg
         grammar, so you need to match the pattern right on the first scan.
 
         There should be only one child element and it will be a named tuple defining the parsed action.
         """
-        return children[0]
+        _logger.info('statement = table_assignment / new_lineage / new_instance / update_ref / delete / migration /'
+                     ' scalar_assignment / signal_action / switch / decision / inst_assignment / call / iteration')
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_sequence_token(cls, node, children):
         """
-        '<' token_name '>'
-
          Named control flow
         """
-        return Sequence_Token_a(name=children[0])
+        _logger.info(f'sequence_token = "<" token_name ">"')
+        _logger.info(f"  < {children}")
+        result = Sequence_Token_a(name=children[0])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_token_name(cls, node, children):
@@ -230,98 +252,135 @@ class ScrallVisitor(PTNodeVisitor):
 
         Since this is a terminal, we need to grab the name from the node.value
         """
-        return node.value
+        _logger.info("token_name = r'[A-Za-z0-9_]+'")
+
+        _logger.info(f"  < {children}")
+        result = node.value
+        _logger.info(f"  > {result}")
+        return result
 
     # Table expressions
     @classmethod
     def visit_table_assignment(cls, node, children):
-        """
-        explicit_table_assignment / implicit_table_assignment
-        """
-        return children[0]
+        _logger.info("table_assignment = explicit_table_assignment / implicit_table_assignment")
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     # Explicit table assignment
     @classmethod
     def visit_explicit_table_assignment(cls, node, children):
-        """
-        table_def TABLE_ASSIGN table_value
-        """
-        return Table_Assignment_a(type='explicit', lhs=children[0], rhs=children[1],
+
+        _logger.info("explicit_table_assignment = table_def TABLE_ASSIGN table_value")
+
+        _logger.info(f"  < {children}")
+        result = Table_Assignment_a(type='explicit', lhs=children[0], rhs=children[1],
                                   X=(node.position, node.position_end))
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_table_def(cls, node, children):
-        """
-        name '[' attr_type_set? ']'
-        """
-        return Table_Def_a(name=children[0].name, header=[] if len(children) < 2 else children[1])
+
+        _logger.info("table_def = name '[' attr_type_set? ']'")
+
+        _logger.info(f"  < {children}")
+        result = Table_Def_a(name=children[0].name, header=[] if len(children) < 2 else children[1])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_attr_type_set(cls, node, children):
-        """
-        attr_type_def (',' attr_type_def)*
-        """
+
+        _logger.info("attr_type_set = attr_type_def (',' attr_type_def)*")
+
+        _logger.info(f"  < {children}")
+        _logger.info("  > pass")
         return children
 
     @classmethod
     def visit_attr_type_def(cls, node, children):
-        """
-        name '::' name
-        """
-        return Attr_Type_a(attr_name=children[0].name, type_name=children[1].name)
+
+        _logger.info("token = name '::' name")
+
+        _logger.info(f"  < {children}")
+        result = Attr_Type_a(attr_name=children[0].name, type_name=children[1].name)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_table_value(cls, node, children):
-        """
-        '{' row* '}'
-        """
+
+        _logger.info("table_value = '{' row* '}'")
+
+        _logger.info(f"  < {children}")
+        _logger.info(f"  > pass")
         return children
 
     @classmethod
     def visit_row(cls, node, children):
-        """
-        '{' attr_value_set? '}'
-        """
-        return [] if not children else children[0]
+
+        _logger.info("row = '{' attr_value_set? '}'")
+
+        _logger.info(f"  < {children}")
+        result = [] if not children else children[0]
+        _logger.info(f"  > {result}")
+        return result
+
 
     @classmethod
     def visit_attr_value_set(cls, node, children):
-        """
-        scalar_expr (',' scalar_expr)*
-        """
+
+        _logger.info(f"attr_value_set = scalar_expr (',' scalar_expr)*")
+
+        _logger.info(f"  < {children}")
+        _logger.info(f"  > pass")
         return children
 
     # Implicit table assignment
     @classmethod
     def visit_implicit_table_assignment(cls, node, children):
-        """
-        name TABLE_ASSIGN table_expr
-        """
-        return Table_Assignment_a(type='implicit', lhs=children[0].name, rhs=children[1],
+
+        _logger.info("implicit_table_assignment = name TABLE_ASSIGN table_expr")
+
+        _logger.info(f"  < {children}")
+        result = Table_Assignment_a(type='implicit', lhs=children[0].name, rhs=children[1],
                                   X=(node.position, node.position_end))
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_table_expr(cls, node, children):
-        """
-        table_operation
-        """
-        return children[0]
+
+        _logger.info("table_expr = table_operation")
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_table_operation(cls, node, children):
-        """
-        table_term (TOP table_term)*
-        """
+
+        _logger.info("table_operation = table_term (TOP table_term)*")
+
+        _logger.info(f"  < {children}")
         if len(children) == 1:
-            return children[0]
+            result = children[0]
         else:
-            return TOP_a(children.results['TOP'][0], children.results['table_term'])
+            result = TOP_a(children.results['TOP'][0], children.results['table_term'])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_table_term(cls, node, children):
-        """
-        (instance_set / "(" table_expr ")") header_expr? selection? projection?
-        """
+
+        _logger.info('table_term = (instance_set / "(" SP* table_expr SP* ")") header_expr? selection? projection?')
+
+        _logger.info(f"  < {children}")
+
         # We always receive either an INST_a or an N_a, both instance sets, but N_a is just a name
         # without the trailing components.
 
@@ -355,123 +414,166 @@ class ScrallVisitor(PTNodeVisitor):
             # It must be a table expression
             table = children.results.get('table_expr')[0]
 
-        return TEXPR_a(table=table, hexpr=None if not h else h[0], selection=s, projection=None if not p else p[0])
+        result = TEXPR_a(table=table, hexpr=None if not h else h[0], selection=s, projection=None if not p else p[0])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_TOP(cls, node, children):
-        """
-        '^' / '+' / '-' / '*' / '##'
-        """
-        return table_op[children[0]]
+
+        _logger.info("TOP= '^' / '+' / '-' / '*' / '##'")
+
+        _logger.info(f"  < {children}")
+        result = table_op[children[0]]
+        _logger.info(f"  > {result}")
+        return result
 
     # Table header operations
     @classmethod
     def visit_header_expr(cls, node, children):
-        """
-        '[' column_op (',' column_op)* ']'
-        """
+
+        _logger.info("header_expr = [' column_op (',' column_op)* ']")
+
+        _logger.info(f"  < {children}")
+        _logger.info(f"  > pass")
         return children
 
     @classmethod
     def visit_column_op(cls, node, children):
-        """
-        extend / rename_op
-        """
-        return children[0]
+
+        _logger.info('column_op = extend / rename_op')
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
+
 
     @classmethod
     def visit_rename_op(cls, node, children):
         """
-        name rename_attr
         """
-        return Rename_a(from_name=children[0].name, to_name=children[1].name)
+        _logger.info('rename_op = name rename_attr')
+
+        _logger.info(f"  < {children}")
+        result = Rename_a(from_name=children[0].name, to_name=children[1].name)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_rename_attr(cls, node, children):
         """
-        RENAME name
         """
-        return children[0]
+        _logger.info('rename_attr = RENAME name')
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     # Decision and switch actions
     @classmethod
     def visit_decision(cls, node, children):
         """
-        scalar_expr true_result false_result?
         """
-        return Decision_a(
+        _logger.info('decision = scalar_expr true_result false_result?')
+
+        _logger.info(f"  < {children}")
+        result = Decision_a(
             input=children[0],
             true_result=children[1],
             false_result=None if len(children) < 3 else children[2]
         )
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_true_result(cls, node, children):
         """
-        DECISION_OP action_group
-
         Actions to be executed when the decision evaluates to true
         """
-        return children[0]
+        _logger.info('true_result = DECISION_OP action_group')
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_false_result(cls, node, children):
         """
-        FALSE_RESULT_OP action_group
-
         Actions to be executed when the decision evaluates to false
         """
-        return children[0]
+        _logger.info('false_result = FALSE_RESULT_OP action_group')
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     # Switch action
     @classmethod
     def visit_switch(cls, node, children):
         """
-        switch_input DECISION_OP SP* case_block
-
         Rnum or boolean expr triggers case_block
         If rnum, the enums must be subclass names (verified outside parser)
         """
-        return Switch_a(
+        _logger.info('switch = switch_input DECISION_OP SP* case_block')
+        _logger.info(f"  < {children}")
+
+        result = Switch_a(
             input_flow=children.results['switch_input'][0],
             cases=children.results['case_block'][0]
         )
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_case_block(cls, node, children):
         """
-        '{' LINEWRAP* case+ LINEWRAP*'}'
-
         One or more cases between brackets
         """
-        return children
+        _logger.info("case_block = '{' LINEWRAP* case+ LINEWRAP*'}'")
+
+        _logger.info(f"  < {children}")
+        result = children
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_case(cls, node, children):
         """
-        LINEWRAP* trigger_set? SP* ':' LINEWRAP* component_statement_set
-
         One or more enumerated values that triggers an execution unit
         """
+        _logger.info("case = LINEWRAP* trigger_set? SP* ':' LINEWRAP* component_statement_set")
+        _logger.info(f"  < {children}")
         triggers = children.results.get('trigger_set')
-        return Case_a(
+        result = Case_a(
             enums=[] if not triggers else triggers[0],
             comp_statement_set=children.results['component_statement_set'][0]
         )
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_trigger_set(cls, node, children):
         """
-        enum_value (',' SP+ enum_value)*
         """
-        return [c.value.name for c in children]
+        _logger.info("trigger_set = enum_value (',' SP+ enum_value)*")
+        _logger.info(f"  < {children}")
+        result = [c.value.name for c in children]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_enum_value(cls, node, children):
         """
-        '.' name
         """
-        return Enum_a(children[0])
+        _logger.info("enum_value = '.' name")
+
+        result = Enum_a(children[0])
+        _logger.info(f"  > {result}")
+        return result
 
     # # Asynch service
     # @classmethod
@@ -479,40 +581,51 @@ class ScrallVisitor(PTNodeVisitor):
     #     """
     #     name '.' signal_spec ASYNCH ee
     #     """
-    #     return Asynch_a(*children)
+    #     result = Asynch_a(*children)
 
     # Signal action
     @classmethod
     def visit_signal_action(cls, node, children):
         """
-        signal_choice / signal
         """
-        return children[0]
+        _logger.info("signal_action = signal_choice / signal")
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_signal(cls, node, children):
         """
-        signal_spec (signal_dest / ee_dest)
         """
+        _logger.info("signal = signal_spec (signal_dest / ee_dest)")
+
+        _logger.info(f"  < {children}")
         sdest = children.results.get('signal_dest')
         if sdest:
-            return Signal_a(
+            result = Signal_a(
                 event=children[0]['name'],
                 supplied_params=children[0]['params'],
                 dest=children[1]
             )
         else:
-            return EE_Signal_a(
+            result = EE_Signal_a(
                 event=children[0]['name'],
                 supplied_params=children[0]['params'],
                 ee=children[1]
             )
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_signal_choice(cls, node, children):
         """
         scalar_expr DECISION_OP signal_spec ':' signal_spec signal_dest
         """
+        _logger.info("signal_choice = ")
+
+        _logger.info(f"  < {children}")
         expr = children[0]
         # Both signals in a choice always have the same destination and delay
         true_signal = Signal_a(
@@ -525,105 +638,126 @@ class ScrallVisitor(PTNodeVisitor):
             supplied_params=children[2]['params'],
             dest=children[3]
         )
-        return Signal_Choice_a(
+        result = Signal_Choice_a(
             decision=expr,
             true_signal=true_signal,
             false_signal=false_signal,
         )
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_signal_spec(cls, node, children):
         """
-        name supplied_params?
         """
+        _logger.info("signal_spec = name supplied_params?")
 
+        _logger.info(f"  < {children}")
         params = children.results.get('supplied_params', [])
-        return {'name': children[0].name, 'params': params}
+        result = {'name': children[0].name, 'params': params}
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_ee_dest(cls, node, children):
         """
-        ASYNCH name
         """
-        return children[0]
+        _logger.info("ee_dest = ASYNCH name")
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_signal_dest(cls, node, children):
         """
-        SIGNAL_OP instance_set assigner_partition? delay?
         """
+        _logger.info("signal_dest = SIGNAL_OP instance_set assigner_partition? delay?")
+        _logger.info(f"  < {children}")
         iset = children[0]
         ap = children.results.get('assigner_partition')
         ap = None if not ap else ap[0]
         delay = children.results.get('delay')
         delay = 0 if not delay else delay[0]
-        return Signal_Dest_a(target_iset = iset, assigner_partition=N_a(ap), delay=delay)
+        result = Signal_Dest_a(target_iset = iset, assigner_partition=N_a(ap), delay=delay)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_assigner_partition(cls, node, children):
         """
-        '(' instance_set ')'
-
         An instance set that partitions an assigner
         """
-        return children[0]
+        _logger.info("assigner_partition = '(' instance_set ')'")
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_delay(cls, node, children):
         """
-        DELAY_OP scalar_expr
-
-        A time or time interval
+       A time or time interval
         """
-        return children[0]
+        _logger.info("delay = DELAY_OP scalar_expr")
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     # Instance set assignment and selection
     @classmethod
     def visit_inst_assignment(cls, node, children):
         """
-        name INST_ASSIGN instance_set
         """
-        return Inst_Assignment_a(
+        _logger.info("inst_assignment = name INST_ASSIGN instance_set")
+        _logger.info(f"  < {children}")
+        result = Inst_Assignment_a(
             lhs=children.results['flow_output'][0],
             card='1' if children.results['INST_ASSIGN'][0] == '.=' else 'M',
             rhs=children.results['instance_set'][0],
             X=(node.position, node.position_end)
         )
+        _logger.info(f"  > {result}")
+        return result
 
 
     @classmethod
     def visit_extend(cls, node, children):
         """
-        rename_attr '(' op_chain ')'
         """
-        return children
+        _logger.info("extend = rename_attr '(' op_chain ')'")
+        _logger.info(f"  < {children}")
+        result = children
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_ITS(cls, node, children):
-        return 'ITS'
-
-
-
+        result = 'ITS'
+        _logger.info(f"  > {result}")
+        return result
 
     # Synchronous method or operation
     @classmethod
     def visit_call(cls, node, children):
         """
-        instance_set op_chain?
         Post-parse verify that last element is an operation, otherwise invalid call
         """
+        _logger.info("call = instance_set op_chain?")
+        _logger.info(f"  < {children}")
         iset = children.results['instance_set'][0]
         opc = children.results.get('op_chain')
-        return Call_a(
+        result = Call_a(
             call=iset,
             op_chain=None if not opc else opc[0]
         )
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_operation(cls, node, children):
         """
-        ORDER? owner? '.' name supplied_params
-
         The results of an operation can be ordered ascending, descending
         The operation is invoked on the owner which may or may not be explicitly named
         If the owner is implicit, it could be 'me' (the local instance) or an operation on a type
@@ -631,436 +765,583 @@ class ScrallVisitor(PTNodeVisitor):
 
         Name is the name of the operation
         """
+        _logger.info("operation = ORDER? owner? '.' name supplied_params")
+
+        _logger.info(f"  < {children}")
         owner = children.results.get('owner')
         o = children.results.get('ORDER')
         p = children.results.get('supplied_params')
-        return Op_a(
+        result = Op_a(
             owner='implicit' if not owner else owner[0],
             op_name=children.results['name'][0].name,
             supplied_params=[] if not p else p[0],
             order=None if not o else symbol[o[0]]
         )
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_supplied_params(cls, node, children):
         """
-        '(' (param (',' param)*)? ')'
-
         Could be () or a list of multiple parameters
         """
-        return children if children else []
+        _logger.info("supplied_params = '(' (param (',' param)*)? ')'")
+
+        _logger.info(f"  < {children}")
+        result = children if children else []
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_param(cls, node, children):
         """
-        (name ':')? scalar_expr
-
         If only a scalar_expr is present, it means that the supplied expr has the same name
         Ex: ( shaft id ) as that of the required parameter. Short for ( shaft id : shaft id ). This
         is a convenience that eliminates the need for name doubling in a supplied parameter set
         """
+        _logger.info("param = (name ':')? scalar_expr")
+
+        _logger.info(f"  < {children}")
         s = children.results['scalar_expr']
         s = s if len(s) > 1 else s[0]
         p = children.results.get('name')
         if not p and not (isinstance(s, N_a) or isinstance(s, IN_a)):
             _logger.error(f"Paramenter name not supplied with expression value: [{children.results}]")
             raise ScrallMissingParameterName(children.results)
-        return Supplied_Parameter_a(pname=s.name if not p else p[0].name, sval=s)
+        result = Supplied_Parameter_a(pname=s.name if not p else p[0].name, sval=s)
+        _logger.info(f"  > {result}")
+        return result
 
     # Subclass migration
     @classmethod
     def visit_migration(cls, node, children):
         """
-        instance_set? SP* '>>' SP* new_inst_int
         """
+        _logger.info("migration = instance_set? SP* '>>' SP* new_inst_int")
+
+        _logger.info(f"  < {children}")
         iset = children.results.get('instance_set')
         iset = 'me' if not iset else iset[0]
         dest_iset = children.results['new_inst_init'][0]
-        return Migration_a(from_inst=iset, to_subclass=dest_iset)
+        result = Migration_a(from_inst=iset, to_subclass=dest_iset)
+        _logger.info(f"  > {result}")
+        return result
 
     # Iteration
     @classmethod
     def visit_iteration(cls, node, children):
         """
-        '<<' instance_set '>>' action_group
         """
-        return Iteration_a(*children)
+        _logger.info("iteration = '<<' instance_set '>>' action_group")
+
+        _logger.info(f"  < {children}")
+        result = Iteration_a(*children)
+        _logger.info(f"  > {result}")
+        return result
 
     # Instance set
     @classmethod
     def visit_instance_set(cls, node, children):
         """
-        new_instance / ((operation / prefix_name / path) (reflexive_selection / selection / operation / path)*)
-
         An instance set begins with a required name (instance flow) or a path. The path can then be followed
         by any sequence of selection, operation, and paths. The parser won't find two paths in sequence since
         any encounter path will be fully consumed
         """
+        _logger.info("instance_set = new_instance / ((operation / prefix_name / path) (reflexive_selection / "
+                     "selection / operation / path)*)")
+
+        _logger.info(f"  < {children}")
         if len(children) == 1 and isinstance(children[0],N_a):
-            return children[0]
+            result = children[0]
         else:
-            return INST_a(children)
+            result = INST_a(children)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_selection(cls, node, children):
         """
-        '(' select_phrase ')'
         """
-        return Selection_a(card=children[0][0], criteria=None if len(children[0]) < 2 else children[0][1])
+        _logger.info("selection = '(' select_phrase ')'")
+
+        _logger.info(f"  < {children}")
+        result = Selection_a(card=children[0][0], criteria=None if len(children[0]) < 2 else children[0][1])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_select_phrase(cls, node, children):
         """
-        (CARD ',' criteria) / CARD / criteria
         """
+        _logger.info("select_phrase = (CARD ',' criteria) / CARD / criteria")
+
+        _logger.info(f"  < {children}")
         explicit_card = children.results.get('CARD')
         card = '*' if not explicit_card else explicit_card[0]
         criteria = children.results.get('scalar_expr')
         if criteria:
-            return [card, criteria[0]]
+            result = [card, criteria[0]]
         else:
-            return [card]
+            result = [card]
+        _logger.info(f"  > {result}")
+        return result
 
     # Creation, deletion, and references
     @classmethod
     def visit_new_instance(cls, node, children):
         """
-        '*' new_inst_init
         create an instance of a class as an action
         """
-        return children[0]
+        _logger.info("new_instance = '*' new_inst_init")
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_new_lineage(cls, node, children):
         """
-        '*[' new_inst_init (',' new_inst_init)+ ']'
-
         create all instances of a lineage
         """
-        return New_lineage_a(children)
+        _logger.info("new_lineage = '*[' new_inst_init (',' new_inst_init)+ ']'")
+
+        _logger.info(f"  < {children}")
+        result = New_lineage_a(children)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_new_inst_init(cls, node, children):
         """
-        name attr_init? to_ref*
-
         specify class, attr inits, and any required references
         """
+        _logger.info("new_inst_init = name attr_init? to_ref*")
+
+        _logger.info(f"  < {children}")
         a = children.results.get('attr_init')
         r = children.results.get('to_ref')
-        return New_inst_a(cname=children[0], attrs=None if not a else a[0], rels=None if not r else r[0])
+        result = New_inst_a(cname=children[0], attrs=None if not a else a[0], rels=None if not r else r[0])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_attr_init(cls, node, children):
         """
-        '(' (attr_value_init (',' attr_value_init)* ')'
-
         all attrs to init for a new instance
         """
-        return children
+        _logger.info("attr_init = '(' (attr_value_init (',' attr_value_init)* ')'")
+
+        _logger.info(f"  < {children}")
+        result = children
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_attr_value_init(cls, node, children):
         """
-        (name ':' scalar_expr )*
         """
-        return Attr_value_init_a(attr=children[0], scalar_expr=children[1])
+        _logger.info("attr_value_init = (name ':' scalar_expr )*")
+
+        _logger.info(f"  < {children}")
+        result = Attr_value_init_a(attr=children[0], scalar_expr=children[1])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_update_ref(cls, node, children):
         """
-        instance_set? to_ref
-
         A standalone reference
         """
+        _logger.info("update_ref = instance_set? to_ref")
+
+        _logger.info(f"  < {children}")
         iset = children.results.get('instance_set')
         iset = 'me' if not iset else iset[0]
-        return Update_ref_a(iset=iset, to_ref=children[-1])
+        result = Update_ref_a(iset=iset, to_ref=children[-1])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_to_ref(cls, node, children):
         """
-        '&' rnum instance_set (',' instance_set)?
-
         non-associative or associative reference
         """
+        _logger.info("to_ref = '&' rnum instance_set (',' instance_set)?")
+
+        _logger.info(f"  < {children}")
         ref1 = None if len(children) < 2 else children[1]
         ref2 = None if len(children) < 3 else children[2]
-        return To_ref_a(rnum=children[0], iset1=ref1, iset2=ref2)
+        result = To_ref_a(rnum=children[0], iset1=ref1, iset2=ref2)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_delete(cls, node, children):
         """
-        '!*' instance_set
         """
+        _logger.info("delete = '!*' instance_set")
+
+        _logger.info(f"  < {children}")
         iset = children.results.get('instance_set')
-        return Delete_Action_a(instance_set=iset)
+        result = Delete_Action_a(instance_set=iset)
+        _logger.info(f"  > {result}")
+        return result
 
     # Scalar call
     @classmethod
     def visit_scalar_call(cls, node, children):
         """
-        scalar_expr
         """
-        return Scalar_Call_a(children)
+        _logger.info("scalar_call = scalar_expr")
+
+        _logger.info(f"  < {children}")
+        result = Scalar_Call_a(children)
+        _logger.info(f"  > {result}")
+        return result
 
     # Math and boolean operator precedence
     @classmethod
     def visit_scalar_assignment(cls, node, children):
         """
-        scalar_output_set SP* SCALAR_ASSIGN SP* scalar_expr projection?
         """
+        _logger.info("scalar_assignment = scalar_output_set SP* SCALAR_ASSIGN SP* scalar_expr projection?")
+
+        _logger.info(f"  < {children}")
         sout_set = children.results['scalar_output_set'][0]
         expr = children.results['scalar_expr'][0]
         proj = children.results.get('projection')
         proj = None if not proj else proj[0]
-        return Scalar_Assignment_a(lhs=sout_set, rhs=Scalar_RHS_a(expr, proj))
+        result = Scalar_Assignment_a(lhs=sout_set, rhs=Scalar_RHS_a(expr, proj))
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_scalar_output_set(cls, node, children):
         """
-        flow_output (',' flow_output)*
         """
-        return children
+        _logger.info("scalar_output_set = flow_output (',' flow_output)*")
+
+        _logger.info(f"  < {children}")
+        result = children
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_flow_output(cls, node, children):
         """
-        name (TYPE_ASSIGN name)?
         """
+        _logger.info("flow_output = name (TYPE_ASSIGN name)?")
+
+        _logger.info(f"  < {children}")
         etyp = None if len(children) < 2 else children[1]
-        return Flow_Output_a(name=children[0], exp_type=etyp)
+        result = Flow_Output_a(name=children[0], exp_type=etyp)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_projection(cls, node, children):
         """
-        '.' '(' ( (ALL / (name (',' name)*) )? ')')
         """
+        _logger.info("projection = '.' '(' ( (ALL / (name (',' name)*) )? ')')")
+
+        _logger.info(f"  < {children}")
         all = children.results.get('ALL')
         n = children.results.get('name')
         exp = 'ALL' if all else 'NONE' if not all and not n else None
-        return Projection_a(expand=exp, attrs=n)
+        result = Projection_a(expand=exp, attrs=n)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_ALL(cls, node, children):
         """
-        '*'
         """
-        return 'ALL'
+        _logger.info("ALL = '*'")
+
+        _logger.info(f"  < {children}")
+        result = 'ALL'
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_scalar_expr(cls, node, children):
         """
-        scalar_logical_or
         """
-        return children[0]
+        _logger.info("scalar_expr = scalar_logical_or")
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_scalar_logical_or(cls, node, children):
         """
-        scalar_logical_and (OR scalar_logical_and)*
         """
+        _logger.info("scalar_logical_or = scalar_logical_and (OR scalar_logical_and)*")
+
+        _logger.info(f"  < {children}")
         if len(children) == 1: # No OR operation
-            return children[0]
+            result = children[0]
         else:
-            return BOOL_a('OR', children.results['scalar_logical_and'])
+            result = BOOL_a('OR', children.results['scalar_logical_and'])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_scalar_logical_and(cls, node, children):
         """
-        equality (AND equality)*
         """
+        _logger.info("scalar_logical_and = equality (AND equality)*")
+
+        _logger.info(f"  < {children}")
         if len(children) == 1: # No AND operation
-            return children[0]
+            result = children[0]
         else:
-            return BOOL_a('AND', children.results['equality'])
+            result = BOOL_a('AND', children.results['equality'])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_equality(cls, node, children) -> BOOL_a:
         """
-        comparison (EQUAL comparison)*
         """
+        _logger.info("equality = comparison (EQUAL comparison)*")
+
+        _logger.info(f"  < {children}")
         if len(children) == 1:
-            return children[0]
+            result = children[0]
         else:
             # Convert ':' to '==' if found
             eq_map = ['==' if e in ('==',':') else '!=' for e in children.results['EQUAL']]
-            return BOOL_a(eq_map, children.results['comparison'])
+            result = BOOL_a(eq_map, children.results['comparison'])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_comparison(cls, node, children):
         """
-        comparison = addition (COMPARE addition)*
         """
+        _logger.info("comparison = addition (COMPARE addition)*")
+
+        _logger.info(f"  < {children}")
         if len(children) == 1:
-            return children[0]
+            result = children[0]
         else:
-            return BOOL_a(children.results['COMPARE'][0], children.results['addition'])
+            result = BOOL_a(children.results['COMPARE'][0], children.results['addition'])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_addition(cls, node, children):
         """
-        factor (ADD factor)*
         """
+        _logger.info("addition = factor (ADD factor)*")
+
+        _logger.info(f"  < {children}")
         if len(children) == 1:
-            return children[0]
+            result = children[0]
         else:
-            return MATH_a(children.results['ADD'][0], children.results['factor'])
+            result = MATH_a(children.results['ADD'][0], children.results['factor'])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_factor(cls, node, children):
         """
-        term (MULT term)*
+
         """
+        _logger.info("factor = term (MULT term)*")
+
+        _logger.info(f"  < {children}")
         if len(children) == 1:
-            return children[0]
+            result = children[0]
         else:
-            return MATH_a(children.results['MULT'][0], children.results['term'])
+            result = MATH_a(children.results['MULT'][0], children.results['term'])
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_term(cls, node, children):
         """
-        NOT? UNARY_MINUS? (scalar / scalar_expr)
-        ---
         If the not or unary minus operations are not specified, returns whatever was parsed out earlier,
         either a simple scalar (attribute, attribute access, etc) or any scalar expression
 
         Otherwise, a unary minus expression nested inside a boolean not operation, or just the boolean not,
         or just the unary minus expressions individually are returned.
         """
+        _logger.info("term = NOT? UNARY_MINUS? (scalar / scalar_expr)")
+
+        _logger.info(f"  < {children}")
         s = children.results.get('scalar')
         s = s if s else children.results['scalar_expr']
         scalar = s[0]
         if len(children) == 1:
-            return scalar
+            result = scalar
         not_op = children.results.get('NOT')
         unary_minus = children.results.get('UNARY_MINUS')
         if unary_minus and not not_op:
-            return UNARY_a('-', scalar)
+            result = UNARY_a('-', scalar)
         if not_op and not unary_minus:
-            return BOOL_a('NOT', scalar)
+            result = BOOL_a('NOT', scalar)
         if unary_minus and not_op:
-            return BOOL_a('NOT', UNARY_a('-', scalar))
+            result = BOOL_a('NOT', UNARY_a('-', scalar))
+        _logger.info(f"  > {result}")
+        return result
 
 
     @classmethod
     def visit_scalar(cls, node, children):
         """
-        value / QTY? scalar_chain
-
         A scalar is either a simple value such as an enum or a variable name, TRUE/FALSE, etc OR
         it is a chain of operations like a.b(x,y).c.d with a preceding instance set such as a path, selection, etc.
         """
+        _logger.info("scalar = value / QTY? scalar_chain")
+
+        _logger.info(f"  < {children}")
         # Return value
         v = children.results.get('value')
         v = None if not v else v[0]
         if v:
-            return v
+            result = v
 
         # Cardinality
         qty = children.results.get('QTY')
         schain = children.results['scalar_chain'][0]
         if qty:
-            return qty[0],schain
+            result = qty[0],schain
         else:
-            return schain
+            result = schain
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_QTY(cls, node, children):
         """
-        '??'
         """
-        return 'QTY'
+        _logger.info("QTY = '??'")
+
+        _logger.info(f"  < {children}")
+        result = 'QTY'
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_scalar_chain(cls, node, children):
         """
-        (ITS op_chain) / ((scalar_source / instance_set projection?) op_chain?)
         """
+        _logger.info("scalar_chain = (ITS op_chain) / ((scalar_source / instance_set projection?) op_chain?)")
+
+        _logger.info(f"  < {children}")
         # ITS op_chain
         its = children.results.get('ITS')
         if its:
             op_chain = children.results['op_chain'][0]
-            return its, op_chain
+            result = its, op_chain
 
         if len(children) == 1 and (isinstance(children[0], N_a) or (isinstance(children[0], IN_a))):
-            return children[0]
+            result = children[0]
 
         # Instance set and projection are grouped for scalar ouput flow
         iset = children.results.get('instance_set')
         if iset:
             p = children.results.get('projection')
-            return INST_PROJ_a(iset=iset[0], projection=None if not p else p[0])
+            result = INST_PROJ_a(iset=iset[0], projection=None if not p else p[0])
+            # TODO: include opchain if supplied
 
-        return children
+        result = children
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_scalar_source(cls, node, children):
         """
-        type_selector / input_param
         """
+        _logger.info("scalar_source = type_selector / input_param")
+
+        _logger.info(f"  < {children}")
         its = children.results.get('ITS')
         if its:
-            return 'ITS'
+            result = 'ITS'
         else:
-            return children[0]
+            result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_op_chain(cls, node, children):
         """
-        (scalar_op / name)*
-
         Here we have a chain of alternating operations and names in the form: a.b(x,y).c(a).d
         These correspond to type specific operations
         """
-        return Op_chain_a(children)
+        _logger.info("op_chain = (scalar_op / name)*")
+
+        _logger.info(f"  < {children}")
+        result = Op_chain_a(children)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_value(cls, node, children):
         """
-        TRUE / FALSE / enum_value / type_selector / input_param
         """
-        return children[0]
+        _logger.info("value = TRUE / FALSE / enum_value / type_selector / input_param")
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_prefix_name(cls, node, children):
         """
-        ORDER? name
         """
+        _logger.info("prefix_name = ORDER? name")
+
+        _logger.info(f"  < {children}")
         n = children.results['name'][0]
         o = children.results.get('ORDER')
         if o:
-            return Order_name_a(order=symbol[o[0]], name=n)
+            result = Order_name_a(order=symbol[o[0]], name=n)
         else:
-            return n
+            result = n
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_scalar_op(cls, node, children):
         """
-        name supplied_params
         """
+        _logger.info("scalar_op = name supplied_params")
+
+        _logger.info(f"  < {children}")
         n = children.results['name'][0]
         p = children.results['supplied_params'][0]
-        return Scalar_op_a(
+        result = Scalar_op_a(
             name=n,
             supplied_params=p
         )
+        _logger.info(f"  > {result}")
+        return result
 
     # Name of type and name of value selected
     @classmethod
     def visit_type_selector(cls, node, children):
         """
-        name '[' name? ']'
         """
+        _logger.info("type_selector = name '[' name? ']'")
+
+        _logger.info(f"  < {children}")
         s = '<default>' if len(children) == 1 else children[1]
-        return Type_expr_a(type=children[0], selector=s)
+        result = Type_expr_a(type=children[0], selector=s)
+        _logger.info(f"  > {result}")
+        return result
 
     # Reflexive selection
     @classmethod
     def visit_reflexive_selection(cls, node, children):
         """
-        HIPPITY_HOP scalar_expr ('|' COMPARE '|')?
-
         HIPPITY_HOP is either nearest or furthest occurrence in reflexive search
         (This operator is also what tells the parser that this is a reflexive search)
 
@@ -1071,81 +1352,122 @@ class ScrallVisitor(PTNodeVisitor):
         so that we can say "its.Altitude" (the Altitude of the currently tested instance) is greater than
         that of the instance at the beginning of the search.
         """
+        _logger.info("reflexive_selection = HIPPITY_HOP scalar_expr ('|' COMPARE '|')?")
+
+        _logger.info(f"  < {children}")
         comp = children.results.get('COMPARE')
-        return Reflexive_select_a(
+        result = Reflexive_select_a(
             expr=children.results['scalar_expr'],
             compare=None if not comp else comp[0],
             position=children.results['HIPPITY_HOP'][0]
         )
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_HIPPITY_HOP(cls, node, children):
         """
-        FAR_HOP / NEAR_HOP
-
         Select the furthest or nearest qualifying instance
         """
-        return 'nearest' if 'NEAR_HOP' in children.results else 'furthest'
+        _logger.info("HIPPITY_HOP = FAR_HOP / NEAR_HOP")
+
+        _logger.info(f"  < {children}")
+        result = 'nearest' if 'NEAR_HOP' in children.results else 'furthest'
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_input_param(cls, node, children):
         """
-        IN '.' name
-
         An input parameter is signified by the 'in' keyword
         """
-        return IN_a(children[0].name)
+        _logger.info("input_param = IN '.' name")
+
+        _logger.info(f"  < {children}")
+        result = IN_a(children[0].name)
+        _logger.info(f"  > {result}")
+        return result
 
     # Relationship traversal
     @classmethod
     def visit_path(cls, node, children):
         """
-        hop+
         """
-        return PATH_a(children)
+        _logger.info("path = hop+")
+
+        _logger.info(f"  < {children}")
+        result = PATH_a(children)
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_hop(cls, node, children):
         """
-        '/' (rnum / name)
         """
-        return children[0]
+        _logger.info("hop = '/' (rnum / name)")
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        _logger.info(f"  > {result}")
+        return result
 
     # Names
     @classmethod
     def visit_name(cls, node, children):
         """ Join words and delimiters """
-        return N_a(''.join(children))
+        _logger.info("name = first_word (NAME_GLUE word)*")
+
+        _logger.info(f"  < {children}")
+        result = N_a(''.join(children))
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_rnum(cls, node, children):
         """
-        r'O?R[1-9][0-9]*'
         Relationship number such as R23
 
         This is how relationships are named
         """
-        return R_a(node.value)
+        _logger.info("rnum = r'O?R[1-9][0-9]*'")
+
+        _logger.info(f"  < {children}")
+        result = R_a(node.value)
+        _logger.info(f"  > {result}")
+        return result
 
     # Discarded whitespace and comments
     @classmethod
     def visit_LINEWRAP(cls, node, children):
         """
-        EOL SP*
         end of line followed by optional indent on next line
         """
-        return None
+        _logger.info("LINEWRAP = EOL SP*")
+
+        _logger.info(f"  < {children}")
+        result = None
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_EOL(cls, node, children):
         """
-        SP* COMMENT? '\n'
-
         end of line: Spaces, Comments, blank lines, whitespace we can omit from the parser result
         """
-        return None
+        _logger.info(r"EOL = SP* COMMENT? '\n'")
+
+        _logger.info(f"  < {children}")
+        result = None
+        _logger.info(f"  > {result}")
+        return result
 
     @classmethod
     def visit_SP(cls, node, children):
-        """ ' '  Single space character (SP) """
-        return None
+        """ Single space character (SP) """
+        _logger.info("SP = ' '")
+
+        _logger.info(f"  < {children}")
+        result = None
+        _logger.info(f"  > {result}")
+        return result
+
