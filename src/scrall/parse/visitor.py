@@ -958,7 +958,8 @@ class ScrallVisitor(PTNodeVisitor):
     def visit_select_phrase(cls, node, children):
         """
         """
-        _logger.info("select_phrase = (CARD ',' criteria) / CARD / criteria")
+        _logger.info(f"{node.rule_name} = (CARD ',' SP* scalar_expr) / CARD / scalar_expr")
+        _logger.info(f">> {[k for k in children.results.keys()]}")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
@@ -1169,11 +1170,10 @@ class ScrallVisitor(PTNodeVisitor):
         """
         """
         _logger.info("scalar_expr = scalar_logical_or")
-        _logger.info(f'  :: {node.value}')
+        # _logger.info(f'  :: {node.value}')
 
-        _logger.info(f"  < {children}")
+        # _logger.info(f"  < {children}")
         result = children[0]
-        _logger.info(f"  > {result}")
         return result
 
     @classmethod
