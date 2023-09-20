@@ -1,2 +1,1 @@
-nearest dest #= destination heights(1, ^-Height >= current floor height)
-
+s ..= Shaft(In service: True)

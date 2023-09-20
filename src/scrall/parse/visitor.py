@@ -1345,15 +1345,19 @@ class ScrallVisitor(PTNodeVisitor):
         v = None if not v else v[0]
         if v:
             result = v
+            _logger.info(f"  > {result}")
+            return result
 
         # Cardinality
         qty = children.results.get('QTY')
         schain = children.results['scalar_chain'][0]
         if qty:
-            result = qty[0],schain
+            result = qty[0], schain
+            _logger.info(f"  > {result}")
+            return result
         else:
             result = schain
-        _logger.info(f"  > {result}")
+            _logger.info(f"  > {result}")
         return result
 
     @classmethod
@@ -1382,15 +1386,21 @@ class ScrallVisitor(PTNodeVisitor):
         if its:
             op_chain = children.results['op_chain'][0]
             result = its, op_chain
+            _logger.info(f"  > {result}")
+            return result
 
         if len(children) == 1 and (isinstance(children[0], N_a) or (isinstance(children[0], IN_a))):
             result = children[0]
+            _logger.info(f"  > {result}")
+            return result
 
         # Instance set and projection are grouped for scalar ouput flow
         iset = children.results.get('instance_set')
         if iset:
             p = children.results.get('projection')
             result = INST_PROJ_a(iset=iset[0], projection=None if not p else p[0])
+            _logger.info(f"  > {result}")
+            return result
             # TODO: include opchain if supplied
 
         result = children
@@ -1403,6 +1413,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info("scalar_source = type_selector / input_param")
         _logger.info(f'  :: {node.value}')
+        _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  < {children}")
         its = children.results.get('ITS')
