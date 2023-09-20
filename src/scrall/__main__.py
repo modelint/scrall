@@ -44,6 +44,9 @@ def main():
     # Start logging
     logger = get_logger()
     logger.info(f'Scrall parser version: {version}')
+    logger.info('-----------------')
+    logger.info('-  Node visits  -')
+    logger.info('-----------------\n')
 
     # Parse the command line args
     args = parse(sys.argv[1:])
