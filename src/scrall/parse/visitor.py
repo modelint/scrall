@@ -81,6 +81,19 @@ table_op = {
     '##': 'JOIN',
 }
 
+def logop(c):
+    """
+    If an operator is detected at some level of nesting, log its detection.
+    This makes it easy to ignore nested levels where the operand is simply passed through.
+
+    :param c:  visited children
+    :return:
+    """
+    found_keys = c.results.keys()
+    if len(found_keys) > 1:
+        key_names = [k for k in found_keys]
+        _logger.info(f" >> {key_names[1]} {c.results[key_names[1]][0]}")
+
 def getresult(t: str, c):
     """
     Returns the first element of the specified term in the parse children.results
@@ -155,6 +168,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info('execution_unit = LINEWRAP* (output_flow / (statement_set sequence_token?)) EOL+')
         _logger.info(f'  :: {node.value}')
+        _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  < {children}")
         oflow = getresult('output_flow', children)
@@ -171,6 +185,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info('statement_set = SP* sequenced_statement_set / component_statement_set')
         _logger.info(f'  :: {node.value}')
+        _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  < {children}")
         result = children[0]
@@ -182,6 +197,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info('sequenced_statement_set = sequence_token* (block / statement)')
         _logger.info(f'  :: {node.value}')
+        _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  < {children}")
         input_tokens = getresult('sequence_token', children)
@@ -196,6 +212,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info('component_statement_set = block / statement')
         _logger.info(f'  :: {node.value}')
+        _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  > {children}")
         # b = None if 'block' not in children.results else children.results['block'][0]
@@ -234,6 +251,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info('statement = table_assignment / new_lineage / new_instance / update_ref / delete / migration /'
                      ' scalar_assignment / signal_action / switch / decision / inst_assignment / call / iteration')
         _logger.info(f'  :: {node.value}')
+        _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  < {children}")
         result = children[0]
@@ -273,6 +291,7 @@ class ScrallVisitor(PTNodeVisitor):
     def visit_table_assignment(cls, node, children):
         _logger.info("table_assignment = explicit_table_assignment / implicit_table_assignment")
         _logger.info(f'  :: {node.value}')
+        _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  < {children}")
         result = children[0]
@@ -399,6 +418,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info('table_term = (instance_set / "(" SP* table_expr SP* ")") header_expr? selection? projection?')
         _logger.info(f'  :: {node.value}')
+        _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  < {children}")
 
@@ -911,6 +931,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info("instance_set = new_instance / ((operation / prefix_name / path) (reflexive_selection / "
                      "selection / operation / path)*)")
+        _logger.info(f">> {[k for k in children.results.keys()]}")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
@@ -1161,6 +1182,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info("scalar_logical_or = scalar_logical_and (OR scalar_logical_and)*")
         _logger.info(f'  :: {node.value}')
+        logop(children)
 
         _logger.info(f"  < {children}")
         if len(children) == 1: # No OR operation
@@ -1176,6 +1198,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info("scalar_logical_and = equality (AND equality)*")
         _logger.info(f'  :: {node.value}')
+        logop(children)
 
         _logger.info(f"  < {children}")
         if len(children) == 1: # No AND operation
@@ -1191,6 +1214,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info("equality = comparison (EQUAL comparison)*")
         _logger.info(f'  :: {node.value}')
+        logop(children)
 
         _logger.info(f"  < {children}")
         if len(children) == 1:
@@ -1208,6 +1232,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info("comparison = addition (COMPARE addition)*")
         _logger.info(f'  :: {node.value}')
+        logop(children)
 
         _logger.info(f"  < {children}")
         if len(children) == 1:
@@ -1223,6 +1248,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info("addition = factor (ADD factor)*")
         _logger.info(f'  :: {node.value}')
+        logop(children)
 
         _logger.info(f"  < {children}")
         if len(children) == 1:
@@ -1239,6 +1265,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info("factor = term (MULT term)*")
         _logger.info(f'  :: {node.value}')
+        logop(children)
 
         _logger.info(f"  < {children}")
         if len(children) == 1:
@@ -1286,6 +1313,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info("scalar = value / QTY? scalar_chain")
         _logger.info(f'  :: {node.value}')
+        _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  < {children}")
         # Return value
@@ -1322,6 +1350,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info("scalar_chain = (ITS op_chain) / ((scalar_source / instance_set projection?) op_chain?)")
         _logger.info(f'  :: {node.value}')
+        _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  < {children}")
         # ITS op_chain
