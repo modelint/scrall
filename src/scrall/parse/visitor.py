@@ -935,7 +935,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        if len(children) == 1 and isinstance(children[0],N_a):
+        if len(children) == 1 and isinstance(children[0], N_a):
             result = children[0]
         else:
             result = INST_a(children)
@@ -1180,99 +1180,124 @@ class ScrallVisitor(PTNodeVisitor):
     def visit_scalar_logical_or(cls, node, children):
         """
         """
-        _logger.info("scalar_logical_or = scalar_logical_and (OR scalar_logical_and)*")
-        _logger.info(f'  :: {node.value}')
-        logop(children)
-
-        _logger.info(f"  < {children}")
-        if len(children) == 1: # No OR operation
+        if len(children) == 1:  # No OR operation
             result = children[0]
         else:
             result = BOOL_a('OR', children.results['scalar_logical_and'])
-        _logger.info(f"  > {result}")
+
+        if children[0] != result:
+            _logger.info(f"{node.rule_name} = scalar_logical_and (OR scalar_logical_and)*")
+            _logger.info(f'  :: {node.value}')
+            logop(children)
+
+            _logger.info(f"  < {children}")
+            _logger.info(f"  > {result}")
+        else:
+            _logger.info(f"{node.rule_name} PASS")
+
         return result
 
     @classmethod
     def visit_scalar_logical_and(cls, node, children):
         """
         """
-        _logger.info("scalar_logical_and = equality (AND equality)*")
-        _logger.info(f'  :: {node.value}')
-        logop(children)
-
-        _logger.info(f"  < {children}")
-        if len(children) == 1: # No AND operation
+        if len(children) == 1:  # No AND operation
             result = children[0]
         else:
             result = BOOL_a('AND', children.results['equality'])
-        _logger.info(f"  > {result}")
+
+        if children[0] != result:
+            _logger.info(f"  > {result}")
+            _logger.info(f"{node.rule_name} = equality (AND equality)*")
+            _logger.info(f'  :: {node.value}')
+            logop(children)
+            _logger.info(f"  < {children}")
+            _logger.info(f"  > {result}")
+        else:
+            _logger.info(f"{node.rule_name} PASS")
+
         return result
 
     @classmethod
     def visit_equality(cls, node, children) -> BOOL_a:
         """
         """
-        _logger.info("equality = comparison (EQUAL comparison)*")
-        _logger.info(f'  :: {node.value}')
-        logop(children)
-
-        _logger.info(f"  < {children}")
         if len(children) == 1:
             result = children[0]
         else:
             # Convert ':' to '==' if found
             eq_map = ['==' if e in ('==',':') else '!=' for e in children.results['EQUAL']]
             result = BOOL_a(eq_map, children.results['comparison'])
-        _logger.info(f"  > {result}")
+
+        if children[0] != result:
+            _logger.info(f"{node.rule_name} = comparison (EQUAL comparison)*")
+            _logger.info(f'  :: {node.value}')
+            logop(children)
+            _logger.info(f"  < {children}")
+            _logger.info(f"  > {result}")
+        else:
+            _logger.info(f"{node.rule_name} PASS")
+
         return result
 
     @classmethod
     def visit_comparison(cls, node, children):
         """
         """
-        _logger.info("comparison = addition (COMPARE addition)*")
-        _logger.info(f'  :: {node.value}')
-        logop(children)
-
-        _logger.info(f"  < {children}")
         if len(children) == 1:
             result = children[0]
         else:
             result = BOOL_a(children.results['COMPARE'][0], children.results['addition'])
-        _logger.info(f"  > {result}")
+
+        if children[0] != result:
+            _logger.info(f"{node.rule_name} = addition (COMPARE addition)*")
+            _logger.info(f'  :: {node.value}')
+            logop(children)
+            _logger.info(f"  < {children}")
+            _logger.info(f"  > {result}")
+        else:
+            _logger.info(f"{node.rule_name} PASS")
+
         return result
 
     @classmethod
     def visit_addition(cls, node, children):
         """
         """
-        _logger.info("addition = factor (ADD factor)*")
-        _logger.info(f'  :: {node.value}')
-        logop(children)
-
-        _logger.info(f"  < {children}")
         if len(children) == 1:
             result = children[0]
         else:
             result = MATH_a(children.results['ADD'][0], children.results['factor'])
-        _logger.info(f"  > {result}")
+
+        if children[0] != result:
+            _logger.info(f"{node.rule_name} = factor (ADD factor)*")
+            _logger.info(f'  :: {node.value}')
+            logop(children)
+            _logger.info(f"  < {children}")
+            _logger.info(f"  > {result}")
+        else:
+            _logger.info(f"{node.rule_name} PASS")
+
         return result
 
     @classmethod
     def visit_factor(cls, node, children):
         """
-
         """
-        _logger.info("factor = term (MULT term)*")
-        _logger.info(f'  :: {node.value}')
-        logop(children)
-
-        _logger.info(f"  < {children}")
         if len(children) == 1:
             result = children[0]
         else:
             result = MATH_a(children.results['MULT'][0], children.results['term'])
-        _logger.info(f"  > {result}")
+
+        if children[0] != result:
+            _logger.info(f"{node.rule_name} = term (MULT term)*")
+            _logger.info(f'  :: {node.value}')
+            logop(children)
+            _logger.info(f"  < {children}")
+            _logger.info(f"  > {result}")
+        else:
+            _logger.info(f"{node.rule_name} PASS")
+
         return result
 
     @classmethod
@@ -1303,7 +1328,6 @@ class ScrallVisitor(PTNodeVisitor):
             result = BOOL_a('NOT', UNARY_a('-', scalar))
         _logger.info(f"  > {result}")
         return result
-
 
     @classmethod
     def visit_scalar(cls, node, children):
