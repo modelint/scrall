@@ -306,9 +306,9 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        atuple = True if children[1] == '||=' else False
-        result = Table_Assignment_a(assign_tuple=atuple, type='explicit', lhs=children[0], rhs=children[1],
-                                  X=(node.position, node.position_end))
+        atuple = True if children.results['relation_assign_op'][0] == '||=' else False
+        result = Table_Assignment_a(assign_tuple=atuple, type='explicit', lhs=children.results['table_def'][0],
+                                    rhs=children.results['table_value'][0], X=(node.position, node.position_end))
         _logger.info(f"  > {result}")
         return result
 
@@ -384,9 +384,9 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        atuple = True if children[1] == '||=' else False
-        result = Table_Assignment_a(assign_tuple=atuple, type='implicit', lhs=children[0].name, rhs=children[1],
-                                  X=(node.position, node.position_end))
+        atuple = True if children.results['relation_assign_op'][0] == '||=' else False
+        result = Table_Assignment_a(assign_tuple=atuple, type='implicit', lhs=children[0].name,
+                                    rhs=children.results['table_expr'][0], X=(node.position, node.position_end))
         _logger.info(f"  > {result}")
         return result
 

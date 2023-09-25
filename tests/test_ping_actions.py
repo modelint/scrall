@@ -37,7 +37,7 @@ actions = [
 
     ("stop here floors #= shaft aslevs( Stop requested ).Floor",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
-            statement=Table_Assignment_a(type='implicit',
+            statement=Table_Assignment_a(type='implicit', assign_tuple=False,
                 lhs='stop here floors',
                 rhs=TEXPR_a(table=INST_a(components=[N_a(name='shaft aslevs')]), hexpr=None,
                             selection=Selection_a(card='*', criteria=N_a(name='Stop requested')),
