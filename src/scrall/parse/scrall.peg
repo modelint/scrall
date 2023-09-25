@@ -16,8 +16,10 @@ token_name = r'[A-Za-z0-9_]+' // No spaces in token names, often single digit: <
 table_assignment = explicit_table_assignment / implicit_table_assignment
 
 // Explicit table assignment
-explicit_table_assignment = table_def SP+ TABLE_ASSIGN SP+ table_value
+explicit_table_assignment = table_def SP+ relation_assign_op SP+ table_value
+relation_assign_op = TABLE_ASSIGN / TUPLE_ASSIGN
 TABLE_ASSIGN = '#='
+TUPLE_ASSIGN = '||='
 table_def = name '[' SP* (attr_type_set SP*)? ']'
 attr_type_set = attr_type_def (',' SP* attr_type_def)*
 attr_type_def = name '::' name
@@ -26,7 +28,7 @@ row = '{' SP* attr_value_set? SP* '}'
 attr_value_set = scalar_expr (',' SP* scalar_expr)*
 
 // Implicit table assignment
-implicit_table_assignment = name SP+ TABLE_ASSIGN SP+ table_expr
+implicit_table_assignment = name SP+ relation_assign_op SP+ table_expr
 table_expr = SP* table_operation SP*
 table_operation = table_term (SP* TOP SP* table_term)*
 table_term = (instance_set / "(" SP* table_expr SP* ")") header_expr? selection? projection?

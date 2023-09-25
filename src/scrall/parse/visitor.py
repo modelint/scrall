@@ -38,7 +38,7 @@ UNARY_a = namedtuple('UNARY_a', 'op operand')
 BOOL_a = namedtuple('BOOL_a', 'op operands')
 """Boolean operation returns true or false"""
 Scalar_Assignment_a = namedtuple('Scalar_Assignment_a', 'lhs rhs')
-Table_Assignment_a = namedtuple('Table_Assignment_a', 'type lhs rhs X')
+Table_Assignment_a = namedtuple('Table_Assignment_a', 'type assign_tuple lhs rhs X')
 Scalar_RHS_a = namedtuple('Scalar_RHS_a', 'expr attrs')
 Flow_Output_a = namedtuple('Flow_Output_a', 'name exp_type')
 PATH_a = namedtuple('PATH_a', 'hops')
@@ -302,11 +302,12 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_explicit_table_assignment(cls, node, children):
 
-        _logger.info("explicit_table_assignment = table_def TABLE_ASSIGN table_value")
+        _logger.info("explicit_table_assignment = table_def relation_assign_op table_value")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = Table_Assignment_a(type='explicit', lhs=children[0], rhs=children[1],
+        atuple = True if children[1] == '||=' else False
+        result = Table_Assignment_a(assign_tuple=atuple, type='explicit', lhs=children[0], rhs=children[1],
                                   X=(node.position, node.position_end))
         _logger.info(f"  > {result}")
         return result
@@ -379,11 +380,12 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_implicit_table_assignment(cls, node, children):
 
-        _logger.info("implicit_table_assignment = name TABLE_ASSIGN table_expr")
+        _logger.info("implicit_table_assignment = name relation_assign_op table_expr")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = Table_Assignment_a(type='implicit', lhs=children[0].name, rhs=children[1],
+        atuple = True if children[1] == '||=' else False
+        result = Table_Assignment_a(assign_tuple=atuple, type='implicit', lhs=children[0].name, rhs=children[1],
                                   X=(node.position, node.position_end))
         _logger.info(f"  > {result}")
         return result
