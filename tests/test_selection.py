@@ -36,7 +36,7 @@ actions = [
              statement=Inst_Assignment_a(
                  lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='M',
                  rhs=INST_a(components=[N_a(name='Shaft'), Selection_a(card='*',
-                        criteria=BOOL_a(op=['=='], operands=[N_a(name='In service'), 'true']))]),
+                        criteria=BOOL_a(op='==', operands=[N_a(name='In service'), 'true']))]),
              X=(0, 29)), block=None), output_token=None)
      ),
     ("s ..= Shaft(In service)",
@@ -52,7 +52,7 @@ actions = [
                   lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='1',
                   rhs=INST_a(components=[N_a(name='Bank'), Selection_a(card='*',
                       criteria=BOOL_a(op='OR', operands=[
-                          BOOL_a(op=['=='], operands=[
+                          BOOL_a(op='==', operands=[
                               N_a(name='Max close attempts'),
                               BOOL_a(op='OR', operands=[N_a(name='v'), N_a(name='x')])]),
                           BOOL_a(op='>', operands=[N_a(name='Average cabin speed'), N_a(name='mspeed')])]))]),
@@ -63,7 +63,7 @@ actions = [
               statement=Inst_Assignment_a(
                   lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='M',
                   rhs=INST_a(components=[Op_a(owner='car', op_name='findsome', supplied_params=[], order=None),
-                                         Selection_a(card='*', criteria=BOOL_a(op=['=='],
+                                         Selection_a(card='*', criteria=BOOL_a(op='==',
                                              operands=[N_a(name='color'), Enum_a(value=N_a(name='red'))]))]),
               X=(0, 33)), block=None), output_token=None)
      ),

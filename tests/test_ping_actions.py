@@ -81,14 +81,14 @@ actions = [
             statement=Inst_Assignment_a(
                 lhs=Flow_Output_a(name=N_a(name='requested stops'), exp_type=None), card='M',
                 rhs=INST_a(components=[N_a(name='shaft aslevs'), Selection_a(card='*',
-                             criteria=BOOL_a(op=['=='], operands=[N_a(name='Stop requested'), N_a(name='avalue')]))]),
+                             criteria=BOOL_a(op='==', operands=[N_a(name='Stop requested'), N_a(name='avalue')]))]),
             X=(0, 58)), block=None), output_token=None)
      ),
     ("=>> Accessible Shaft Level( Floor: nearest dest.Floor; Shaft )",
         Output_Flow_a(output=
             INST_a(components=[N_a(name='Accessible Shaft Level'),
                  Selection_a(card='*', criteria=BOOL_a(op='AND', operands=[
-                                                     BOOL_a(op=['=='], operands=[
+                                                     BOOL_a(op='==', operands=[
                                                          N_a(name='Floor'),
                                                          INST_PROJ_a(iset=N_a(name='nearest dest'), projection=
                                                              Projection_a(expand=None, attrs=[N_a(name='Floor')]))]),

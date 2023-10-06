@@ -1228,8 +1228,8 @@ class ScrallVisitor(PTNodeVisitor):
             result = children[0]
         else:
             # Convert ':' to '==' if found
-            eq_map = ['==' if e in ('==',':') else '!=' for e in children.results['EQUAL']]
-            result = BOOL_a(eq_map, children.results['comparison'])
+            eq_op = '==' if children.results['EQUAL'][0] == ':' else children.results['EQUAL'][0]
+            result = BOOL_a(eq_op, children.results['comparison'])
 
         if children[0] != result:
             _logger.info(f"{node.rule_name} = comparison (EQUAL comparison)*")
