@@ -31,12 +31,12 @@ actions = [
                        criteria=BOOL_a(op='>', operands=[N_a(name='Speed'), N_a(name='slowest')]))]),
            X=(0, 28)), block=None), output_token=None)
      ),
-    ("s ..= Shaft(In service: True)",
+    ("s ..= Shaft(In service: TRUE)",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
              statement=Inst_Assignment_a(
                  lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='M',
                  rhs=INST_a(components=[N_a(name='Shaft'), Selection_a(card='*',
-                        criteria=BOOL_a(op='==', operands=[N_a(name='In service'), 'true']))]),
+                        criteria=BOOL_a(op='==', operands=[N_a(name='In service'), 'TRUE']))]),
              X=(0, 29)), block=None), output_token=None)
      ),
     ("s ..= Shaft(In service)",

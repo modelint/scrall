@@ -6,10 +6,10 @@ from scrall.parse.visitor import Execution_Unit_a, Signal_a, Signal_Dest_a, N_a,
     Seq_Statement_Set_a
 
 actions = [
-    ("Change requested -> me",
+    ("Change requested -> ME",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
            statement=Signal_a(event='Change requested', supplied_params=[],
-                              dest=Signal_Dest_a(target_iset=N_a(name='me'),
+                              dest=Signal_Dest_a(target_iset=N_a(name='ME'),
                               assigner_partition=N_a(name=None), delay=0)),
            block=None), output_token=None)
      ),

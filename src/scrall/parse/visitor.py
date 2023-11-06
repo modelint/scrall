@@ -808,7 +808,7 @@ class ScrallVisitor(PTNodeVisitor):
 
     @classmethod
     def visit_ITS(cls, node, children):
-        _logger.info("ITS = 'its'")
+        _logger.info("ITS = 'ITS'")
         _logger.info(f'  :: {node.value}')
 
         result = 'ITS'
@@ -839,7 +839,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         The results of an operation can be ordered ascending, descending
         The operation is invoked on the owner which may or may not be explicitly named
-        If the owner is implicit, it could be 'me' (the local instance) or an operation on a type
+        If the owner is implicit, it could be 'ME' (the executing instance) or an operation on a type
         as determined from its parameters
 
         Name is the name of the operation
@@ -904,7 +904,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         iset = children.results.get('instance_set')
-        iset = 'me' if not iset else iset[0]
+        iset = 'ME' if not iset else iset[0]
         dest_iset = children.results['new_inst_init'][0]
         result = Migration_a(from_inst=iset, to_subclass=dest_iset)
         _logger.info(f"  > {result}")
@@ -1052,7 +1052,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         iset = children.results.get('instance_set')
-        iset = 'me' if not iset else iset[0]
+        iset = 'ME' if not iset else iset[0]
         result = Update_ref_a(iset=iset, to_ref=children[-1])
         _logger.info(f"  > {result}")
         return result
