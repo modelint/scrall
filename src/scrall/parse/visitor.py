@@ -646,7 +646,7 @@ class ScrallVisitor(PTNodeVisitor):
     def visit_signal_action(cls, node, children):
         """
         """
-        _logger.info("signal_action = signal_choice / signal")
+        _logger.info("signal_spec SP+ (signal_dest / ee_dest)")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
@@ -675,35 +675,6 @@ class ScrallVisitor(PTNodeVisitor):
                 supplied_params=children[0]['params'],
                 ee=children[1]
             )
-        _logger.info(f"  > {result}")
-        return result
-
-    @classmethod
-    def visit_signal_choice(cls, node, children):
-        """
-        scalar_expr DECISION_OP signal_spec ':' signal_spec signal_dest
-        """
-        _logger.info("signal_choice = ")
-        _logger.info(f'  :: {node.value}')
-
-        _logger.info(f"  < {children}")
-        expr = children[0]
-        # Both signals in a choice always have the same destination and delay
-        true_signal = Signal_a(
-            event=children[1]['name'],
-            supplied_params=children[1]['params'],
-            dest=children[3]
-        )
-        false_signal = Signal_a(
-            event=children[2]['name'],
-            supplied_params=children[2]['params'],
-            dest=children[3]
-        )
-        result = Signal_Choice_a(
-            decision=expr,
-            true_signal=true_signal,
-            false_signal=false_signal,
-        )
         _logger.info(f"  > {result}")
         return result
 
@@ -888,7 +859,7 @@ class ScrallVisitor(PTNodeVisitor):
         s = s if len(s) > 1 else s[0]
         p = children.results.get('name')
         if not p and not (isinstance(s, N_a) or isinstance(s, IN_a)):
-            _logger.error(f"Paramenter name not supplied with expression value: [{children.results}]")
+            _logger.error(f"Parameter name not supplied with expression value: [{children.results}]")
             raise ScrallMissingParameterName(children.results)
         result = Supplied_Parameter_a(pname=s.name if not p else p[0].name, sval=s)
         _logger.info(f"  > {result}")
