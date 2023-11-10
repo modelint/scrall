@@ -166,14 +166,11 @@ class ScrallVisitor(PTNodeVisitor):
 
         Every execution unit is terminated by a new line.
         """
-        _logger.info('execution_unit = LINEWRAP* (output_flow / (statement_set sequence_token?)) EOL+')
+        _logger.info('LINEWRAP* statement_set sequence_token? LINEWRAP+')
         _logger.info(f'  :: {node.value}')
         _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  < {children}")
-        oflow = getresult('output_flow', children)
-        if oflow:
-            return Output_Flow_a(oflow[0])
         output_token = getresult('sequence_token', children)
         st_set = getresult('statement_set', children)
         result = Execution_Unit_a(output_token=output_token, statement_set=st_set)
@@ -641,21 +638,8 @@ class ScrallVisitor(PTNodeVisitor):
     #     """
     #     result = Asynch_a(*children)
 
-    # Signal action
     @classmethod
     def visit_signal_action(cls, node, children):
-        """
-        """
-        _logger.info("signal_action = signal_choice / signal")
-        _logger.info(f'  :: {node.value}')
-
-        _logger.info(f"  < {children}")
-        result = children[0]
-        _logger.info(f"  > {result}")
-        return result
-
-    @classmethod
-    def visit_signal(cls, node, children):
         """
         """
         _logger.info("signal = signal_spec (signal_dest / ee_dest)")
@@ -922,6 +906,21 @@ class ScrallVisitor(PTNodeVisitor):
         result = Iteration_a(*children)
         _logger.info(f"  > {result}")
         return result
+
+    # Output flow
+    def visit_output_flow(cls, node, children):
+        """
+        Final output of a synchronous activity (method, operation)
+        """
+        _logger.info("output_flow = OUTPUT SP+ scalar_expr")
+        _logger.info(f'  :: {node.value}')
+
+        _logger.info(f"  < {children}")
+
+        result = Output_Flow_a(children[0])
+        _logger.info(f"  > {result}")
+        return result
+
 
     # Instance set
     @classmethod
@@ -1578,7 +1577,6 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f"  > {result}")
         return result
 
-    # Names
     @classmethod
     def visit_name(cls, node, children):
         """ Join words and delimiters """

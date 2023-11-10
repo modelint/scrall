@@ -1,7 +1,5 @@
 activity = LINEWRAP* execution_unit* EOF
-execution_unit = LINEWRAP* (output_flow / (statement_set sequence_token?)) EOL+
-output_flow = OUTPUT SP+ scalar_expr
-OUTPUT = '=>>'
+execution_unit = LINEWRAP* statement_set sequence_token? LINEWRAP+
 statement_set = SP* sequenced_statement_set / component_statement_set
 sequenced_statement_set = sequence_token* (block / statement)
 component_statement_set = block / LINEWRAP* statement
@@ -89,6 +87,10 @@ migration = instance_set? SP* '>>' SP* new_inst_init
 // Iteration
 iteration = '<<' SP* instance_set SP* '>>' SP* component_statement_set
 
+// Output flow action
+output_flow = OUTPUT SP+ scalar_expr
+OUTPUT = '=>>'
+
 // Instance set
 instance_set =  new_instance / ((operation / prefix_name / path) (reflexive_selection / selection / operation / path)*)
 selection = '(' SP* select_phrase SP* ')'
@@ -139,7 +141,7 @@ prefix_name = ORDER? name
 scalar_op = name supplied_params
 
 // name of type and name of value selected
-type_selector = name '[' SP* (name SP*)? ']'
+type_selector = name '[' SP* selected_value? SP* ']'
 
 reflexive_selection = HIPPITY_HOP scalar_expr (SP* '|' COMPARE '|')?
 HIPPITY_HOP = FAR_HOP / NEAR_HOP
@@ -147,9 +149,9 @@ NEAR_HOP = '/~/'
 FAR_HOP = '/~|'
 
 SCALAR_ASSIGN = '='
-OR = 'or' / 'OR'
-AND = 'and' / 'AND' / ';' // ; shorthand for anding attr comparisons in a selection phrase
-NOT = '!' / 'not' / 'NOT'
+OR = 'OR'
+AND = 'AND' / ';' // ; shorthand for anding attr comparisons in a selection phrase
+NOT = '!' / 'NOT'
 EQUAL = '==' / '!=' / ':'
 COMPARE = '>=' / '>' / '<=' / '<'
 UNARY_MINUS = "-"
@@ -165,6 +167,7 @@ path = hop+ // path to some instance set
 hop = '/' (rnum / name) // just a sequence of rels and phrase or class names
 
 // Names
+selected_value = r'[^[\]\s]+' // any non-whitespace character except square brackets
 name = first_word (NAME_GLUE word)* // One word or a sequence of delimited words (name used for most model elements)
 NAME_GLUE = r'[ _]' // delmits words within a name
 rnum = r'O?R[1-9][0-9]*' // Relationship number (name used for relationships)
