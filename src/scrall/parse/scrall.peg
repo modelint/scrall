@@ -4,7 +4,7 @@ statement_set = SP* sequenced_statement_set / component_statement_set
 sequenced_statement_set = sequence_token* (block / statement)
 component_statement_set = block / LINEWRAP* statement
 block = SP* '{' execution_unit* '}'
-statement = table_assignment / new_lineage / new_instance / update_ref / delete / migration / scalar_assignment / signal_action / switch / decision / inst_assignment / call / iteration
+statement = table_assignment / new_lineage / new_instance / update_ref / delete / migration / scalar_assignment / signal_action / switch / decision / inst_assignment / call / iteration / output_flow
 
 // Explicit sequence using control flow inputs and outputs
 sequence_token = SP* '<' token_name '>' SP* // Named control flow
@@ -45,7 +45,7 @@ RENAME = '>>'
 // Decision action
 decision = scalar_expr SP* true_result false_result? // Control flow version of an if-then
 true_result = DECISION_OP SP* component_statement_set
-false_result = SP* FALSE_RESULT_OP SP* component_statement_set // Else
+false_result = (LINEWRAP* / SP*) FALSE_RESULT_OP SP* component_statement_set // Else
 FALSE_RESULT_OP = ':'
 
 // Switch action
@@ -58,9 +58,8 @@ enum_value = '_' name // Scalar switch has enum value cases
 DECISION_OP = '?'
 
 // Signal action
-signal_action = signal_choice / signal
+signal_action = signal_spec SP+ (signal_dest / ee_dest)
 signal = signal_spec SP+ (signal_dest / ee_dest)
-signal_choice = scalar_expr SP* DECISION_OP (LINEWRAP? / SP+) signal_spec SP* SIGNAL_OP SP* '|' SP+ signal_spec SP* signal_dest
 signal_spec = name supplied_params?
 signal_dest = SIGNAL_OP (LINEWRAP / SP+) instance_set assigner_partition? (SP+ delay)?
 ee_dest = ASYNCH SP* name
@@ -116,7 +115,7 @@ delete = '!*' SP* instance_set
 //scalar_call = scalar_expr
 
 // math and boolean operator precedence
-scalar_assignment = scalar_output_set SP* SCALAR_ASSIGN SP* scalar_expr projection?
+scalar_assignment = scalar_output_set SP* SCALAR_ASSIGN SP* (scalar_expr projection?) (',' SP* scalar_expr projection?)*
 scalar_output_set = flow_output (',' SP* flow_output)*
 flow_output = name (TYPE_ASSIGN name)?
 projection = '.' (name / '(' ( (ALL / (name (',' SP+ name)*) )? ')'))
