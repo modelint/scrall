@@ -4,11 +4,14 @@ __main__.py
 Scrall Parser
 """
 
+# System
 import logging
 import logging.config
 import sys
 import argparse
 from pathlib import Path
+
+# Scrall
 from scrall import version
 from scrall.parse.parser import ScrallParser
 
@@ -66,7 +69,7 @@ def main():
         d = args.debug
         result = ScrallParser.parse_file(file_input=fpath, debug=d)
 
-    logger.info("No problemo")  # We didn't die on an exception, basically
+    # logger.info("No problemo")  # We didn't die on an exception, basically
     print("\nNo problemo")
 
 

@@ -109,7 +109,7 @@ attr_init = '(' SP* (attr_value_init (',' SP+ attr_value_init)* SP*)? ')' // all
 attr_value_init = (name SP? ':' SP+ scalar_expr )*
 update_ref = (instance_set SP+)? to_ref // relate or unrelated to me or explicit instance_set
 to_ref = '&' rnum SP+ instance_set (',' SP+ instance_set)? // non-associative or associative reference
-delete = '!*' SP* instance_set
+delete = '!*' SP* instance_set (',' SP+ instance_set) // supports multi-delete transaction
 
 // Scalar call
 //scalar_call = scalar_expr
