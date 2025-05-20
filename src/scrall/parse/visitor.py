@@ -10,13 +10,13 @@ _logger = logging.getLogger(__name__)
 # and return in the visit result.
 Supplied_Parameter_a = namedtuple('Supplied_Parameter_a', 'pname sval')
 """Parameter name and flow name pair for a set of supplied parameters"""
-Op_a = namedtuple('Op_a', 'owner op_name supplied_params order')
+Op_a = namedtuple('Op_a', 'owner op_name supplied_params')
 Scalar_op_a = namedtuple('Scalar_op_a', 'name supplied_params')
 Call_a = namedtuple('Call_a', 'call op_chain')
 Scalar_Call_a = namedtuple('Scalar_Call_a', 'call')
 """The subject of a call could be an instance set (method) or an external entity (ee operation)"""
 Attr_Access_a = namedtuple('Attr_Access_a', 'cname its attr')
-Selection_a = namedtuple('Selection_a', 'card criteria')
+Selection_a = namedtuple('Selection_a', 'card order criteria')
 Inst_Assignment_a = namedtuple('Inst_Assignment_a', 'lhs card rhs X')
 EE_Signal_a = namedtuple('EE_Signal_a', 'event supplied_params ee')
 Signal_a = namedtuple('Signal_a', 'event supplied_params dest')
@@ -792,6 +792,8 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_operation(cls, node, children):
         """
+        owner? '.' name supplied_params
+
         The results of an operation can be ordered ascending, descending
         The operation is invoked on the owner which may or may not be explicitly named
         If the owner is implicit, it could be 'ME' (the executing instance) or an operation on a type
@@ -804,13 +806,12 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         owner = children.results.get('owner')
-        o = children.results.get('ORDER')
         p = children.results.get('supplied_params')
         result = Op_a(
             owner='implicit' if not owner else owner[0],
             op_name=children.results['name'][0].name,
-            supplied_params=[] if not p else p[0],
-            order=None if not o else symbol[o[0]]
+            supplied_params=[] if not p else p[0]
+            # order=None if not o else symbol[o[0]]
         )
         _logger.info(f"  > {result}")
         return result
@@ -915,20 +916,9 @@ class ScrallVisitor(PTNodeVisitor):
         return result
 
     @classmethod
-    def visit_selection(cls, node, children):
-        """
-        """
-        _logger.info("selection = '(' select_phrase ')'")
-        _logger.info(f'  :: {node.value}')
-
-        _logger.info(f"  < {children}")
-        result = Selection_a(card=children[0][0], criteria=None if len(children[0]) < 2 else children[0][1])
-        _logger.info(f"  > {result}")
-        return result
-
-    @classmethod
     def visit_select_phrase(cls, node, children):
         """
+        (CARD ',' SP* ORDER? scalar_expr) / CARD / ORDER? scalar_expr
         """
         _logger.info(f"{node.rule_name} = (CARD ',' SP* scalar_expr) / CARD / scalar_expr")
         _logger.info(f">> {[k for k in children.results.keys()]}")
@@ -938,8 +928,10 @@ class ScrallVisitor(PTNodeVisitor):
         explicit_card = children.results.get('CARD')
         card = '*' if not explicit_card else explicit_card[0]
         criteria = children.results.get('scalar_expr')
+        o = children.results.get('ORDER')
+        o = symbol[o[0]] if o else None
         if criteria:
-            result = [card, criteria[0]]
+            result = Selection_a(card=card, criteria=criteria[0], order=o)
         else:
             result = [card]
         _logger.info(f"  > {result}")
@@ -1423,22 +1415,22 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f"  > {result}")
         return result
 
-    @classmethod
-    def visit_prefix_name(cls, node, children):
-        """
-        """
-        _logger.info("prefix_name = ORDER? name")
-        _logger.info(f'  :: {node.value}')
-
-        _logger.info(f"  < {children}")
-        n = children.results['name'][0]
-        o = children.results.get('ORDER')
-        if o:
-            result = Order_name_a(order=symbol[o[0]], name=n)
-        else:
-            result = n
-        _logger.info(f"  > {result}")
-        return result
+    # @classmethod
+    # def visit_prefix_name(cls, node, children):
+    #     """
+    #     """
+    #     _logger.info("prefix_name = ORDER? name")
+    #     _logger.info(f'  :: {node.value}')
+    #
+    #     _logger.info(f"  < {children}")
+    #     n = children.results['name'][0]
+    #     o = children.results.get('ORDER')
+    #     if o:
+    #         result = Order_name_a(order=symbol[o[0]], name=n)
+    #     else:
+    #         result = n
+    #     _logger.info(f"  > {result}")
+    #     return result
 
     @classmethod
     def visit_scalar_op(cls, node, children):

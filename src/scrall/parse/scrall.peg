@@ -75,7 +75,7 @@ INST_ASSIGN = '.=' / '..='
 
 // Synchronous call action (method or ee operation)
 call = instance_set op_chain? // Post-parse verify that last element is an operation, otherwise invalid call
-operation = ORDER? owner? '.' name supplied_params
+operation = owner? '.' name supplied_params
 owner = name
 supplied_params = '(' SP* (param (',' SP+ param)*)? SP* ')'
 param = (name SP* ':' SP*)? scalar_expr // Comma above keeps scalar_expr from grabbing next param
@@ -91,9 +91,9 @@ output_flow = OUTPUT SP+ scalar_expr
 OUTPUT = '=>>'
 
 // Instance set
-instance_set =  new_instance / ((operation / prefix_name / path) (reflexive_selection / selection / operation / path)*)
+instance_set =  new_instance / ((operation / name / path) (reflexive_selection / selection / operation / path)*)
 selection = '(' SP* select_phrase SP* ')'
-select_phrase = (CARD ',' SP* scalar_expr) / CARD / scalar_expr
+select_phrase = (CARD ',' SP* ORDER? scalar_expr) / CARD / ORDER? scalar_expr
 CARD = '1' / '*'
 ORDER = '^+' / '^-'
 IN = '^'
@@ -136,7 +136,6 @@ scalar_chain = (ITS op_chain) / ((scalar_source / instance_set projection?) op_c
 scalar_source = type_selector / input_param
 op_chain = ('.' (scalar_op / name))*
 value = TRUE / FALSE / enum_value
-prefix_name = ORDER? name
 scalar_op = name supplied_params
 
 // name of type and name of value selected
