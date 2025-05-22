@@ -12,9 +12,9 @@ atcOn >>On Duty Controller(Time logged in: Date.Now hms) &R3 my station
 << /OR1/next >> {
     LOG.LogData( Item1: Altitude, Item2: Airspeed )
 }
-<< Aircraft(^+Altitude; ^-Airspeed) >> {
-    LOG.LogData( Item1: Altitude, Item2: Airspeed )
-}
+//<< Aircraft(^+Altitude; ^-Airspeed) >> {
+//    LOG.LogData( Item1: Altitude, Item2: Airspeed )
+//}
 // Implicit
 t4[ Altitude::Height, Heading::Compass ] #= { { a1, h1 } { a2, h2 } } // Two rows
 t5[ Altitude::Height, Heading::Compass ] #= {} // No rows
@@ -57,8 +57,8 @@ b = Motor.Compute(x: c or d, y: e / f)
 x = /R1/Aircraft(1).Speed.mph
 higher follow ac .= /OR3/is following/~/its.Altitude |>|
 hf ac .= /OR3/is following/~|( its.Altitude - Altitude ) > y
-cabin .= Cabin(1, ^-.Estimated travel delay( To floor : calling floor, Calling dir: Dir ))
-best cabin .= ^-.Estimated travel delay(floor: position)
+cabin .= Cabin(1<, Estimated travel delay( To floor : calling floor, Calling dir: Dir ))
+best cabin .= Estimated travel delay(floor: position)
 x = .compute(x, y)
 // Tokens
 <1>{

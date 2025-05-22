@@ -10,7 +10,7 @@ actions = [
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
            statement=Inst_Assignment_a(
                lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='M',
-               rhs=INST_a(components=[N_a(name='Shaft'), Selection_a(card='*',
+               rhs=INST_a(components=[N_a(name='Shaft'), Selection_a(card='*', rankr=None,
                           criteria=BOOL_a(op='AND', operands=[N_a(name='Inservice'), N_a(name='Cleared')]))]),
                X=(0, 31)), block=None), output_token=None)
      ),
@@ -18,7 +18,7 @@ actions = [
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
            statement=Inst_Assignment_a(
                lhs=Flow_Output_a(name=N_a(name='c'), exp_type=None), card='M',
-               rhs=INST_a(components=[N_a(name='Cabin'), Selection_a(card='*',
+               rhs=INST_a(components=[N_a(name='Cabin'), Selection_a(card='*', rankr=None,
                   criteria=BOOL_a(op='>', operands=[N_a(name='Speed'),
                            MATH_a(op='+', operands=[N_a(name='slowest'), N_a(name='buffer')])]))]),
                X=(0, 37)), block=None), output_token=None)
@@ -27,7 +27,7 @@ actions = [
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
            statement=Inst_Assignment_a(
                lhs=Flow_Output_a(name=N_a(name='c'), exp_type=None), card='M',
-               rhs=INST_a(components=[N_a(name='Cabin'), Selection_a(card='*',
+               rhs=INST_a(components=[N_a(name='Cabin'), Selection_a(card='*', rankr=None,
                        criteria=BOOL_a(op='>', operands=[N_a(name='Speed'), N_a(name='slowest')]))]),
            X=(0, 28)), block=None), output_token=None)
      ),
@@ -35,14 +35,14 @@ actions = [
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
              statement=Inst_Assignment_a(
                  lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='M',
-                 rhs=INST_a(components=[N_a(name='Shaft'), Selection_a(card='*',
+                 rhs=INST_a(components=[N_a(name='Shaft'), Selection_a(card='*', rankr=None,
                         criteria=BOOL_a(op='==', operands=[N_a(name='In service'), 'TRUE']))]),
              X=(0, 29)), block=None), output_token=None)
      ),
     ("s ..= Shaft(In service)",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
               statement=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='M',
-                                          rhs=INST_a(components=[N_a(name='Shaft'), Selection_a(card='*',
+                                          rhs=INST_a(components=[N_a(name='Shaft'), Selection_a(card='*', rankr=None,
                                               criteria=N_a(name='In service'))]),
               X=(0, 23)), block=None), output_token=None)
      ),
@@ -50,7 +50,7 @@ actions = [
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
               statement=Inst_Assignment_a(
                   lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='1',
-                  rhs=INST_a(components=[N_a(name='Bank'), Selection_a(card='*',
+                  rhs=INST_a(components=[N_a(name='Bank'), Selection_a(card='*', rankr=None,
                       criteria=BOOL_a(op='OR', operands=[
                           BOOL_a(op='==', operands=[
                               N_a(name='Max close attempts'),
@@ -62,8 +62,8 @@ actions = [
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
               statement=Inst_Assignment_a(
                   lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='M',
-                  rhs=INST_a(components=[Op_a(owner='car', op_name='findsome', supplied_params=[], order=None),
-                                         Selection_a(card='*', criteria=BOOL_a(op='==',
+                  rhs=INST_a(components=[Op_a(owner='car', op_name='findsome', supplied_params=[]),
+                                         Selection_a(card='*', rankr=None, criteria=BOOL_a(op='==',
                                              operands=[N_a(name='color'), Enum_a(value=N_a(name='red'))]))]),
               X=(0, 33)), block=None), output_token=None)
      ),
