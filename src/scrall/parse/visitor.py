@@ -72,8 +72,7 @@ Migration_a = namedtuple('Migration_a','from_inst to_subclass')
 Rank_a = namedtuple('Rank_a', "card extent")
 
 
-rank_symbol = {'^+': Rank_a(card=1, extent='greatest'), '^-': Rank_a(card=1, extent='least'),
-          '^^+': Rank_a(card='*', extent='greatest'), '^^-': Rank_a(card='*', extent='least')}
+rank_symbol = {'>': "greatest", '<': "least"}
 
 table_op = {
     '^': 'INTERSECT',
@@ -919,7 +918,7 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_select_phrase(cls, node, children):
         """
-        (CARD ',' SP* RANKR? scalar_expr) / CARD / RANKR? scalar_expr
+        (CARD RANKR? ',' SP* scalar_expr) / CARD / RANKR? scalar_expr
         """
         _logger.info(f"{node.rule_name} = (CARD ',' SP* scalar_expr) / CARD / scalar_expr")
         _logger.info(f">> {[k for k in children.results.keys()]}")
@@ -930,9 +929,9 @@ class ScrallVisitor(PTNodeVisitor):
         card = '*' if not explicit_card else explicit_card[0]
         criteria = children.results.get('scalar_expr')
         rankr = children.results.get('RANKR')
-        rankr_parse = rank_symbol[rankr[0]] if rankr else None
+        rankr_parse = rank_symbol[rankr[0]] if rankr else None  # assign greatest or least
         if criteria:
-            result = Selection_a(card=card, criteria=criteria[0], rankr=rankr_parse)
+            result = Selection_a(card=card, rankr=rankr_parse, criteria=criteria[0])
         else:
             result = [card]
         _logger.info(f"  > {result}")
