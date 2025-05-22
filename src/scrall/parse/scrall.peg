@@ -93,9 +93,9 @@ OUTPUT = '=>>'
 // Instance set
 instance_set =  new_instance / ((operation / name / path) (reflexive_selection / selection / operation / path)*)
 selection = '(' SP* select_phrase SP* ')'
-select_phrase = (CARD ',' SP* ORDER? scalar_expr) / CARD / ORDER? scalar_expr
+select_phrase = (CARD ',' SP* RANKR? scalar_expr) / CARD / RANKR? scalar_expr
 CARD = '1' / '*'
-ORDER = '^+' / '^-'
+RANKR = '^^+' / '^^-' / '^+' / '^-'  // Rank restrict symbol
 IN = '^'
 TRUE = 'TRUE'
 FALSE = 'FALSE'

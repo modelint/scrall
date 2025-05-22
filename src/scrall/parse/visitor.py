@@ -16,7 +16,7 @@ Call_a = namedtuple('Call_a', 'call op_chain')
 Scalar_Call_a = namedtuple('Scalar_Call_a', 'call')
 """The subject of a call could be an instance set (method) or an external entity (ee operation)"""
 Attr_Access_a = namedtuple('Attr_Access_a', 'cname its attr')
-Selection_a = namedtuple('Selection_a', 'card order criteria')
+Selection_a = namedtuple('Selection_a', 'card rankr criteria')
 Inst_Assignment_a = namedtuple('Inst_Assignment_a', 'lhs card rhs X')
 EE_Signal_a = namedtuple('EE_Signal_a', 'event supplied_params ee')
 Signal_a = namedtuple('Signal_a', 'event supplied_params dest')
@@ -69,9 +69,11 @@ Table_Def_a= namedtuple('Table_Def_a', 'name header')
 Rename_a = namedtuple('Rename_a', 'from_name to_name')
 Iteration_a = namedtuple('Iteration_a', 'order statement_set')
 Migration_a = namedtuple('Migration_a','from_inst to_subclass')
+Rank_a = namedtuple('Rank_a', "card extent")
 
 
-symbol = {'^+': 'ascending', '^-': 'descending'}
+rank_symbol = {'^+': Rank_a(card=1, extent='greatest'), '^-': Rank_a(card=1, extent='least'),
+          '^^+': Rank_a(card='*', extent='greatest'), '^^-': Rank_a(card='*', extent='least')}
 
 table_op = {
     '^': 'INTERSECT',
@@ -801,7 +803,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         Name is the name of the operation
         """
-        _logger.info("operation = ORDER? owner? '.' name supplied_params")
+        _logger.info("operation = owner? '.' name supplied_params")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
@@ -811,7 +813,6 @@ class ScrallVisitor(PTNodeVisitor):
             owner='implicit' if not owner else owner[0],
             op_name=children.results['name'][0].name,
             supplied_params=[] if not p else p[0]
-            # order=None if not o else symbol[o[0]]
         )
         _logger.info(f"  > {result}")
         return result
@@ -918,7 +919,7 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_select_phrase(cls, node, children):
         """
-        (CARD ',' SP* ORDER? scalar_expr) / CARD / ORDER? scalar_expr
+        (CARD ',' SP* RANKR? scalar_expr) / CARD / RANKR? scalar_expr
         """
         _logger.info(f"{node.rule_name} = (CARD ',' SP* scalar_expr) / CARD / scalar_expr")
         _logger.info(f">> {[k for k in children.results.keys()]}")
@@ -928,10 +929,10 @@ class ScrallVisitor(PTNodeVisitor):
         explicit_card = children.results.get('CARD')
         card = '*' if not explicit_card else explicit_card[0]
         criteria = children.results.get('scalar_expr')
-        o = children.results.get('ORDER')
-        o = symbol[o[0]] if o else None
+        rankr = children.results.get('RANKR')
+        rankr_parse = rank_symbol[rankr[0]] if rankr else None
         if criteria:
-            result = Selection_a(card=card, criteria=criteria[0], order=o)
+            result = Selection_a(card=card, criteria=criteria[0], rankr=rankr_parse)
         else:
             result = [card]
         _logger.info(f"  > {result}")
@@ -1414,23 +1415,6 @@ class ScrallVisitor(PTNodeVisitor):
         result = children[0]
         _logger.info(f"  > {result}")
         return result
-
-    # @classmethod
-    # def visit_prefix_name(cls, node, children):
-    #     """
-    #     """
-    #     _logger.info("prefix_name = ORDER? name")
-    #     _logger.info(f'  :: {node.value}')
-    #
-    #     _logger.info(f"  < {children}")
-    #     n = children.results['name'][0]
-    #     o = children.results.get('ORDER')
-    #     if o:
-    #         result = Order_name_a(order=symbol[o[0]], name=n)
-    #     else:
-    #         result = n
-    #     _logger.info(f"  > {result}")
-    #     return result
 
     @classmethod
     def visit_scalar_op(cls, node, children):
