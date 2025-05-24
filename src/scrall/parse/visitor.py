@@ -16,7 +16,8 @@ Call_a = namedtuple('Call_a', 'call op_chain')
 Scalar_Call_a = namedtuple('Scalar_Call_a', 'call')
 """The subject of a call could be an instance set (method) or an external entity (ee operation)"""
 Attr_Access_a = namedtuple('Attr_Access_a', 'cname its attr')
-Selection_a = namedtuple('Selection_a', 'card rankr criteria')
+Rank_Selection_a = namedtuple('Rank_Selection_a', 'card rankr attr')
+Criteria_Selection_a = namedtuple('Criteria_Selection_a', 'card criteria')
 Inst_Assignment_a = namedtuple('Inst_Assignment_a', 'lhs card rhs X')
 EE_Signal_a = namedtuple('EE_Signal_a', 'event supplied_params ee')
 Signal_a = namedtuple('Signal_a', 'event supplied_params dest')
@@ -72,7 +73,7 @@ Migration_a = namedtuple('Migration_a','from_inst to_subclass')
 Rank_a = namedtuple('Rank_a', "card extent")
 
 
-rank_symbol = {'>': "greatest", '<': "least"}
+rank_symbol = {'^+': "greatest", '^-': "least"}
 
 table_op = {
     '^': 'INTERSECT',
@@ -441,7 +442,7 @@ class ScrallVisitor(PTNodeVisitor):
             if type(table).__name__ == 'INST_a':
                 last_comp = table.components[-1]
 
-            if last_comp and type(last_comp).__name__ == 'Selection_a':
+            if last_comp and type(last_comp).__name__ == 'Criteria_Selection_a':
                 if s:
                     # We have two selection phrases. The first is terminating the instance set and the second is
                     # picked up as 's' above. We will take the first one and ignore the second,
@@ -916,11 +917,29 @@ class ScrallVisitor(PTNodeVisitor):
         return result
 
     @classmethod
-    def visit_select_phrase(cls, node, children):
+    def visit_rank_selection(cls, node, children):
         """
-        (CARD RANKR? ',' SP* scalar_expr) / CARD / RANKR? scalar_expr
+        CARD ', ' SP* RANKR name
         """
-        _logger.info(f"{node.rule_name} = (CARD ',' SP* scalar_expr) / CARD / scalar_expr")
+        _logger.info(f"{node.rule_name} = CARD ', ' SP* RANKR name")
+        _logger.info(f">> {[k for k in children.results.keys()]}")
+        _logger.info(f'  :: {node.value}')
+
+        _logger.info(f"  < {children}")
+        card = children.results.get('CARD')[0]
+        attr = children.results.get('name')
+        rankr = children.results.get('RANKR')
+        rankr_parse = rank_symbol[rankr[0]]
+        result = Rank_Selection_a(card=card, rankr=rankr_parse, attr=attr)
+        _logger.info(f"  > {result}")
+        return result
+
+    @classmethod
+    def visit_critieria_selection(cls, node, children):
+        """
+        (CARD ', ' SP* scalar_expr) / CARD / scalar_expr
+        """
+        _logger.info(f"{node.rule_name} = (CARD ', ' SP* scalar_expr) / CARD / scalar_expr")
         _logger.info(f">> {[k for k in children.results.keys()]}")
         _logger.info(f'  :: {node.value}')
 
@@ -928,10 +947,8 @@ class ScrallVisitor(PTNodeVisitor):
         explicit_card = children.results.get('CARD')
         card = '*' if not explicit_card else explicit_card[0]
         criteria = children.results.get('scalar_expr')
-        rankr = children.results.get('RANKR')
-        rankr_parse = rank_symbol[rankr[0]] if rankr else None  # assign greatest or least
         if criteria:
-            result = Selection_a(card=card, rankr=rankr_parse, criteria=criteria[0])
+            result = Criteria_Selection_a(card=card, criteria=criteria[0])
         else:
             result = [card]
         _logger.info(f"  > {result}")

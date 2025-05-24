@@ -92,10 +92,11 @@ OUTPUT = '=>>'
 
 // Instance set
 instance_set =  new_instance / ((operation / name / path) (reflexive_selection / selection / operation / path)*)
-selection = '(' SP* select_phrase SP* ')'
-select_phrase = (CARD RANKR? ',' SP* scalar_expr) / CARD / scalar_expr
+selection = '(' SP* (rank_selection / criteria_selection) SP* ')'
+rank_selection = CARD ', ' SP* RANKR name
+criteria_selection = (CARD ', ' SP* scalar_expr) / CARD / scalar_expr
 CARD = '1' / '*'
-RANKR = '<' / '>'
+RANKR = '^+' / '^-'
 IN = '^'
 TRUE = 'TRUE'
 FALSE = 'FALSE'
