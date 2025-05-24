@@ -74,6 +74,7 @@ Rank_a = namedtuple('Rank_a', "card extent")
 
 
 rank_symbol = {'^+': "greatest", '^-': "least"}
+card_symbol = {'1':'ONE', '*':'ALL'}
 
 table_op = {
     '^': 'INTERSECT',
@@ -926,11 +927,13 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        card = children.results.get('CARD')[0]
-        attr = children.results.get('name')
-        rankr = children.results.get('RANKR')
-        rankr_parse = rank_symbol[rankr[0]]
-        result = Rank_Selection_a(card=card, rankr=rankr_parse, attr=attr)
+        card_parse = children.results['CARD'][0]
+        card = card_symbol[card_parse]
+        attr_parse = children.results['name'][0]
+        attr = attr_parse.name
+        rankr_parse = children.results['RANKR']
+        rankr = rank_symbol[rankr_parse[0]]
+        result = Rank_Selection_a(card=card, rankr=rankr, attr=attr)
         _logger.info(f"  > {result}")
         return result
 
@@ -945,7 +948,8 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         explicit_card = children.results.get('CARD')
-        card = '*' if not explicit_card else explicit_card[0]
+        card_parse = '*' if not explicit_card else explicit_card[0]
+        card = card_symbol[card_parse]
         criteria = children.results.get('scalar_expr')
         if criteria:
             result = Criteria_Selection_a(card=card, criteria=criteria[0])

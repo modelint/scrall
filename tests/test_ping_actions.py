@@ -40,7 +40,7 @@ actions = [
             statement=Table_Assignment_a(type='implicit', assign_tuple=False,
                 lhs='stop here floors',
                 rhs=TEXPR_a(table=INST_a(components=[N_a(name='shaft aslevs')]), hexpr=None,
-                            selection=Criteria_Selection_a(card='*', criteria=N_a(name='Stop requested')),
+                            selection=Criteria_Selection_a(card='ALL', criteria=N_a(name='Stop requested')),
                             projection=Projection_a(expand=None, attrs=[N_a(name='Floor')])),
             X=(0, 56)), block=None), output_token=None)),
     ("Try redirect( ^new dest ) -> /R53/Cabin",
@@ -80,14 +80,14 @@ actions = [
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
             statement=Inst_Assignment_a(
                 lhs=Flow_Output_a(name=N_a(name='requested stops'), exp_type=None), card='M',
-                rhs=INST_a(components=[N_a(name='shaft aslevs'), Criteria_Selection_a(card='*',
+                rhs=INST_a(components=[N_a(name='shaft aslevs'), Criteria_Selection_a(card='ALL',
                              criteria=BOOL_a(op='==', operands=[N_a(name='Stop requested'), N_a(name='avalue')]))]),
             X=(0, 58)), block=None), output_token=None)
      ),
     ("=>> Accessible Shaft Level( Floor: nearest dest.Floor; Shaft )",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None, statement=Output_Flow_a(
             output=INST_PROJ_a(iset=INST_a(components=[N_a(name='Accessible Shaft Level'),
-                 Criteria_Selection_a(card='*', criteria=BOOL_a(op='AND', operands=[
+                 Criteria_Selection_a(card='ALL', criteria=BOOL_a(op='AND', operands=[
                      BOOL_a(op='==', operands=[N_a(name='Floor'),
                            INST_PROJ_a(iset=N_a(name='nearest dest'),
                                  projection=Projection_a(expand=None, attrs=[N_a(name='Floor')]))]),
