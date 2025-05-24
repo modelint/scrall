@@ -935,7 +935,7 @@ class ScrallVisitor(PTNodeVisitor):
         return result
 
     @classmethod
-    def visit_critieria_selection(cls, node, children):
+    def visit_criteria_selection(cls, node, children):
         """
         (CARD ', ' SP* scalar_expr) / CARD / scalar_expr
         """
