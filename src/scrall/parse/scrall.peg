@@ -44,13 +44,9 @@ RENAME = '>>'
 
 // Decision action
 decision = scalar_expr true_result false_result?
-//decision = scalar_expr SP true_result false_result?
 true_result = DECISION_OP LINEWRAP? SP? component_statement_set
-
-//true_result = DECISION_OP (LINEWRAP* / SP*) component_statement_set
-false_result = SP FALSE_RESULT_OP LINEWRAP? SP? component_statement_set // Else
-//false_result = (LINEWRAP* / SP*) FALSE_RESULT_OP SP* component_statement_set // Else
-FALSE_RESULT_OP = ':'
+false_result = FALSE_RESULT_OP LINEWRAP? SP? component_statement_set // Else
+FALSE_RESULT_OP = ' :'
 
 // Switch action
 switch = switch_input DECISION_OP SP* case_block // Boolean expr triggers case_block
