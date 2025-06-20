@@ -664,7 +664,11 @@ class ScrallVisitor(PTNodeVisitor):
                 ee=children[1]
             )
         else:  # It must be a same dest with no explicit destination
-            result = None
+            result = Signal_a(
+                event=children[0]['name'],
+                supplied_params=children[0]['params'],
+                ee=children[1]
+            )
         _logger.info(f"  > {result}")
         return result
 
