@@ -58,7 +58,7 @@ enum_value = '_' name // Scalar switch has enum value cases
 DECISION_OP = '?'
 
 // Signal action
-signal_action = signal_spec SP+ (signal_dest / ee_dest)
+signal_action = signal_spec SP+ (signal_dest / ee_dest / SIGNAL_OP)
 signal_spec = name supplied_params?
 signal_dest = SIGNAL_OP LINEWRAP? SP? instance_set assigner_partition? (SP+ delay)?
 ee_dest = ASYNCH SP* name?
