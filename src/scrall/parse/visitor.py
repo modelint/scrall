@@ -657,14 +657,8 @@ class ScrallVisitor(PTNodeVisitor):
                 supplied_params=children[0]['params'],
                 dest=children[1]
             )
-        elif eedest:
+        else:
             result = EE_Signal_a(
-                event=children[0]['name'],
-                supplied_params=children[0]['params'],
-                ee=children[1]
-            )
-        else:  # It must be a same dest with no explicit destination
-            result = Signal_a(
                 event=children[0]['name'],
                 supplied_params=children[0]['params'],
                 ee=children[1]
@@ -696,14 +690,6 @@ class ScrallVisitor(PTNodeVisitor):
         result = children[0]
         _logger.info(f"  > {result}")
         return result
-
-    @classmethod
-    def visit_same_dest(cls, node, children):
-        """
-        """
-        _logger.info("same_dest = SIGNAL_OP SP+")
-        _logger.info(f'  :: {node.value}')
-        return None
 
     @classmethod
     def visit_signal_dest(cls, node, children):
