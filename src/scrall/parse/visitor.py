@@ -645,24 +645,34 @@ class ScrallVisitor(PTNodeVisitor):
     def visit_signal_action(cls, node, children):
         """
         """
-        _logger.info("signal = signal_spec (signal_dest / ee_dest)")
+        _logger.info("signal_action = signal_spec SP+ (signal_dest / ee_dest / SIGNAL_OP)")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
         sdest = children.results.get('signal_dest')
         eedest = children.results.get('ee_dest')
-        if sdest:
+        if not sdest and not eedest:
+            # Dest should be supplied by false result in decision
+            result = Signal_a(
+                event=children[0]['name'],
+                supplied_params=children[0]['params'],
+                dest=None
+            )
+        elif sdest:
+            # Signal instance set or assigner destination
             result = Signal_a(
                 event=children[0]['name'],
                 supplied_params=children[0]['params'],
                 dest=children[1]
             )
         else:
+            # Otherwise it must be an EE destination
             result = EE_Signal_a(
                 event=children[0]['name'],
                 supplied_params=children[0]['params'],
                 ee=children[1]
             )
+
         _logger.info(f"  > {result}")
         return result
 
@@ -695,7 +705,7 @@ class ScrallVisitor(PTNodeVisitor):
     def visit_signal_dest(cls, node, children):
         """
         """
-        _logger.info("signal_dest = SIGNAL_OP instance_set assigner_partition? delay?")
+        _logger.info("signal_action = signal_spec SP+ (signal_dest / ee_dest / SIGNAL_OP / ASYNCH)")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
