@@ -63,6 +63,7 @@ def main():
         text = args.expr + '\n'
         d = args.debug
         result = ScrallParser.parse_text(scrall_text=text, debug=d)
+        pass
 
     if args.file:
         fpath = Path(args.file)

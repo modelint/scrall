@@ -41,6 +41,7 @@ BOOL_a = namedtuple('BOOL_a', 'op operands')
 Scalar_Assignment_a = namedtuple('Scalar_Assignment_a', 'lhs rhs')
 Table_Assignment_a = namedtuple('Table_Assignment_a', 'type assign_tuple lhs rhs X')
 Scalar_RHS_a = namedtuple('Scalar_RHS_a', 'expr attrs')
+Qualified_Name_a = namedtuple('Qualified_Name_a', 'cname aname')
 Flow_Output_a = namedtuple('Flow_Output_a', 'name exp_type')
 PATH_a = namedtuple('PATH_a', 'hops')
 INST_a = namedtuple('INST_a', 'components')
@@ -1093,7 +1094,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f"  > {result}")
         return result
 
-    # Math and boolean operator precedence
+    # Scalar Assigment
     @classmethod
     def visit_scalar_assignment(cls, node, children):
         """
@@ -1111,10 +1112,18 @@ class ScrallVisitor(PTNodeVisitor):
         return result
 
     @classmethod
+    def visit_qualified_name(cls, node, children):
+        """
+        """
+        _logger.info("qualified_name = name '.' name")
+        _logger.info(f'  :: {node.value}')
+        return Qualified_Name_a(cname=children[0].name, aname=children[1].name)
+
+    @classmethod
     def visit_scalar_output_set(cls, node, children):
         """
         """
-        _logger.info("scalar_output_set = flow_output (',' flow_output)*")
+        _logger.info("scalar_output_set = qualified_name / flow_output (',' SP+ flow_output)*")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
