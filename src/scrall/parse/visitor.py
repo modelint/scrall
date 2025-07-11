@@ -201,7 +201,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f">> {[k for k in children.results.keys()]}")
 
         _logger.info(f"  < {children}")
-        input_tokens = getresult('sequence_token', children)
+        input_tokens = children.results.get('sequence_token', [])
         b = getresult('block', children)
         s = getresult('statement', children)
         result = Seq_Statement_Set_a(input_tokens=input_tokens, statement=s, block=b)
