@@ -7,7 +7,7 @@ from scrall.parse.visitor import Execution_Unit_a, Signal_a, Signal_Dest_a, N_a,
 
 actions = [
     ("s ..= Shaft(Inservice; Cleared)",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
            statement=Inst_Assignment_a(
                lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='M',
                rhs=INST_a(components=[N_a(name='Shaft'), Criteria_Selection_a(card='ALL',
@@ -15,7 +15,7 @@ actions = [
                X=(0, 31)), block=None), output_token=None)
      ),
     ("c ..= Cabin(Speed > slowest + buffer)",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
            statement=Inst_Assignment_a(
                lhs=Flow_Output_a(name=N_a(name='c'), exp_type=None), card='M',
                rhs=INST_a(components=[N_a(name='Cabin'), Criteria_Selection_a(card='ALL',
@@ -24,7 +24,7 @@ actions = [
                X=(0, 37)), block=None), output_token=None)
     ),
     ("c ..= Cabin(Speed > slowest)",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
            statement=Inst_Assignment_a(
                lhs=Flow_Output_a(name=N_a(name='c'), exp_type=None), card='M',
                rhs=INST_a(components=[N_a(name='Cabin'), Criteria_Selection_a(card='ALL',
@@ -32,7 +32,7 @@ actions = [
            X=(0, 28)), block=None), output_token=None)
      ),
     ("s ..= Shaft(In service: TRUE)",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
              statement=Inst_Assignment_a(
                  lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='M',
                  rhs=INST_a(components=[N_a(name='Shaft'), Criteria_Selection_a(card='ALL',
@@ -40,14 +40,14 @@ actions = [
              X=(0, 29)), block=None), output_token=None)
      ),
     ("s ..= Shaft(In service)",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
               statement=Inst_Assignment_a(lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='M',
                                           rhs=INST_a(components=[N_a(name='Shaft'), Criteria_Selection_a(card='ALL',
                                               criteria=N_a(name='In service'))]),
               X=(0, 23)), block=None), output_token=None)
      ),
     ("x .= Bank(Max close attempts: (v or x) or Average cabin speed > mspeed)",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
               statement=Inst_Assignment_a(
                   lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='1',
                   rhs=INST_a(components=[N_a(name='Bank'), Criteria_Selection_a(card='ALL',
@@ -59,7 +59,7 @@ actions = [
               X=(0, 71)), block=None), output_token=None)
     ),
     ("x ..= car.findsome()(color: _red)",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
               statement=Inst_Assignment_a(
                   lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='M',
                   rhs=INST_a(components=[Op_a(owner='car', op_name='findsome', supplied_params=[]),

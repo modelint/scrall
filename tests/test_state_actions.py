@@ -15,7 +15,7 @@ actions = [
     // this case
     Take out of service -> ME
 """,
-    Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+    Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
         statement=Decision_a(input=BOOL_a(
             op='NOT', operands=INST_PROJ_a(iset=INST_a(
                 components=[PATH_a(hops=[R_a(rnum='R2'), N_a(name='Shaft')])]),
@@ -28,7 +28,7 @@ actions = [
         block=None), output_token=None)
     ),
     ("!(/R2/Shaft.In service) ? Take out of service -> ME",
-    Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+    Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
          statement=Decision_a(input=BOOL_a(
              op='NOT', operands=INST_PROJ_a(iset=INST_a(
                  components=[PATH_a(hops=[R_a(rnum='R2'), N_a(name='Shaft')])]),

@@ -9,20 +9,20 @@ from scrall.parse.visitor import Execution_Unit_a, Signal_a, Signal_Dest_a, N_a,
 
 actions = [
     ("{\n    a = b\n    c = d\n}<1>",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None, statement=None, block=[
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[], statement=None, block=[
 
-            Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+            Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
                statement=Scalar_Assignment_a(
                    lhs=[Flow_Output_a(name=N_a(name='a'), exp_type=None)],
                    rhs=Scalar_RHS_a(expr=N_a(name='b'), attrs=None)), block=None), output_token=None),
 
-            Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+            Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
                statement=Scalar_Assignment_a(
                   lhs=[Flow_Output_a(name=N_a(name='c'), exp_type=None)],
                   rhs=Scalar_RHS_a(expr=N_a(name='d'), attrs=None)), block=None), output_token=None)]),
                output_token=Sequence_Token_a(name='1'))),
     ("^dir? {\n    _up:\n        a = b\n    _down:\n        a = c\n}\n",
-            Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+            Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
                 statement=Switch_a(input_flow=IN_a(name='dir'), cases=[
                     Case_a(enums=['up'], comp_statement_set=Comp_Statement_Set_a(
                         statement=Scalar_Assignment_a(
@@ -36,7 +36,7 @@ actions = [
      ),
 
     ("stop here floors #= shaft aslevs( Stop requested ).Floor",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
             statement=Table_Assignment_a(type='implicit', assign_tuple=False,
                 lhs='stop here floors',
                 rhs=TEXPR_a(table=INST_a(components=[N_a(name='shaft aslevs')]), hexpr=None,
@@ -44,7 +44,7 @@ actions = [
                             projection=Projection_a(expand=None, attrs=[N_a(name='Floor')])),
             X=(0, 56)), block=None), output_token=None)),
     ("Try redirect( ^new dest ) -> /R53/Cabin",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
             statement=Signal_a(event='Try redirect', supplied_params=[
                 [Supplied_Parameter_a(pname='new dest', sval=IN_a(name='new dest'))]],
                     dest=Signal_Dest_a(target_iset=
@@ -53,7 +53,7 @@ actions = [
             block=None), output_token=None)
     ),
     ("TRAN.Go to floor( Dest floor: ^new dest, Shaft )",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
             statement=Call_a(call=INST_a(components=[Op_a(owner='TRAN', op_name='Go to floor',
                           supplied_params=[Supplied_Parameter_a(pname='Dest floor', sval=IN_a(name='new dest')),
                                            Supplied_Parameter_a(pname='Shaft', sval=N_a(name='Shaft'))])]
@@ -61,14 +61,14 @@ actions = [
             block=None), output_token=None)
     ),
     ("Change requested -> ME",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
             statement=Signal_a(event='Change requested', supplied_params=[],
                                dest=Signal_Dest_a(target_iset=N_a(name='ME'),
                                assigner_partition=N_a(name=None), delay=0)),
             block=None), output_token=None)
      ),
     ("shaft aslevs ..= /R2/R28/Shaft Level/R3/Accessible Shaft Level",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
             statement=Inst_Assignment_a(
                 lhs=Flow_Output_a(name=N_a(name='shaft aslevs'), exp_type=None), card='M',
                 rhs=INST_a(components=[PATH_a(hops=[
@@ -77,7 +77,7 @@ actions = [
             X=(0, 62)), block=None), output_token=None)
      ),
     ("requested stops ..= shaft aslevs( Stop requested: avalue )",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None,
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
             statement=Inst_Assignment_a(
                 lhs=Flow_Output_a(name=N_a(name='requested stops'), exp_type=None), card='M',
                 rhs=INST_a(components=[N_a(name='shaft aslevs'), Criteria_Selection_a(card='ALL',
@@ -85,7 +85,7 @@ actions = [
             X=(0, 58)), block=None), output_token=None)
      ),
     ("=>> Accessible Shaft Level( Floor: nearest dest.Floor; Shaft )",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=None, statement=Output_Flow_a(
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[], statement=Output_Flow_a(
             output=INST_PROJ_a(iset=INST_a(components=[N_a(name='Accessible Shaft Level'),
                  Criteria_Selection_a(card='ALL', criteria=BOOL_a(op='AND', operands=[
                      BOOL_a(op='==', operands=[N_a(name='Floor'),
