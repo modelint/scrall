@@ -1021,7 +1021,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = children
+        result = children.results.get('attr_value_init')
         _logger.info(f"  > {result}")
         return result
 
