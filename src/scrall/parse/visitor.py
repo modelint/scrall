@@ -1008,7 +1008,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f"  < {children}")
         a = children.results.get('attr_init')
         r = children.results.get('to_ref')
-        result = New_inst_a(cname=children[0], attrs=None if not a else a[0], rels=None if not r else r[0])
+        result = New_inst_a(cname=children[0], attrs=a[0] if a else [], rels=None if not r else r[0])
         _logger.info(f"  > {result}")
         return result
 
