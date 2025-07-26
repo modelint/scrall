@@ -91,7 +91,7 @@ output_flow = OUTPUT SP+ scalar_expr
 OUTPUT = '=>>'
 
 // Instance set
-instance_set =  new_instance / ((operation / name / path) (reflexive_selection / selection / operation / path)*)
+instance_set =  new_instance / ((operation / input_param / name / path) (reflexive_selection / selection / operation / path)*)
 selection = '(' SP* (rank_selection / criteria_selection) SP* ')'
 rank_selection = CARD ', ' SP* RANKR name
 criteria_selection = (CARD ', ' SP* scalar_expr) / CARD / scalar_expr

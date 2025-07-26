@@ -916,7 +916,7 @@ class ScrallVisitor(PTNodeVisitor):
         by any sequence of selection, operation, and paths. The parser won't find two paths in sequence since
         any encounter path will be fully consumed
         """
-        _logger.info("instance_set = new_instance / ((operation / prefix_name / path) (reflexive_selection / "
+        _logger.info("instance_set = new_instance / ((operation / input_param / name / path) (reflexive_selection / "
                      "selection / operation / path)*)")
         _logger.info(f">> {[k for k in children.results.keys()]}")
         _logger.info(f'  :: {node.value}')
@@ -925,7 +925,12 @@ class ScrallVisitor(PTNodeVisitor):
         if len(children) == 1 and isinstance(children[0], N_a):
             result = children[0]
         else:
-            result = INST_a(children)
+            p = children.results.get('input_param')
+            if p:
+                # Just like above case, but returning an IN_a (parameter name)
+                result = p[0]
+            else:
+                result = INST_a(children)
         _logger.info(f"  > {result}")
         return result
 
