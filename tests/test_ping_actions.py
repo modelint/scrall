@@ -49,7 +49,7 @@ actions = [
                 [Supplied_Parameter_a(pname='new dest', sval=IN_a(name='new dest'))]],
                     dest=Signal_Dest_a(target_iset=
                        INST_a(components=[PATH_a(hops=[R_a(rnum='R53'), N_a(name='Cabin')])]),
-                                       assigner_partition=N_a(name=None), delay=0)),
+                                       assigner_dest=None, delay=0)),
             block=None), output_token=None)
     ),
     ("TRAN.Go to floor( Dest floor: ^new dest, Shaft )",
@@ -64,7 +64,7 @@ actions = [
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
             statement=Signal_a(event='Change requested', supplied_params=[],
                                dest=Signal_Dest_a(target_iset=N_a(name='ME'),
-                               assigner_partition=N_a(name=None), delay=0)),
+                               assigner_dest=None, delay=0)),
             block=None), output_token=None)
      ),
     ("shaft aslevs ..= /R2/R28/Shaft Level/R3/Accessible Shaft Level",

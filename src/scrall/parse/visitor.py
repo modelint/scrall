@@ -22,8 +22,9 @@ Inst_Assignment_a = namedtuple('Inst_Assignment_a', 'lhs card rhs X')
 EE_Signal_a = namedtuple('EE_Signal_a', 'event supplied_params ee')
 Signal_a = namedtuple('Signal_a', 'event supplied_params dest')
 """Signal sent to trigger event at destination with optional supplied parameters"""
-Signal_Action_a = namedtuple('Signal_Action_a', 'event supplied_params dest delay assigner_partition')
-Signal_Dest_a = namedtuple('Signal_Dest_a', 'target_iset assigner_partition delay')
+Signal_Action_a = namedtuple('Signal_Action_a', 'event supplied_params dest delay')
+Signal_Dest_a = namedtuple('Signal_Dest_a', 'target_iset assigner_dest delay')
+Assigner_Dest_a = namedtuple('Assigner_Dest_a', 'rnum partition')
 Signal_Choice_a = namedtuple('Signal_Choice_a', 'decision true_signal false_signal')
 Sequence_Token_a = namedtuple('Sequence_Token_a', 'name')
 Execution_Unit_a = namedtuple('Execution_Unit_a', 'statement_set output_token')
@@ -706,16 +707,32 @@ class ScrallVisitor(PTNodeVisitor):
     def visit_signal_dest(cls, node, children):
         """
         """
-        _logger.info("signal_action = signal_spec SP+ (signal_dest / ee_dest / SIGNAL_OP / ASYNCH)")
+        _logger.info("signal_dest = SIGNAL_OP LINEWRAP? SP? (assigner / instance_set) (SP+ delay)?")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        iset = children[0]
-        ap = children.results.get('assigner_partition')
-        ap = None if not ap else ap[0]
+        iset = children.results.get('instance_set')
+        iset = iset[0] if iset else None
+        assigner = children.results.get('assigner')
+        assigner = assigner[0] if assigner else None
         delay = children.results.get('delay')
         delay = 0 if not delay else delay[0]
-        result = Signal_Dest_a(target_iset=iset, assigner_partition=N_a(ap), delay=delay)
+        result = Signal_Dest_a(target_iset=iset, assigner_dest=assigner, delay=delay)
+        _logger.info(f"  > {result}")
+        return result
+
+    @classmethod
+    def visit_assigner(cls, node, children):
+        """
+        An instance set that partitions an assigner
+        """
+        _logger.info("assigner = rnum assigner_partition?")
+        _logger.info(f'  :: {node.value}')
+
+        _logger.info(f"  < {children}")
+        rnum = children.results.get('rnum')
+        ap = children.results.get('assigner_partition')
+        result = Assigner_Dest_a(rnum=rnum[0], partition=ap[0] if ap else None)
         _logger.info(f"  > {result}")
         return result
 
@@ -724,7 +741,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         An instance set that partitions an assigner
         """
-        _logger.info("assigner_partition = '(' instance_set ')'")
+        _logger.info("assigner_partition = '( ' instance_set ' )'")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")

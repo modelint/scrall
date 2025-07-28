@@ -61,10 +61,11 @@ DECISION_OP = '?'
 signal_action = signal_spec SP+ (signal_dest / ee_dest / SIGNAL_OP / ASYNCH)
 // SIGNAL_OP only destination means: copy dest from false result of decision action
 signal_spec = name supplied_params?
-signal_dest = SIGNAL_OP LINEWRAP? SP? instance_set assigner_partition? (SP+ delay)?
+signal_dest = SIGNAL_OP LINEWRAP? SP? (assigner / instance_set) (SP+ delay)?
+assigner = rnum assigner_partition?
 ee_dest = ASYNCH LINEWRAP? SP? name
 delay = DELAY_OP SP* scalar_expr
-assigner_partition = '|' instance_set
+assigner_partition = '( ' instance_set ' )'
 DELAY_OP = '@'
 SIGNAL_OP = '->'
 ASYNCH = '=>'
