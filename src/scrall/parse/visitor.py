@@ -31,7 +31,7 @@ Execution_Unit_a = namedtuple('Execution_Unit_a', 'statement_set output_token')
 Seq_Statement_Set_a = namedtuple('Seq_Statement_Set_a', 'input_tokens statement block')
 Comp_Statement_Set_a = namedtuple('Comp_Statement_Set_a', 'statement block')
 Decision_a = namedtuple('Decision_a', 'input true_result false_result')
-Delete_Action_a = namedtuple('Delete_Action_a', 'instance_sets')
+Delete_Group_a = namedtuple('Delete_Group_a', 'instance_sets')
 Case_a = namedtuple('Case_a', 'enums comp_statement_set')
 Switch_a = namedtuple('Switch_a', 'input_flow cases')
 MATH_a = namedtuple('MATH_a', 'op operands')
@@ -1099,7 +1099,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         iset = children.results.get('instance_set')
-        result = Delete_Action_a(instance_sets=iset)
+        result = Delete_Group_a(instance_sets=iset)
         _logger.info(f"  > {result}")
         return result
 

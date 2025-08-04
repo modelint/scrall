@@ -2,12 +2,12 @@
 
 import pytest
 from scrall.parse.parser import ScrallParser
-from scrall.parse.visitor import Execution_Unit_a, N_a, INST_a, PATH_a, R_a, Seq_Statement_Set_a, Delete_Action_a
+from scrall.parse.visitor import Execution_Unit_a, N_a, INST_a, PATH_a, R_a, Seq_Statement_Set_a, Delete_Group_a
 
 actions = [
     ("!* siamese, /R1/Cat",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(
-            input_tokens=[], statement=Delete_Action_a(
+            input_tokens=[], statement=Delete_Group_a(
                 instance_sets=[N_a(name='siamese'),
                    INST_a(components=[PATH_a(hops=[R_a(rnum='R1'),
                        N_a(name='Cat')])])]), block=None), output_token=None)
