@@ -23,7 +23,7 @@ actions = [
             true_result=Comp_Statement_Set_a(statement=
                     Signal_a(event='Take out of service', supplied_params=[],
                              dest=Signal_Dest_a(target_iset=N_a(name='ME'),
-                             assigner_dest=None, delay=0)), block=None),
+                             assigner_dest=None, delay=0, cancel=False)), block=None),
             false_result=None),
         block=None), output_token=None)
     ),
@@ -36,7 +36,7 @@ actions = [
              true_result=Comp_Statement_Set_a(statement=
                      Signal_a(event='Take out of service', supplied_params=[],
                               dest=Signal_Dest_a(target_iset=N_a(name='ME'),
-                              assigner_dest=None, delay=0)), block=None),
+                              assigner_dest=None, delay=0, cancel=False)), block=None),
              false_result=None),
          block=None), output_token=None))]
 

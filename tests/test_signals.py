@@ -24,7 +24,7 @@ actions = [
                 statement=Signal_a(
                     event='Change requested',
                     supplied_params=[],
-                    dest=Signal_Dest_a(target_iset=N_a(name='me'), assigner_dest=None, delay=0)),
+                    dest=Signal_Dest_a(target_iset=N_a(name='me'), assigner_dest=None, delay=0, cancel=False)),
                 block=None),
             output_token=None)
      ),
@@ -37,7 +37,7 @@ actions = [
                     supplied_params=[],
                     dest=Signal_Dest_a(target_iset=INST_a(
                         components=[PATH_a(hops=[R_a(rnum='R53'), N_a(name='Transfer')])]
-                    ), assigner_dest=None, delay=0)
+                    ), assigner_dest=None, delay=0, cancel=False)
                 ),
                 block=None),
             output_token=None)

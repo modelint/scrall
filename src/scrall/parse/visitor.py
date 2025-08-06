@@ -23,7 +23,7 @@ External_Signal_a = namedtuple('External_Signal_a', 'event supplied_params')
 Signal_a = namedtuple('Signal_a', 'event supplied_params dest')
 """Signal sent to trigger event at destination with optional supplied parameters"""
 Signal_Action_a = namedtuple('Signal_Action_a', 'event supplied_params dest delay')
-Signal_Dest_a = namedtuple('Signal_Dest_a', 'target_iset assigner_dest delay')
+Signal_Dest_a = namedtuple('Signal_Dest_a', 'target_iset assigner_dest delay cancel')
 Assigner_Dest_a = namedtuple('Assigner_Dest_a', 'rnum partition')
 Signal_Choice_a = namedtuple('Signal_Choice_a', 'decision true_signal false_signal')
 Sequence_Token_a = namedtuple('Sequence_Token_a', 'name')
@@ -708,6 +708,7 @@ class ScrallVisitor(PTNodeVisitor):
         """
         _logger.info("signal_dest = SIGNAL_OP LINEWRAP? SP? (assigner / instance_set) (SP+ delay)?")
         _logger.info(f'  :: {node.value}')
+        cancel = bool(children[0] == '*')
 
         _logger.info(f"  < {children}")
         iset = children.results.get('instance_set')
@@ -716,7 +717,7 @@ class ScrallVisitor(PTNodeVisitor):
         assigner = assigner[0] if assigner else None
         delay = children.results.get('delay')
         delay = 0 if not delay else delay[0]
-        result = Signal_Dest_a(target_iset=iset, assigner_dest=assigner, delay=delay)
+        result = Signal_Dest_a(target_iset=iset, assigner_dest=assigner, delay=delay, cancel=cancel)
         _logger.info(f"  > {result}")
         return result
 

@@ -1,4 +1,4 @@
-# simple tests
+""" test_pint_actions.py - Example statements from the Elevator ping method """
 
 import pytest
 from scrall.parse.parser import ScrallParser
@@ -44,14 +44,18 @@ actions = [
                             projection=Projection_a(expand=None, attrs=[N_a(name='Floor')])),
             X=(0, 56)), block=None), output_token=None)),
     ("Try redirect( ^new dest ) -> /R53/Cabin",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
-            statement=Signal_a(event='Try redirect', supplied_params=[
-                [Supplied_Parameter_a(pname='new dest', sval=IN_a(name='new dest'))]],
-                    dest=Signal_Dest_a(target_iset=
-                       INST_a(components=[PATH_a(hops=[R_a(rnum='R53'), N_a(name='Cabin')])]),
-                                       assigner_dest=None, delay=0)),
-            block=None), output_token=None)
-    ),
+     Execution_Unit_a(
+         statement_set=Seq_Statement_Set_a(
+             input_tokens=[],
+             statement=Signal_a(
+                 event='Try redirect', supplied_params=[
+                     [Supplied_Parameter_a(pname='new dest', sval=IN_a(name='new dest'))]],
+                 dest=Signal_Dest_a(
+                     target_iset=INST_a(
+                         components=[PATH_a(hops=[R_a(rnum='R53'), N_a(name='Cabin')])]),
+                     assigner_dest=None, delay=0, cancel=False)), block=None),
+         output_token=None)
+     ),
     ("TRAN.Go to floor( Dest floor: ^new dest, Shaft )",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
             statement=Call_a(call=INST_a(components=[Op_a(owner='TRAN', op_name='Go to floor',
@@ -60,12 +64,17 @@ actions = [
                                          ), op_chain=None),
             block=None), output_token=None)
     ),
-    ("Change requested -> ME",
-        Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
-            statement=Signal_a(event='Change requested', supplied_params=[],
-                               dest=Signal_Dest_a(target_iset=N_a(name='ME'),
-                               assigner_dest=None, delay=0)),
-            block=None), output_token=None)
+    ("Change requested -> me",
+        Execution_Unit_a(
+            statement_set=Seq_Statement_Set_a(
+                input_tokens=[],
+                statement=Signal_a(
+                    event='Change requested', supplied_params=[],
+                    dest=Signal_Dest_a(
+                        target_iset=N_a(name='me'), assigner_dest=None, delay=0, cancel=False
+                    )
+                ), block=None),
+            output_token=None)
      ),
     ("shaft aslevs ..= /R2/R28/Shaft Level/R3/Accessible Shaft Level",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
