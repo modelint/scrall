@@ -808,14 +808,14 @@ class ScrallVisitor(PTNodeVisitor):
         """
         Post-parse verify that last element is an operation, otherwise invalid call
         """
-        _logger.info("call = instance_set op_chain?")
+        _logger.info("call = ('~' / instance_set) op_chain?")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        iset = children.results['instance_set'][0]
+        iset = children.results.get('instance_set')
         opc = children.results.get('op_chain')
         result = Call_a(
-            call=iset,
+            call=iset[0] if iset else None,  # None means that we are calling a service mapped to a service domain
             op_chain=None if not opc else opc[0]
         )
         _logger.info(f"  > {result}")

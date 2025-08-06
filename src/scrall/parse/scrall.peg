@@ -75,7 +75,7 @@ inst_assignment = flow_output SP+ INST_ASSIGN SP+ instance_set
 INST_ASSIGN = '.=' / '..='
 
 // Synchronous call action (method or ee operation or type operation)
-call = instance_set op_chain? // Post-parse verify that last element is an operation, otherwise invalid call
+call = ('~' / instance_set) op_chain? // Post-parse verify that last element is an operation, otherwise invalid call
 operation = owner? '.' name supplied_params
 owner = name
 supplied_params = '(' SP* (param (',' SP+ param)*)? SP* ')'
