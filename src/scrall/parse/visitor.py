@@ -19,7 +19,7 @@ Attr_Access_a = namedtuple('Attr_Access_a', 'cname its attr')
 Rank_Selection_a = namedtuple('Rank_Selection_a', 'card rankr attr')
 Criteria_Selection_a = namedtuple('Criteria_Selection_a', 'card criteria')
 Inst_Assignment_a = namedtuple('Inst_Assignment_a', 'lhs card rhs X')
-EE_Signal_a = namedtuple('EE_Signal_a', 'event supplied_params ee')
+External_Signal_a = namedtuple('External_Signal_a', 'event supplied_params')
 Signal_a = namedtuple('Signal_a', 'event supplied_params dest')
 """Signal sent to trigger event at destination with optional supplied parameters"""
 Signal_Action_a = namedtuple('Signal_Action_a', 'event supplied_params dest delay')
@@ -647,13 +647,13 @@ class ScrallVisitor(PTNodeVisitor):
     def visit_signal_action(cls, node, children):
         """
         """
-        _logger.info("signal_action = signal_spec SP+ (signal_dest / ee_dest / SIGNAL_OP)")
+        _logger.info("signal_action = signal_spec SP+ (signal_dest / external_dest / SIGNAL_OP)")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
         sdest = children.results.get('signal_dest')
-        eedest = children.results.get('ee_dest')
-        if not sdest and not eedest:
+        external_dest = bool(children.results.get('external_dest'))
+        if not sdest and not external_dest:
             # Dest should be supplied by false result in decision
             result = Signal_a(
                 event=children[0]['name'],
@@ -668,11 +668,10 @@ class ScrallVisitor(PTNodeVisitor):
                 dest=children[1]
             )
         else:
-            # Otherwise it must be an EE destination
-            result = EE_Signal_a(
+            # Otherwise it must be an external destination
+            result = External_Signal_a(
                 event=children[0]['name'],
                 supplied_params=children[0]['params'],
-                ee=children[1]
             )
 
         _logger.info(f"  > {result}")
@@ -692,14 +691,14 @@ class ScrallVisitor(PTNodeVisitor):
         return result
 
     @classmethod
-    def visit_ee_dest(cls, node, children):
+    def visit_external_dest(cls, node, children):
         """
         """
-        _logger.info("ee_dest = ASYNCH name")
+        _logger.info("external_dest = SIGNAL_OP LINEWRAP? SP? '~'")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = children[0]
+        result = '~'
         _logger.info(f"  > {result}")
         return result
 

@@ -58,17 +58,16 @@ enum_value = '_' name // Scalar switch has enum value cases
 DECISION_OP = '?'
 
 // Signal action
-signal_action = signal_spec SP+ (signal_dest / ee_dest / SIGNAL_OP / ASYNCH)
+signal_action = signal_spec SP+ (signal_dest / external_dest / SIGNAL_OP)
 // SIGNAL_OP only destination means: copy dest from false result of decision action
 signal_spec = name supplied_params?
 signal_dest = SIGNAL_OP LINEWRAP? SP? (assigner / instance_set) (SP+ delay)?
 assigner = rnum assigner_partition?
-ee_dest = ASYNCH LINEWRAP? SP? name
+external_dest = SIGNAL_OP LINEWRAP? SP? '~'
 delay = DELAY_OP SP* scalar_expr
 assigner_partition = '( ' instance_set ' )'
 DELAY_OP = '@'
 SIGNAL_OP = '->'
-ASYNCH = '=>'
 
 // Instance assignment action
 inst_assignment = flow_output SP+ INST_ASSIGN SP+ instance_set
