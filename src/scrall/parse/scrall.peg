@@ -1,5 +1,5 @@
 activity = LINEWRAP* execution_unit* EOF
-execution_unit = LINEWRAP* statement_set sequence_token? LINEWRAP+
+execution_unit = LINEWRAP* statement_set sequence_token? (SP+ / LINEWRAP*)
 statement_set = SP* sequenced_statement_set / component_statement_set
 sequenced_statement_set = sequence_token* (block / statement)
 component_statement_set = block / LINEWRAP* statement
