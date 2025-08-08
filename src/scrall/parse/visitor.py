@@ -635,14 +635,6 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f"  > {result}")
         return result
 
-    # # Asynch service
-    # @classmethod
-    # def visit_asynch_service(cls, node, children):
-    #     """
-    #     name '.' signal_spec ASYNCH ee
-    #     """
-    #     result = Asynch_a(*children)
-
     @classmethod
     def visit_signal_action(cls, node, children):
         """
@@ -845,6 +837,11 @@ class ScrallVisitor(PTNodeVisitor):
             supplied_params=[] if not p else p[0]
         )
         _logger.info(f"  > {result}")
+        return result
+
+    @classmethod
+    def visit_owner(cls, node, children):
+        result = ''.join(children)
         return result
 
     @classmethod
