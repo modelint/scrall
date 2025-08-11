@@ -24,7 +24,7 @@ actions = [
 
 
 @pytest.mark.parametrize("text, expected", actions)
-def test_ping_action(text, expected):
+def test_operation(text, expected):
     parse = ScrallParser.parse_text(scrall_text=text, debug=False)[0]
     print(parse)
     assert parse[0] == expected

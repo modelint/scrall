@@ -33,7 +33,7 @@ expected_parse = Execution_Unit_a(
     "choice? {\n    *cat\n}",
     "choice?\n    { *cat }",
 ])
-def test_signal_action(text):
+def test_decision_wrap(text):
     parse = ScrallParser.parse_text(scrall_text=text, debug=False)[0]
     print(parse)
     assert parse[0] == expected_parse
