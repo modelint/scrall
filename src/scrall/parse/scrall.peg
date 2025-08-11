@@ -44,8 +44,8 @@ RENAME = '>>'
 
 // Decision action
 decision = scalar_expr true_result false_result?
-true_result = DECISION_OP LINEWRAP? SP? component_statement_set
-false_result = SP FALSE_RESULT_OP LINEWRAP? SP? component_statement_set // Else
+true_result = DECISION_OP LINEWRAP? SP? component_statement_set SP*
+false_result = FALSE_RESULT_OP LINEWRAP? SP? component_statement_set // Else
 FALSE_RESULT_OP = ':'
 
 // Switch action
