@@ -157,7 +157,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"< {children}")
-        result = [c for c in children if c]
+        result = children[:]
         _logger.info(f"  -> {result}")
         return result
 
@@ -239,7 +239,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         _logger.info(f"  > pass")
-        return children
+        return children[:]  # Removes the result component
 
     @classmethod
     def visit_statement(cls, node, children):
@@ -333,7 +333,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         _logger.info("  > pass")
-        return children
+        return children[:]
 
     @classmethod
     def visit_attr_type_def(cls, node, children):
@@ -354,7 +354,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         _logger.info(f"  > pass")
-        return children
+        return children[:]
 
     @classmethod
     def visit_row(cls, node, children):
@@ -376,7 +376,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         _logger.info(f"  > pass")
-        return children
+        return children[:]
 
     # Implicit table assignment
     @classmethod
@@ -483,7 +483,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         _logger.info(f"  > pass")
-        return children
+        return children[:]
 
     @classmethod
     def visit_column_op(cls, node, children):
@@ -592,7 +592,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = children
+        result = children[:]
         _logger.info(f"  > {result}")
         return result
 
@@ -781,7 +781,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = children
+        result = children[:]
         _logger.info(f"  > {result}")
         return result
 
@@ -853,7 +853,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = children if children else []
+        result = children[:]
         _logger.info(f"  > {result}")
         return result
 
@@ -903,7 +903,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = Iteration_a(*children)
+        result = Iteration_a(*children)  # TODO: Check this for inclusion of results member
         _logger.info(f"  > {result}")
         return result
 
@@ -944,7 +944,7 @@ class ScrallVisitor(PTNodeVisitor):
                 # Just like above case, but returning an IN_a (parameter name)
                 result = p[0]
             else:
-                result = INST_a(children)
+                result = INST_a(children[:])
         _logger.info(f"  > {result}")
         return result
 
@@ -1012,7 +1012,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = New_lineage_a(children)
+        result = New_lineage_a(children[:])
         _logger.info(f"  > {result}")
         return result
 
@@ -1109,7 +1109,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = Scalar_Call_a(children)
+        result = Scalar_Call_a(children[:])
         _logger.info(f"  > {result}")
         return result
 
@@ -1146,7 +1146,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = children
+        result = children[:]
         _logger.info(f"  > {result}")
         return result
 
@@ -1428,7 +1428,7 @@ class ScrallVisitor(PTNodeVisitor):
             return result
             # TODO: include opchain if supplied
 
-        result = children
+        result = children[:]
         _logger.info(f"  > {result}")
         return result
 
@@ -1459,7 +1459,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = Op_chain_a(children)
+        result = Op_chain_a(children[:])
         _logger.info(f"  > {result}")
         return result
 
@@ -1568,7 +1568,7 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = PATH_a(children)
+        result = PATH_a(children[:])
         _logger.info(f"  > {result}")
         return result
 
