@@ -2,10 +2,7 @@
 
 import pytest
 from scrall.parse.parser import ScrallParser
-from scrall.parse.visitor import (
-    Execution_Unit_a, Seq_Statement_Set_a, Call_a, Op_chain_a, Scalar_op_a,
-    Supplied_Parameter_a, N_a, IN_a,
-)
+from scrall.parse.visitor import *
 
 actions = [
     ("~.Goto floor( Dest floor: ^new dest )",
@@ -29,6 +26,34 @@ actions = [
                  )
              ), block=None),
          output_token=None)
+     ),
+    (".Ping( dir: Travel direction.opposite )",
+    Execution_Unit_a(
+        statement_set=Seq_Statement_Set_a(
+            input_tokens=[],
+            statement=Call_a(
+                call=INST_a(
+                    components=[
+                        Op_a(
+                            owner='implicit',
+                            op_name='Ping',
+                            supplied_params=[
+                                Supplied_Parameter_a(
+                                    pname='dir',
+                                    sval=INST_PROJ_a(
+                                        iset=N_a(name='Travel direction'),
+                                        projection=Projection_a(
+                                            expand=None, attrs=[N_a(name='opposite')]
+                                        )
+                                    )
+                                )
+                            ]
+                        )
+                    ]
+                ),
+                op_chain=None),
+            block=None),
+        output_token=None)
      ),
 ]
 
