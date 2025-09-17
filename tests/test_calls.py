@@ -6,27 +6,40 @@ from scrall.parse.visitor import *
 
 actions = [
     ("~.Goto floor( Dest floor: ^new dest )",
-     Execution_Unit_a(
-         statement_set=Seq_Statement_Set_a(
-             input_tokens=[],
-             statement=Call_a(
-                 call=None,
-                 op_chain=Op_chain_a(
-                     components=[
-                         Scalar_op_a(
-                             name=N_a(name='Goto floor'),
+    Execution_Unit_a(
+        statement_set=Seq_Statement_Set_a(
+            input_tokens=[],
+            statement=Call_a(
+                call=INST_a(
+                    components=[
+                        Op_a(owner='_external', op_name='Goto floor',
                              supplied_params=[
                                  Supplied_Parameter_a(
-                                     pname='Dest floor',
-                                     sval=IN_a(name='new dest')
+                                     pname='Dest floor', sval=IN_a(name='new dest')
                                  )
-                             ]
-                         )
-                     ]
-                 )
-             ), block=None),
-         output_token=None)
+                             ])]), op_chain=None), block=None), output_token=None)
      ),
+    #  Execution_Unit_a(
+    #      statement_set=Seq_Statement_Set_a(
+    #          input_tokens=[],
+    #          statement=Call_a(
+    #              call=None,
+    #              op_chain=Op_chain_a(
+    #                  components=[
+    #                      Scalar_op_a(
+    #                          name=N_a(name='Goto floor'),
+    #                          supplied_params=[
+    #                              Supplied_Parameter_a(
+    #                                  pname='Dest floor',
+    #                                  sval=IN_a(name='new dest')
+    #                              )
+    #                          ]
+    #                      )
+    #                  ]
+    #              )
+    #          ), block=None),
+    #      output_token=None)
+    #  ),
     (".Ping( dir: Travel direction.opposite )",
     Execution_Unit_a(
         statement_set=Seq_Statement_Set_a(
@@ -35,7 +48,7 @@ actions = [
                 call=INST_a(
                     components=[
                         Op_a(
-                            owner='implicit',
+                            owner='_implicit',
                             op_name='Ping',
                             supplied_params=[
                                 Supplied_Parameter_a(

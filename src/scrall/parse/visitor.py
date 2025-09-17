@@ -832,7 +832,7 @@ class ScrallVisitor(PTNodeVisitor):
         owner = children.results.get('owner')
         p = children.results.get('supplied_params')
         result = Op_a(
-            owner='implicit' if not owner else owner[0],
+            owner='_implicit' if not owner else owner[0],
             op_name=children.results['name'][0].name,
             supplied_params=[] if not p else p[0]
         )
@@ -841,7 +841,12 @@ class ScrallVisitor(PTNodeVisitor):
 
     @classmethod
     def visit_owner(cls, node, children):
-        result = ''.join(children)
+        """
+        '~' / name
+        """
+        name = children.results.get('name')
+        # This is either ~ signifying an external service or a single instance flow (instance set)
+        result = name[0].name if name else '_external'
         return result
 
     @classmethod
