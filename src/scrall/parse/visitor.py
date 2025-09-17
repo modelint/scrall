@@ -42,7 +42,7 @@ BOOL_a = namedtuple('BOOL_a', 'op operands')
 Scalar_Assignment_a = namedtuple('Scalar_Assignment_a', 'lhs rhs')
 Table_Assignment_a = namedtuple('Table_Assignment_a', 'type assign_tuple lhs rhs X')
 Scalar_RHS_a = namedtuple('Scalar_RHS_a', 'expr attrs')
-Qualified_Name_a = namedtuple('Qualified_Name_a', 'cname aname')
+Qualified_Name_a = namedtuple('Qualified_Name_a', 'iset cname aname')
 Flow_Output_a = namedtuple('Flow_Output_a', 'name exp_type')
 PATH_a = namedtuple('PATH_a', 'hops')
 INST_a = namedtuple('INST_a', 'components')
@@ -1138,10 +1138,21 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_qualified_name(cls, node, children):
         """
+        (name / instance_set) '.' name
         """
         _logger.info("qualified_name = name '.' name")
         _logger.info(f'  :: {node.value}')
-        return Qualified_Name_a(cname=children[0].name, aname=children[1].name)
+        iset = children.results.get('instance_set')
+        names = children.results.get('name')
+        if iset:
+            # iset takes the place of cname
+            # iset.attribute -- /R4/Door.Lock request
+            aname = names[0].name
+            cname = None
+        else:
+            # class.attribute -- Door.Lock request
+            cname, aname = names[0].name, names[1].name
+        return Qualified_Name_a(iset=iset, cname=cname, aname=aname)
 
     @classmethod
     def visit_scalar_output_set(cls, node, children):

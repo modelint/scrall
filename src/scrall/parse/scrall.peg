@@ -118,7 +118,7 @@ delete = '!*' SP* instance_set (',' SP+ instance_set)* // supports multi-delete 
 // Scalar assignment
 scalar_assignment = scalar_output_set SP* SCALAR_ASSIGN SP* scalar_expr projection? (',' SP* scalar_expr projection?)*
 scalar_output_set = qualified_name / flow_output (',' SP+ flow_output)*
-qualified_name = name '.' name
+qualified_name = (name / instance_set) '.' name
 flow_output = name (TYPE_ASSIGN name)?
 projection = '.' (name / '(' ( (ALL / (name (',' SP+ name)*) )? ')')) // TODO: Why is empty () ok in projection?
 ALL = '*'
