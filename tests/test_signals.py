@@ -24,7 +24,7 @@ actions = [
              statement=External_Signal_a(
                  event='Goto floor',
                  supplied_params=[
-                     [Supplied_Parameter_a(pname='Dest floor', sval=N_a(name='my level'))]
+                     Supplied_Parameter_a(pname='Dest floor', sval=N_a(name='my level'))
                  ]), block=None),
          output_token=None)
      ),

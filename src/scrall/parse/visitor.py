@@ -677,7 +677,8 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        params = children.results.get('supplied_params', [])
+        params = children.results.get('supplied_params')
+        params = params[0] if params else []
         result = {'name': children[0].name, 'params': params}
         _logger.info(f"  > {result}")
         return result

@@ -49,7 +49,7 @@ actions = [
              input_tokens=[],
              statement=Signal_a(
                  event='Try redirect', supplied_params=[
-                     [Supplied_Parameter_a(pname='new dest', sval=IN_a(name='new dest'))]],
+                     Supplied_Parameter_a(pname='new dest', sval=IN_a(name='new dest'))],
                  dest=Signal_Dest_a(
                      target_iset=INST_a(
                          components=[PATH_a(hops=[R_a(rnum='R53'), N_a(name='Cabin')])]),
