@@ -105,7 +105,8 @@ ITS = 'ITS'
 // Creation, deletion and references
 new_instance = '*' new_inst_init // create an instance of a class as an action
 new_lineage = '*[' SP* new_inst_init (';' SP+ new_inst_init)+ SP* ']' // create all instances of a lineage
-new_inst_init = name attr_init? (SP+ to_ref)* // specify class, attr inits, and any required references
+new_inst_init = name attr_init? (SP+ to_ref)* (SP+ to_state)? // specify class, attr inits, and any required references
+to_state = '>' SP* name
 attr_init = '(' SP* (attr_value_init (',' SP+ attr_value_init)* SP*)? ')' // all attrs to init for a new instance
 attr_value_init = (name SP? ':' SP+ scalar_expr )*
 update_ref = (instance_set SP+)? to_ref // relate or unrelated to me or explicit instance_set

@@ -17,7 +17,7 @@ expected_parse = Execution_Unit_a(
                         statement_set=Seq_Statement_Set_a(
                             input_tokens=[],
                             statement=New_inst_a(
-                                cname=N_a(name='cat'), attrs=[], rels=None),
+                                cname=N_a(name='cat'), attrs=[], rels=None, state=None),
                             block=None), output_token=None
                     )
                 ]),
@@ -28,7 +28,7 @@ expected_parse = Execution_Unit_a(
                         statement_set=Seq_Statement_Set_a(
                             input_tokens=[],
                             statement=New_inst_a(
-                                cname=N_a(name='dog'), attrs=[], rels=None),
+                                cname=N_a(name='dog'), attrs=[], rels=None, state=None),
                             block=None), output_token=None
                     )
                 ])

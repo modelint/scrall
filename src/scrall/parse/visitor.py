@@ -60,7 +60,7 @@ Type_expr_a = namedtuple('Type_expr_a', 'type selector')
 Attr_value_init_a = namedtuple('Attr_value_init_a', 'attr scalar_expr')
 To_ref_a = namedtuple('To_ref_a', 'rnum iset1 iset2')
 Update_ref_a = namedtuple('Update_ref_a', 'iset to_ref')
-New_inst_a = namedtuple('New_inst_a', 'cname attrs rels')
+New_inst_a = namedtuple('New_inst_a', 'cname attrs rels state')
 New_lineage_a = namedtuple('New_lineage_a', 'inits')
 Output_Flow_a = namedtuple('Output_Flow_a', 'output')
 Projection_a = namedtuple('Projection_a', 'expand attrs')
@@ -1033,9 +1033,24 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f"  < {children}")
         a = children.results.get('attr_init')
         r = children.results.get('to_ref')
-        result = New_inst_a(cname=children[0], attrs=a[0] if a else [], rels=None if not r else r)
+        s = children.results.get('to_state')
+        result = New_inst_a(cname=children[0], attrs=a[0] if a else [], rels=None if not r else r,
+                            state=s[0].name if s else None)
         _logger.info(f"  > {result}")
         return result
+
+    @classmethod
+    def visit_to_state(cls, node, children):
+        """
+        '>' SP* name
+        """
+        _logger.info("to_state = '>' SP* name")
+        _logger.info(f'  :: {node.value}')
+
+        _logger.info(f"  < {children}")
+        result = children[0]
+        return result
+
 
     @classmethod
     def visit_attr_init(cls, node, children):
