@@ -57,7 +57,8 @@ actions = [
                                         iset=N_a(name='Travel direction'),
                                         projection=Projection_a(
                                             expand=None, attrs=[N_a(name='opposite')]
-                                        )
+                                        ),
+                                        op_chain=None
                                     )
                                 )
                             ]

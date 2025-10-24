@@ -19,7 +19,7 @@ actions = [
         statement=Decision_a(input=BOOL_a(
             op='NOT', operands=INST_PROJ_a(iset=INST_a(
                 components=[PATH_a(hops=[R_a(rnum='R2'), N_a(name='Shaft')])]),
-                projection=Projection_a(expand=None, attrs=[N_a(name='In service')]))),
+                projection=Projection_a(expand=None, attrs=[N_a(name='In service')]), op_chain=None)),
             true_result=Comp_Statement_Set_a(statement=
                     Signal_a(event='Take out of service', supplied_params=[],
                              dest=Signal_Dest_a(target_iset=N_a(name='ME'),
@@ -32,7 +32,7 @@ actions = [
          statement=Decision_a(input=BOOL_a(
              op='NOT', operands=INST_PROJ_a(iset=INST_a(
                  components=[PATH_a(hops=[R_a(rnum='R2'), N_a(name='Shaft')])]),
-                 projection=Projection_a(expand=None, attrs=[N_a(name='In service')]))),
+                 projection=Projection_a(expand=None, attrs=[N_a(name='In service')]), op_chain=None)),
              true_result=Comp_Statement_Set_a(statement=
                      Signal_a(event='Take out of service', supplied_params=[],
                               dest=Signal_Dest_a(target_iset=N_a(name='ME'),

@@ -36,7 +36,8 @@ actions = [
                                                 iset=N_a(name='Travel direction'),
                                                 projection=Projection_a(
                                                 expand=None,
-                                                attrs=[N_a(name='opposite')]))]))]), X=(31, 81)), block=None),
+                                                attrs=[N_a(name='opposite')]), op_chain=None)
+                                                  ]))]), X=(31, 81)), block=None),
                                 output_token=None),
                             Execution_Unit_a(
                                 statement_set=Seq_Statement_Set_a(

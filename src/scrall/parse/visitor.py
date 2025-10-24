@@ -46,7 +46,7 @@ Qualified_Name_a = namedtuple('Qualified_Name_a', 'iset cname aname')
 Flow_Output_a = namedtuple('Flow_Output_a', 'name exp_type')
 PATH_a = namedtuple('PATH_a', 'hops')
 INST_a = namedtuple('INST_a', 'components')
-INST_PROJ_a = namedtuple('INST_PROJ_a', 'iset projection')
+INST_PROJ_a = namedtuple('INST_PROJ_a', 'iset projection op_chain')
 TEXPR_a = namedtuple('TEXPR_a', 'table hexpr selection projection')
 R_a = namedtuple('R_a', 'rnum')
 IN_a = namedtuple('IN_a', 'name')
@@ -1455,10 +1455,11 @@ class ScrallVisitor(PTNodeVisitor):
         iset = children.results.get('instance_set')
         if iset:
             p = children.results.get('projection')
-            result = INST_PROJ_a(iset=iset[0], projection=None if not p else p[0])
+            o = children.results.get('op_chain')
+            op_chain = None if not o else o[0]
+            result = INST_PROJ_a(iset=iset[0], projection=None if not p else p[0], op_chain=op_chain)
             _logger.info(f"  > {result}")
             return result
-            # TODO: include opchain if supplied
 
         result = children[:]
         _logger.info(f"  > {result}")
