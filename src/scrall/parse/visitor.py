@@ -1446,7 +1446,8 @@ class ScrallVisitor(PTNodeVisitor):
             _logger.info(f"  > {result}")
             return result
 
-        if len(children) == 1 and (isinstance(children[0], N_a) or (isinstance(children[0], IN_a))):
+        if len(children) == 1 and (isinstance(children[0], N_a) or (isinstance(children[0], IN_a)) or
+                                   isinstance(children[0], Type_expr_a)):
             result = children[0]
             _logger.info(f"  > {result}")
             return result
