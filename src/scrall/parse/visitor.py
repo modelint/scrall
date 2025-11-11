@@ -411,7 +411,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         if len(children) == 1:
-            result = children[0]
+            result = TOP_a(None, children[0])
         else:
             result = TOP_a(children.results['TOP'][0], children.results['table_term'])
         _logger.info(f"  > {result}")
