@@ -47,7 +47,7 @@ Flow_Output_a = namedtuple('Flow_Output_a', 'name exp_type')
 PATH_a = namedtuple('PATH_a', 'hops')
 INST_a = namedtuple('INST_a', 'components')
 INST_PROJ_a = namedtuple('INST_PROJ_a', 'iset projection op_chain')
-TEXPR_a = namedtuple('TEXPR_a', 'table hexpr selection projection')
+Table_term_a = namedtuple('Table_term_a', 'table hexpr selection projection')
 R_a = namedtuple('R_a', 'rnum')
 IN_a = namedtuple('IN_a', 'name')
 Enum_a = namedtuple('Enum_a', 'value')
@@ -411,7 +411,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         if len(children) == 1:
-            result = TOP_a(None, children[0])
+            result = children[0]
         else:
             result = TOP_a(children.results['TOP'][0], children.results['table_term'])
         _logger.info(f"  > {result}")
@@ -459,7 +459,7 @@ class ScrallVisitor(PTNodeVisitor):
             # It must be a table expression
             table = children.results.get('table_expr')[0]
 
-        result = TEXPR_a(table=table, hexpr=None if not h else h[0], selection=s, projection=None if not p else p[0])
+        result = Table_term_a(table=table, hexpr=None if not h else h[0], selection=s, projection=None if not p else p[0])
         _logger.info(f"  > {result}")
         return result
 
