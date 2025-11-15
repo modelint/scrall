@@ -991,7 +991,7 @@ class ScrallVisitor(PTNodeVisitor):
         if criteria:
             result = Criteria_Selection_a(card=card, criteria=criteria[0])
         else:
-            result = [card]
+            result = Criteria_Selection_a(card=card, criteria=None)
         _logger.info(f"  > {result}")
         return result
 
