@@ -942,15 +942,10 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        if len(children) == 1 and isinstance(children[0], N_a):
+        if len(children) == 1 and ( isinstance(children[0], N_a) or (isinstance(children[0], IN_a)) ):
             result = children[0]
         else:
-            p = children.results.get('input_param')
-            if p:
-                # Just like above case, but returning an IN_a (parameter name)
-                result = p[0]
-            else:
-                result = INST_a(children[:])
+            result = INST_a(children[:])
         _logger.info(f"  > {result}")
         return result
 
