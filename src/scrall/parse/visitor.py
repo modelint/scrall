@@ -41,7 +41,6 @@ BOOL_a = namedtuple('BOOL_a', 'op operands')
 """Boolean operation returns true or false"""
 Scalar_Assignment_a = namedtuple('Scalar_Assignment_a', 'lhs rhs')
 Table_Assignment_a = namedtuple('Table_Assignment_a', 'type assign_tuple lhs rhs X')
-Scalar_RHS_a = namedtuple('Scalar_RHS_a', 'expr attrs')
 Qualified_Name_a = namedtuple('Qualified_Name_a', 'iset cname aname')
 Flow_Output_a = namedtuple('Flow_Output_a', 'name exp_type')
 PATH_a = namedtuple('PATH_a', 'hops')
@@ -1139,10 +1138,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         sout_set = children.results['scalar_output_set'][0]
-        expr = children.results['scalar_expr'][0]
-        proj = children.results.get('projection')
-        proj = None if not proj else proj[0]
-        result = Scalar_Assignment_a(lhs=sout_set, rhs=Scalar_RHS_a(expr, proj))
+        result = Scalar_Assignment_a(lhs=sout_set, rhs=[e for e in children.results['scalar_expr']])
         _logger.info(f"  > {result}")
         return result
 

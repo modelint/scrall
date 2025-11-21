@@ -114,10 +114,9 @@ to_ref = '&' rnum SP+ instance_set (',' SP+ instance_set)? // non-associative or
 delete = '!*' SP* instance_set (',' SP+ instance_set)* // supports multi-delete transaction
 
 // Scalar call
-//scalar_call = scalar_expr
 
 // Scalar assignment
-scalar_assignment = scalar_output_set SP* SCALAR_ASSIGN SP* scalar_expr projection? (',' SP* scalar_expr projection?)*
+scalar_assignment = scalar_output_set SP* SCALAR_ASSIGN SP* scalar_expr (',' SP* scalar_expr)*
 scalar_output_set = qualified_name / flow_output (',' SP+ flow_output)*
 qualified_name = (name / instance_set) '.' name
 flow_output = name (TYPE_ASSIGN name)?
@@ -136,7 +135,6 @@ term = (NOT SP*)? UNARY_MINUS? (scalar / "(" SP* scalar_expr SP* ")")
 scalar = value / QTY? scalar_chain
 QTY = '??'
 scalar_chain = (ITS op_chain) / ((instance_set projection? / scalar_source) op_chain?)
-//scalar_chain = (ITS op_chain) / ((scalar_source / instance_set projection?) op_chain?)
 scalar_source = type_selector / input_param
 op_chain = ('.' (scalar_op / name))*
 value = TRUE / FALSE / enum_value

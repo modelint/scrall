@@ -4,7 +4,7 @@ import pytest
 from scrall.parse.parser import ScrallParser
 from scrall.parse.visitor import Execution_Unit_a, Signal_a, Signal_Dest_a, N_a, INST_a, PATH_a, R_a,\
     Inst_Assignment_a, Flow_Output_a, Criteria_Selection_a, BOOL_a, Supplied_Parameter_a, Call_a, Op_a, IN_a, \
-    Table_Assignment_a, Table_term_a, Projection_a, Seq_Statement_Set_a, Scalar_Assignment_a, Scalar_RHS_a, \
+    Table_Assignment_a, Table_term_a, Projection_a, Seq_Statement_Set_a, Scalar_Assignment_a, \
     Sequence_Token_a, Case_a, Switch_a, Enum_a, Output_Flow_a, INST_PROJ_a, Comp_Statement_Set_a, \
     Decision_a
 

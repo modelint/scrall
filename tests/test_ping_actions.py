@@ -4,7 +4,7 @@ import pytest
 from scrall.parse.parser import ScrallParser
 from scrall.parse.visitor import Execution_Unit_a, Signal_a, Signal_Dest_a, N_a, INST_a, PATH_a, R_a,\
     Inst_Assignment_a, Flow_Output_a, Criteria_Selection_a, Rank_Selection_a, BOOL_a, Supplied_Parameter_a, Call_a, Op_a, IN_a, \
-    Table_Assignment_a, Table_term_a, Projection_a, Seq_Statement_Set_a, Scalar_Assignment_a, Scalar_RHS_a, \
+    Table_Assignment_a, Table_term_a, Projection_a, Seq_Statement_Set_a, Scalar_Assignment_a, \
     Sequence_Token_a, Case_a, Switch_a, Enum_a, Output_Flow_a, INST_PROJ_a, Comp_Statement_Set_a, TOP_a
 
 actions = [
@@ -14,12 +14,14 @@ actions = [
             Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
                statement=Scalar_Assignment_a(
                    lhs=[Flow_Output_a(name=N_a(name='a'), exp_type=None)],
-                   rhs=Scalar_RHS_a(expr=N_a(name='b'), attrs=None)), block=None), output_token=None),
+                   rhs=[N_a(name='b')]
+               ), block=None), output_token=None),
 
             Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
                statement=Scalar_Assignment_a(
                   lhs=[Flow_Output_a(name=N_a(name='c'), exp_type=None)],
-                  rhs=Scalar_RHS_a(expr=N_a(name='d'), attrs=None)), block=None), output_token=None)]),
+                  rhs=[N_a(name='d')]
+               ), block=None), output_token=None)]),
                output_token=Sequence_Token_a(name='1'))),
     ("^dir? {\n    _up:\n        a = b\n    _down:\n        a = c\n}\n",
             Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
@@ -27,11 +29,13 @@ actions = [
                     Case_a(enums=['up'], comp_statement_set=Comp_Statement_Set_a(
                         statement=Scalar_Assignment_a(
                             lhs=[Flow_Output_a(name=N_a(name='a'), exp_type=None)],
-                            rhs=Scalar_RHS_a(expr=N_a(name='b'), attrs=None)), block=None)),
+                            rhs=[N_a(name='b')]
+                        ), block=None)),
                     Case_a(enums=['down'], comp_statement_set=Comp_Statement_Set_a(
                         statement=Scalar_Assignment_a(
                             lhs=[Flow_Output_a(name=N_a(name='a'), exp_type=None)],
-                            rhs=Scalar_RHS_a(expr=N_a(name='c'), attrs=None)), block=None))]),
+                            rhs=[N_a(name='c')]
+                        ), block=None))]),
                 block=None), output_token=None)
      ),
 
