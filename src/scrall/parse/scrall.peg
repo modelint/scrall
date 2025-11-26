@@ -134,7 +134,8 @@ term = (NOT SP*)? UNARY_MINUS? (scalar / "(" SP* scalar_expr SP* ")")
 
 scalar = value / QTY? scalar_chain
 QTY = '??'
-scalar_chain = (ITS op_chain) / ((instance_set projection? / scalar_source) op_chain?)
+scalar_chain = (ITS op_chain) / ((scalar_source / instance_set projection?) op_chain?)
+//scalar_chain = (ITS op_chain) / ((instance_set projection? / scalar_source) op_chain?)
 scalar_source = type_selector / input_param
 op_chain = ('.' (scalar_op / name))*
 value = TRUE / FALSE / enum_value
