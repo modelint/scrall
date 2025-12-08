@@ -33,6 +33,7 @@ actions = [
                                         criteria=BOOL_a(op='==',
                                         operands=[N_a(name='dir'),
                                             INST_PROJ_a(
+                                                qty=False,
                                                 iset=N_a(name='Travel direction'),
                                                 projection=Projection_a(
                                                 expand=None,

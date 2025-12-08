@@ -102,10 +102,10 @@ actions = [
      ),
     ("=>> Accessible Shaft Level( Floor: nearest dest.Floor; Shaft )",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[], statement=Output_Flow_a(
-            output=INST_PROJ_a(iset=INST_a(components=[N_a(name='Accessible Shaft Level'),
+            output=INST_PROJ_a(qty=False, iset=INST_a(components=[N_a(name='Accessible Shaft Level'),
                  Criteria_Selection_a(card='ALL', criteria=BOOL_a(op='AND', operands=[
                      BOOL_a(op='==', operands=[N_a(name='Floor'),
-                           INST_PROJ_a(iset=N_a(name='nearest dest'),
+                           INST_PROJ_a(qty=False, iset=N_a(name='nearest dest'),
                                  projection=Projection_a(expand=None, attrs=[N_a(name='Floor')]), op_chain=None)]),
                                  N_a(name='Shaft')]))]), projection=None, op_chain=None)), block=None),
                          output_token=None

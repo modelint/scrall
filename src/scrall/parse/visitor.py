@@ -45,7 +45,7 @@ Qualified_Name_a = namedtuple('Qualified_Name_a', 'iset cname aname')
 Flow_Output_a = namedtuple('Flow_Output_a', 'name exp_type')
 PATH_a = namedtuple('PATH_a', 'hops')
 INST_a = namedtuple('INST_a', 'components')
-INST_PROJ_a = namedtuple('INST_PROJ_a', 'iset projection op_chain')
+INST_PROJ_a = namedtuple('INST_PROJ_a', 'qty iset projection op_chain')
 Table_term_a = namedtuple('Table_term_a', 'table hexpr selection projection')
 R_a = namedtuple('R_a', 'rnum')
 IN_a = namedtuple('IN_a', 'name')
@@ -1409,22 +1409,10 @@ class ScrallVisitor(PTNodeVisitor):
         return result
 
     @classmethod
-    def visit_QTY(cls, node, children):
-        """
-        """
-        _logger.info("QTY = '??'")
-        _logger.info(f'  :: {node.value}')
-
-        _logger.info(f"  < {children}")
-        result = 'QTY'
-        _logger.info(f"  > {result}")
-        return result
-
-    @classmethod
     def visit_scalar_chain(cls, node, children):
         """
         """
-        _logger.info("scalar_chain = (ITS op_chain) / ((scalar_source / instance_set projection?) op_chain?)")
+        _logger.info("scalar_chain = (ITS op_chain) / ((type_selector / instance_set projection?) op_chain?)")
         _logger.info(f'  :: {node.value}')
         _logger.info(f">> {[k for k in children.results.keys()]}")
 
@@ -1436,6 +1424,8 @@ class ScrallVisitor(PTNodeVisitor):
             result = its, op_chain
             _logger.info(f"  > {result}")
             return result
+
+        qty = True if children.results.get('QTY') else False
 
         if len(children) == 1 and (isinstance(children[0], N_a) or (isinstance(children[0], IN_a)) or
                                    isinstance(children[0], Type_expr_a)):
@@ -1449,7 +1439,7 @@ class ScrallVisitor(PTNodeVisitor):
             p = children.results.get('projection')
             o = children.results.get('op_chain')
             op_chain = None if not o else o[0]
-            result = INST_PROJ_a(iset=iset[0], projection=None if not p else p[0], op_chain=op_chain)
+            result = INST_PROJ_a(qty=qty, iset=iset[0], projection=None if not p else p[0], op_chain=op_chain)
             _logger.info(f"  > {result}")
             return result
 

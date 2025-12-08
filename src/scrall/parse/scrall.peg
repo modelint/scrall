@@ -132,13 +132,9 @@ addition = factor (SP* ADD SP* factor)*
 factor = term (SP* MULT SP* term)*
 term = (NOT SP*)? UNARY_MINUS? (scalar / "(" SP* scalar_expr SP* ")")
 
-scalar = value / QTY? scalar_chain
+scalar = value / scalar_chain
+scalar_chain = (ITS op_chain) / QTY? ((type_selector / instance_set projection?) op_chain?)
 QTY = '??'
-scalar_chain = (ITS op_chain) / ((type_selector / instance_set projection?) op_chain?)
-//scalar_chain = (ITS op_chain) / ((instance_set projection? / scalar_source) op_chain?)
-//scalar_source = type_selector / input_param
-//an instance set can be an input param, so we con't need scalar source
-//expecially since it prevents parsing ??^param(a: b) - need to retest
 op_chain = ('.' (scalar_op / name))*
 value = TRUE / FALSE / enum_value
 scalar_op = name supplied_params

@@ -54,6 +54,7 @@ actions = [
                                 Supplied_Parameter_a(
                                     pname='dir',
                                     sval=INST_PROJ_a(
+                                        qty=False,
                                         iset=N_a(name='Travel direction'),
                                         projection=Projection_a(
                                             expand=None, attrs=[N_a(name='opposite')]
