@@ -16,7 +16,7 @@ Call_a = namedtuple('Call_a', 'call op_chain')
 Scalar_Call_a = namedtuple('Scalar_Call_a', 'call')
 """The subject of a call could be an instance set (method) or an external entity (ee operation)"""
 Attr_Access_a = namedtuple('Attr_Access_a', 'cname its attr')
-Rank_Selection_a = namedtuple('Rank_Selection_a', 'card rankr attr')
+Rank_Selection_a = namedtuple('Rank_Selection_a', 'card rankr attr call')
 Criteria_Selection_a = namedtuple('Criteria_Selection_a', 'card criteria')
 Inst_Assignment_a = namedtuple('Inst_Assignment_a', 'lhs card rhs X')
 External_Signal_a = namedtuple('External_Signal_a', 'event supplied_params')
@@ -951,7 +951,7 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_rank_selection(cls, node, children):
         """
-        CARD ', ' SP* RANKR name
+        CARD ', ' SP* RANKR (call / name)
         """
         _logger.info(f"{node.rule_name} = CARD ', ' SP* RANKR name")
         _logger.info(f">> {[k for k in children.results.keys()]}")
@@ -960,11 +960,17 @@ class ScrallVisitor(PTNodeVisitor):
         _logger.info(f"  < {children}")
         card_parse = children.results['CARD'][0]
         card = card_symbol[card_parse]
-        attr_parse = children.results['name'][0]
-        attr = attr_parse.name
+        # call and name are mutually exclusive
+        ranked_name = children.results.get('name')
+        if ranked_name:
+            attr = ranked_name[0]
+            call = None
+        else:
+            attr = None
+            call = children.results['call'][0]
         rankr_parse = children.results['RANKR']
         rankr = rank_symbol[rankr_parse[0]]
-        result = Rank_Selection_a(card=card, rankr=rankr, attr=attr)
+        result = Rank_Selection_a(card=card, rankr=rankr, attr=attr, call=call)
         _logger.info(f"  > {result}")
         return result
 
