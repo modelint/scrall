@@ -963,7 +963,7 @@ class ScrallVisitor(PTNodeVisitor):
         # call and name are mutually exclusive
         ranked_name = children.results.get('name')
         if ranked_name:
-            attr = ranked_name[0]
+            attr = ranked_name[0].name
             call = None
         else:
             attr = None
