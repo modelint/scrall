@@ -16,7 +16,8 @@ Call_a = namedtuple('Call_a', 'call op_chain')
 Scalar_Call_a = namedtuple('Scalar_Call_a', 'call')
 """The subject of a call could be an instance set (method) or an external entity (ee operation)"""
 Attr_Access_a = namedtuple('Attr_Access_a', 'cname its attr')
-Rank_Selection_a = namedtuple('Rank_Selection_a', 'card rankr attr call')
+Rank_Selection_a = namedtuple('Rank_Selection_a', 'card criteria')
+Rank_Criterion_a = namedtuple('Rank_Criterion_a', 'rankr attr call')
 Criteria_Selection_a = namedtuple('Criteria_Selection_a', 'card criteria')
 Inst_Assignment_a = namedtuple('Inst_Assignment_a', 'lhs card rhs X')
 External_Signal_a = namedtuple('External_Signal_a', 'event supplied_params')
@@ -951,16 +952,32 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_rank_selection(cls, node, children):
         """
-        CARD ', ' SP* RANKR (call / name)
+        (CARD ', ')? rank_criterion (', ' rank_criterion)*
         """
-        _logger.info(f"{node.rule_name} = CARD ', ' SP* RANKR name")
+        _logger.info(f"{node.rule_name} = (CARD ', ')? rank_criterion (', ' rank_criterion)*")
         _logger.info(f">> {[k for k in children.results.keys()]}")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        card_parse = children.results['CARD'][0]
+        test_card = children.results.get('CARD')
+        card_parse = test_card[0] if test_card else '*'
         card = card_symbol[card_parse]
-        # call and name are mutually exclusive
+        rank_criteria = children.results['rank_criterion']
+
+        result = Rank_Selection_a(card=card, criteria=rank_criteria)
+        _logger.info(f"  > {result}")
+        return result
+
+    @classmethod
+    def visit_rank_criterion(cls, node, children):
+        """
+        RANKR (call / name)
+        """
+        _logger.info(f"{node.rule_name} = RANKR (call / name)")
+        _logger.info(f">> {[k for k in children.results.keys()]}")
+        _logger.info(f'  :: {node.value}')
+
+        _logger.info(f"  < {children}")
         ranked_name = children.results.get('name')
         if ranked_name:
             attr = ranked_name[0].name
@@ -970,7 +987,7 @@ class ScrallVisitor(PTNodeVisitor):
             call = children.results['call'][0]
         rankr_parse = children.results['RANKR']
         rankr = rank_symbol[rankr_parse[0]]
-        result = Rank_Selection_a(card=card, rankr=rankr, attr=attr, call=call)
+        result = Rank_Criterion_a(rankr=rankr, attr=attr, call=call)
         _logger.info(f"  > {result}")
         return result
 

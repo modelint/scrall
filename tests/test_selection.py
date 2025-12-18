@@ -3,7 +3,7 @@
 import pytest
 from scrall.parse.parser import ScrallParser
 from scrall.parse.visitor import Execution_Unit_a, Signal_a, Signal_Dest_a, N_a, INST_a, PATH_a, R_a,\
-    Inst_Assignment_a, Flow_Output_a, Rank_Selection_a, Criteria_Selection_a, BOOL_a, Op_a, Enum_a, MATH_a, Seq_Statement_Set_a
+    Inst_Assignment_a, Flow_Output_a, Rank_Criterion_a, Criteria_Selection_a, BOOL_a, Op_a, Enum_a, MATH_a, Seq_Statement_Set_a
 
 actions = [
     ("s ..= Shaft(Inservice; Cleared)",
