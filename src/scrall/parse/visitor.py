@@ -16,7 +16,8 @@ Call_a = namedtuple('Call_a', 'call op_chain')
 Scalar_Call_a = namedtuple('Scalar_Call_a', 'call')
 """The subject of a call could be an instance set (method) or an external entity (ee operation)"""
 Attr_Access_a = namedtuple('Attr_Access_a', 'cname its attr')
-Rank_Selection_a = namedtuple('Rank_Selection_a', 'card rankr call attr_expr')
+Rank_Selection_a = namedtuple('Rank_Selection_a', 'card rankr call attr attr_expr')
+"""Cardinality, rank order, mutually exclusive choice of call, attribute name, or attribute scalar expression"""
 Criteria_Selection_a = namedtuple('Criteria_Selection_a', 'card criteria')
 Inst_Assignment_a = namedtuple('Inst_Assignment_a', 'lhs card rhs X')
 External_Signal_a = namedtuple('External_Signal_a', 'event supplied_params')
@@ -967,14 +968,18 @@ class ScrallVisitor(PTNodeVisitor):
         rankr_parse = children.results['RANKR']
         rankr = rank_symbol[rankr_parse[0]]
 
-        ranked_expr = children.results.get('scalar_expr')
-        if ranked_expr:
-            attr_expr = ranked_expr[0]
-            call = None
+        attr = attr_expr = call = None
+
+        if name_result := children.results.get("name"):
+            attr = name_result[0].name
+        elif expr_result := children.results.get("scalar_expr"):
+            attr_expr = expr_result[0]
+        elif call_result := children.results.get("call"):
+            call = call_result[0]
         else:
-            attr_expr = None
-            call = children.results['call'][0]
-        result = Rank_Selection_a(card=card, rankr=rankr, call=call, attr_expr=attr_expr)
+            raise ValueError("Expected exactly one of: name, scalar_expr, call in rank selection")
+
+        result = Rank_Selection_a(card=card, rankr=rankr, call=call, attr=attr, attr_expr=attr_expr)
 
         _logger.info(f"  > {result}")
         return result
