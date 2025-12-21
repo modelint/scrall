@@ -93,8 +93,7 @@ OUTPUT = '=>>'
 // Instance set
 instance_set =  new_instance / ((operation / input_param / name / path) (reflexive_selection / selection / operation / path)*)
 selection = '(' SP* (rank_selection / criteria_selection) SP* ')'
-rank_selection = (CARD ', ')? rank_criterion (', ' rank_criterion)*
-rank_criterion = RANKR (name / call)
+rank_selection = (CARD ', ')? RANKR (call / scalar_expr)
 criteria_selection = (CARD ', ' SP* scalar_expr) / CARD / scalar_expr
 CARD = '1' / '*'
 RANKR = '^+' / '^-'
