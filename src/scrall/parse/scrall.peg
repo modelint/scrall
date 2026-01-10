@@ -63,7 +63,7 @@ signal_action = signal_spec SP+ (signal_dest / external_dest / SIGNAL_OP)
 signal_spec = name supplied_params?
 signal_dest = SIGNAL_OP '*'? LINEWRAP? SP? (assigner / instance_set) (SP+ delay)?
 assigner = rnum assigner_partition?
-external_dest = SIGNAL_OP LINEWRAP? SP? '~'
+external_dest = SIGNAL_OP LINEWRAP? SP? '~' ee_name
 delay = DELAY_OP SP* scalar_expr
 assigner_partition = '( ' instance_set ' )'
 DELAY_OP = '@'
@@ -76,7 +76,7 @@ INST_ASSIGN = '.=' / '..='
 // Synchronous call action (method or ee operation or type operation)
 call = instance_set op_chain? // Post-parse verify that last element is an operation, otherwise invalid call
 operation = owner? '.' name supplied_params
-owner = '~' / name
+owner = '~' ee_name / name
 supplied_params = '(' SP* (param (',' SP+ param)*)? SP* ')'
 param = (name SP* ':' SP*)? scalar_expr // Comma above keeps scalar_expr from grabbing next param
 
@@ -173,6 +173,7 @@ rnum = r'O?R[1-9][0-9]*' // Relationship number (name used for relationships)
 first_word = ignore_keywords r'[A-Za-z][A-Za-z0-9]*'
 word = ignore_keywords r'[A-Za-z0-9]+'
 ignore_keywords = !r'(?i)\b(TRUE|FALSE|AND|OR|NOT)\b'
+ee_name = r'[A-Z]([A-Z]*_[A-Z]+)*[A-Z]*' // Uppercase letters with single underscores, no consecutive underscores
 
 // Whitespace and comments
 LINEWRAP = EOL SP* // end of line followed by optional indent on next line

@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 # and return in the visit result.
 Supplied_Parameter_a = namedtuple('Supplied_Parameter_a', 'pname sval')
 """Parameter name and flow name pair for a set of supplied parameters"""
-Op_a = namedtuple('Op_a', 'owner op_name supplied_params')
+Op_a = namedtuple('Op_a', 'owner ee op_name supplied_params')
 Scalar_op_a = namedtuple('Scalar_op_a', 'name supplied_params')
 Call_a = namedtuple('Call_a', 'call op_chain')
 Scalar_Call_a = namedtuple('Scalar_Call_a', 'call')
@@ -20,7 +20,7 @@ Rank_Selection_a = namedtuple('Rank_Selection_a', 'card rankr call attr attr_exp
 """Cardinality, rank order, mutually exclusive choice of call, attribute name, or attribute scalar expression"""
 Criteria_Selection_a = namedtuple('Criteria_Selection_a', 'card criteria')
 Inst_Assignment_a = namedtuple('Inst_Assignment_a', 'lhs card rhs X')
-External_Signal_a = namedtuple('External_Signal_a', 'event supplied_params')
+External_Signal_a = namedtuple('External_Signal_a', 'event supplied_params ee')
 Signal_a = namedtuple('Signal_a', 'event supplied_params dest')
 """Signal sent to trigger event at destination with optional supplied parameters"""
 Signal_Action_a = namedtuple('Signal_Action_a', 'event supplied_params dest delay')
@@ -644,7 +644,7 @@ class ScrallVisitor(PTNodeVisitor):
 
         _logger.info(f"  < {children}")
         sdest = children.results.get('signal_dest')
-        external_dest = bool(children.results.get('external_dest'))
+        external_dest = children.results.get('external_dest')
         if not sdest and not external_dest:
             # Dest should be supplied by false result in decision
             result = Signal_a(
@@ -664,6 +664,7 @@ class ScrallVisitor(PTNodeVisitor):
             result = External_Signal_a(
                 event=children[0]['name'],
                 supplied_params=children[0]['params'],
+                ee =external_dest[0]
             )
 
         _logger.info(f"  > {result}")
@@ -687,11 +688,11 @@ class ScrallVisitor(PTNodeVisitor):
     def visit_external_dest(cls, node, children):
         """
         """
-        _logger.info("external_dest = SIGNAL_OP LINEWRAP? SP? '~'")
+        _logger.info("external_dest = SIGNAL_OP LINEWRAP? SP? ~ ee_name")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        result = '~'
+        result = children[0]
         _logger.info(f"  > {result}")
         return result
 
@@ -826,16 +827,24 @@ class ScrallVisitor(PTNodeVisitor):
 
         Name is the name of the operation
         """
-        _logger.info("operation = owner? '.' name supplied_params")
+        _logger.info("operation = '~' owner? '.' name supplied_params")
         _logger.info(f'  :: {node.value}')
 
         _logger.info(f"  < {children}")
-        owner = children.results.get('owner')
+        owner_result = children.results.get('owner')
+        ee = False
+        if not owner_result:
+            owner = '_implicit'
+        elif owner_result[0].get('name'):
+            owner = owner_result[0]['name']
+        else:
+            owner, ee = owner_result[0]['ee'], True
         p = children.results.get('supplied_params')
         result = Op_a(
-            owner='_implicit' if not owner else owner[0],
+            owner='_implicit' if not owner else owner,
             op_name=children.results['name'][0].name,
-            supplied_params=[] if not p else p[0]
+            supplied_params=[] if not p else p[0],
+            ee=ee
         )
         _logger.info(f"  > {result}")
         return result
@@ -843,11 +852,10 @@ class ScrallVisitor(PTNodeVisitor):
     @classmethod
     def visit_owner(cls, node, children):
         """
-        '~' / name
+        '~' ee_name / name
         """
-        name = children.results.get('name')
-        # This is either ~ signifying an external service or a single instance flow (instance set)
-        result = name[0].name if name else '_external'
+        ee_name = children.results.get('ee_name')
+        result = {'ee': ee_name[0]} if ee_name else {'name': children.results.get('name')[0].name}
         return result
 
     @classmethod
