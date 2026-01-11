@@ -42,7 +42,7 @@ def parse(cl_input):
                         help='Print the current version of parser')
     return parser.parse_args(cl_input)
 
-
+e
 def main():
     # Start logging
     logger = get_logger()

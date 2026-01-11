@@ -14,6 +14,7 @@ actions = [
                     components=[
                         Op_a(
                             owner='cabin in shaft',
+                            ee=False,
                             op_name='Ping both ways',
                             supplied_params=[])]
                 ), X=(0, 45)

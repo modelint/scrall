@@ -63,9 +63,9 @@ actions = [
                      assigner_dest=None, delay=0, cancel=False)), block=None),
          output_token=None)
      ),
-    ("TRAN.Go to floor( Dest floor: ^new dest, Shaft )",
+    ("~TRAN.Go to floor( Dest floor: ^new dest, Shaft )",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
-            statement=Call_a(call=INST_a(components=[Op_a(owner='TRAN', op_name='Go to floor',
+            statement=Call_a(call=INST_a(components=[Op_a(owner='TRAN', ee=True, op_name='Go to floor',
                           supplied_params=[Supplied_Parameter_a(pname='Dest floor', sval=IN_a(name='new dest')),
                                            Supplied_Parameter_a(pname='Shaft', sval=N_a(name='Shaft'))])]
                                          ), op_chain=None),

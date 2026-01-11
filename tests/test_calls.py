@@ -5,14 +5,14 @@ from scrall.parse.parser import ScrallParser
 from scrall.parse.visitor import *
 
 actions = [
-    ("~.Goto floor( Dest floor: ^new dest )",
+    ("~TRANS.Goto floor( Dest floor: ^new dest )",
     Execution_Unit_a(
         statement_set=Seq_Statement_Set_a(
             input_tokens=[],
             statement=Call_a(
                 call=INST_a(
                     components=[
-                        Op_a(owner='_external', op_name='Goto floor',
+                        Op_a(owner='TRANS', ee=True, op_name='Goto floor',
                              supplied_params=[
                                  Supplied_Parameter_a(
                                      pname='Dest floor', sval=IN_a(name='new dest')
@@ -49,6 +49,7 @@ actions = [
                     components=[
                         Op_a(
                             owner='_implicit',
+                            ee=False,
                             op_name='Ping',
                             supplied_params=[
                                 Supplied_Parameter_a(

@@ -62,7 +62,7 @@ actions = [
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
               statement=Inst_Assignment_a(
                   lhs=Flow_Output_a(name=N_a(name='x'), exp_type=None), card='M',
-                  rhs=INST_a(components=[Op_a(owner='car', op_name='findsome', supplied_params=[]),
+                  rhs=INST_a(components=[Op_a(owner='car', ee=False, op_name='findsome', supplied_params=[]),
                                          Criteria_Selection_a(card='ALL', criteria=BOOL_a(op='==',
                                              operands=[N_a(name='color'), Enum_a(value=N_a(name='red'))]))]),
               X=(0, 33)), block=None), output_token=None)
