@@ -13,6 +13,17 @@ actions = [
                rhs=INST_a(components=[N_a(name='Shaft'), Criteria_Selection_a(card='ALL',
                           criteria=BOOL_a(op='AND', operands=[N_a(name='Inservice'), N_a(name='Cleared')]))]),
                X=(0, 31)), block=None), output_token=None)
+    ),
+    ("s .= Shaft(0)",
+        Execution_Unit_a(statement_set=Seq_Statement_Set_a(
+            input_tokens=[],
+            statement=Inst_Assignment_a(
+                lhs=Flow_Output_a(name=N_a(name='s'), exp_type=None), card='1',
+                rhs=INST_a(
+                    components=[N_a(name='Shaft'),
+                                Criteria_Selection_a(card='ZERO', criteria=None)]
+                ),
+                X=(0, 13)), block=None), output_token=None)
      ),
     ("c ..= Cabin(Speed > slowest + buffer)",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
@@ -30,7 +41,7 @@ actions = [
                rhs=INST_a(components=[N_a(name='Cabin'), Criteria_Selection_a(card='ALL',
                        criteria=BOOL_a(op='>', operands=[N_a(name='Speed'), N_a(name='slowest')]))]),
            X=(0, 28)), block=None), output_token=None)
-     ),
+    ),
     ("s ..= Shaft(In service: TRUE)",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
              statement=Inst_Assignment_a(
@@ -45,7 +56,7 @@ actions = [
                                           rhs=INST_a(components=[N_a(name='Shaft'), Criteria_Selection_a(card='ALL',
                                               criteria=N_a(name='In service'))]),
               X=(0, 23)), block=None), output_token=None)
-     ),
+    ),
     ("x .= Bank(Max close attempts: (v or x) or Average cabin speed > mspeed)",
         Execution_Unit_a(statement_set=Seq_Statement_Set_a(input_tokens=[],
               statement=Inst_Assignment_a(
@@ -66,7 +77,7 @@ actions = [
                                          Criteria_Selection_a(card='ALL', criteria=BOOL_a(op='==',
                                              operands=[N_a(name='color'), Enum_a(value=N_a(name='red'))]))]),
               X=(0, 33)), block=None), output_token=None)
-     ),
+    ),
 ]
 
 

@@ -76,7 +76,7 @@ Rank_a = namedtuple('Rank_a', "card extent")
 
 
 rank_symbol = {'^+': "greatest", '^-': "least"}
-card_symbol = {'1':'ONE', '*':'ALL'}
+card_symbol = {'0': 'ZERO', '1': 'ONE', '*' :'ALL'}
 
 table_op = {
     '^': 'INTERSECT',
